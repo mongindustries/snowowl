@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Snow Owl", "Snow Owl\Snow Owl.vcxproj", "{C704531A-C21D-4849-8419-E19793491BD4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test App", "..\Test App\Test App.vcxproj", "{038B68F8-5CD3-4CD8-9113-EFD1BCBB1D5D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test App", "Test App\Test App.vcxproj", "{038B68F8-5CD3-4CD8-9113-EFD1BCBB1D5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

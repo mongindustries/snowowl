@@ -166,7 +166,7 @@
     <ClCompile Include="Test App.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Snow Owl\Snow Owl\Snow Owl.vcxproj">
+    <ProjectReference Include="..\Snow Owl\Snow Owl.vcxproj">
       <Project>{c704531a-c21d-4849-8419-e19793491bd4}</Project>
     </ProjectReference>
   </ItemGroup>

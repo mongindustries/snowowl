@@ -2,22 +2,17 @@
 
 #include <string>
 #include <typeinfo>
-#include <type_traits>
-
-#include <concepts>
 
 #include "DNDDecoder.hxx"
 #include "DNDEncoder.hxx"
 
 namespace snowowl {
 
-template<class T>
-concept snowowlObject = std::is_class<T>::value;
-
-template <snowowlObject DefiningType,
+template <class DefiningType,
           typename SerializationType,
           typename Encoder = Encoder<DefiningType, SerializationType>,
-          typename Decoder = Decoder<DefiningType, SerializationType>>
+          typename Decoder = Decoder<DefiningType, SerializationType>
+>
 class Object {
 
 public:
@@ -40,11 +35,11 @@ public:
   }
 
   Object(const typename Decoder::Input& input) {
-    Decoder::Decode(input, *(DefiningType*) this);
+    Decoder::Decode(input, *static_cast<DefiningType*>(this));
   }
 
   [[nodiscard]] typename Encoder::Output encode() const {
-    return Encoder::Encode(reinterpret_cast<const DefiningType*>(this));
+    return Encoder::Encode(static_cast<const DefiningType*>(this));
   }
 };
 }
