@@ -1,4 +1,6 @@
-﻿.vs
+.vs
 *.user
 [Dd]ebug
 [Rr]elease
+.gradle
+build
