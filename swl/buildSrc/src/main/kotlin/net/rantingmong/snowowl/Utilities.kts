@@ -8,6 +8,7 @@ import org.gradle.language.cpp.ProductionCppComponent
 import org.gradle.language.cpp.tasks.CppCompile
 import org.gradle.nativeplatform.OperatingSystemFamily
 import org.gradle.nativeplatform.toolchain.Clang
+import org.gradle.nativeplatform.toolchain.VisualCpp
 
 class Utilities {
   companion object {
@@ -16,15 +17,9 @@ class Utilities {
 
       master.logger.lifecycle("mong: Begin configuration:")
 
-      master.tasks.withType(CppCompile::class.java) {
-        if (name.contains("debug", true)) {
-          macros["SWL_DEBUG"] = "1"
-        } else {
+      binaries.configureEach(CppBinary::class.java) {
 
-        }
-      }
-
-      binaries.whenElementFinalized(CppBinary::class.java) {
+        master.logger.lifecycle("$name:")
 
         val args          = mutableListOf<String>()
         val targetMachine = targetMachine.operatingSystemFamily.name
@@ -47,10 +42,20 @@ class Utilities {
         when (toolChain) {
           is Clang -> {
             master.logger.lifecycle("  Applying c++17 language standard.")
-
             args.add("-std=c++17")
+          }
 
-            this.compileTask.get().compilerArgs.set(args)
+          is VisualCpp -> {
+            master.logger.lifecycle("  Applying c++17 language standard.")
+            args.add("/std:c++17")
+          }
+        }
+
+        compileTask.get().apply {
+          compilerArgs.set(args)
+
+          if (name.contains("debug", true)) {
+            macros["SWL_DEBUG"] = "1"
           }
         }
       }
