@@ -1,4 +1,4 @@
-import net.rantingmong.snowowl.Utilities.*
+import net.rantingmong.snowowl.configureCppProject
 
 plugins {
   `cpp-library`
@@ -7,9 +7,15 @@ plugins {
 group = "engine"
 
 library {
-  Utilities.asCppProject(project, this)
+  configureCppProject(project)
+
+  linkage.set(listOf(Linkage.STATIC))
 
   dependencies {
     implementation(project(":swl-cx"))
   }
+}
+
+unitTest {
+  configureCppProject(project)
 }

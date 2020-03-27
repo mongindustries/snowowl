@@ -1,13 +1,18 @@
-import net.rantingmong.snowowl.Utilities.*
+import net.rantingmong.snowowl.configureCppProject
 
 plugins {
   `cpp-application`
 }
 
 application {
-  Utilities.asCppProject(project, this)
+  configureCppProject(project)
 
   dependencies {
     implementation(project(":swl-cx"))
+    implementation(project(":swl-gx"))
   }
+}
+
+unitTest {
+  configureCppProject(project)
 }

@@ -23,15 +23,3 @@ string getLastComponent(std::string &check) {
 
 	return result;
 }
-
-Path::Path(std::string &absolutePath):
-	absolutePath(absolutePath),
-	lastComponent(getLastComponent(absolutePath)) {
-
-}
-
-Path::Path(std::string absolutePath):
-		absolutePath(absolutePath),
-		lastComponent(getLastComponent(absolutePath)) {
-
-}

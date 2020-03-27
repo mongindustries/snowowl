@@ -14,9 +14,7 @@ std::string snow_owl::Greeter::greeting() {
 int main () {
 
 #if defined(SWL_DEBUG)
-
 	std::cout << "SnowOwl: Debug build" << std::endl;
-
 #endif
 
 	snow_owl::Greeter greeter;
