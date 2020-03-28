@@ -8,7 +8,7 @@
 SNOW_OWL_NAMESPACE(cx)
 
 /**
- * A two coordinate location in space, z is always assumed zero.
+ * A two coordinate location in space.
  */
 struct Point2D {
 	float x, y;

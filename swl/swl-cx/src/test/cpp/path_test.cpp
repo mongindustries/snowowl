@@ -2,17 +2,56 @@
 // Created by Michael Ong on 26/3/20.
 //
 
-#include "path.hpp"
+#include <gtest/gtest.h>
 
-#include <cassert>
+#include "path.hpp"
 
 using namespace std;
 using namespace swl::cx;
 
-void path_test() {
+TEST(PathTest, ShouldConstruct) {
 
-	Path samplePath("simple/path/here.txt");
+	Path samplePath("absolute/path");
 
-	assert(samplePath.lastComponent == "/here.txt");
-	assert(samplePath.extension 		== ".txt");
+	ASSERT_EQ   (samplePath.absolutePath, "absolute/path");
+	ASSERT_EQ   (samplePath.lastComponent, "path");
+	ASSERT_EQ   (samplePath.type, PathType::file);
+}
+
+TEST(PathTest, ShouldAppend) {
+
+	Path samplePath("root");
+
+	ASSERT_EQ(samplePath.absolutePath, "root");
+
+	samplePath.append_path("subroot");
+
+	ASSERT_EQ(samplePath.absolutePath, "root/subroot");
+}
+
+TEST(PathTest, ShouldAppendPaths) {
+
+	Path samplePath("root");
+
+	ASSERT_EQ(samplePath.absolutePath, "root");
+
+	samplePath.append_path(Path("another/subpath"));
+
+	ASSERT_EQ(samplePath.absolutePath, "root/another/subpath");
+}
+
+TEST(PathTest, ShouldAcceptCustomSeparatorStyle) {
+
+	Path path(":deps:googletest", ':');
+
+	ASSERT_EQ(path.absolutePath, ":deps/googletest");
+	ASSERT_EQ(path.lastComponent, "googletest");
+}
+
+TEST(PathTest, ShouldBeOfTypeURL) {
+
+	Path path("http://www.google.com");
+
+	ASSERT_EQ(path.absolutePath, "https://www.google.com");
+	ASSERT_EQ(path.type, PathType::url);
 }

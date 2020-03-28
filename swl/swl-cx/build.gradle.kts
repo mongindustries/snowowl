@@ -14,4 +14,8 @@ library {
 
 unitTest {
   configureCppProject(project)
+
+  dependencies {
+    implementation(project(":deps:googletest"))
+  }
 }

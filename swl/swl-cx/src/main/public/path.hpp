@@ -56,12 +56,6 @@ struct Path {
 	/// Gets path's individual components.
 	std::vector<std::string> components() const;
 
-	/// Checks if the path is a directory.
-	bool is_directory() const;
-
-	/// Checks if the path is a file.
-	bool is_file() const;
-
 	/// Gets the platform-native path of this <code>Path</code>.
 	std::string platformPath() const;
 
@@ -79,18 +73,18 @@ struct Path {
 	/**
 	 * Creates a <code>Path</code> object. This constructor guesses the path type.
 	 * @param [in] absolutePath The absolute path to define this <code>Path</code>.
-	 * @param [in] separator The separator style of the path. Defaults to "/".
+	 * @param [in] separator The separator style of the path. Defaults to \"/\".
 	 */
-	Path(std::string &absolutePath, char separator = '/');
+	Path(const std::string &absolutePath, char separator = '/');
 
 	/**
 	 * Creates an appended <code>Path</code> from a source path. This constructor guesses the path type.
 	 * @param source The source path that will be the prefix path.
 	 * @param append The path to be appended.
-	 * @param separator The separator style of the path. Defaults to "/".
+	 * @param separator The separator style of the path. Defaults to \"/\".
 	 *
 	 */
-	Path(Path &source, std::string append, char separator = '/');
+	Path(const Path &source, const std::string& append, char separator = '/');
 
 private:
 

@@ -4,9 +4,7 @@ import org.gradle.api.Project
 import org.gradle.language.cpp.CppComponent
 import org.gradle.language.cpp.CppSharedLibrary
 import org.gradle.language.cpp.CppStaticLibrary
-import org.gradle.language.cpp.ProductionCppComponent
 import org.gradle.nativeplatform.OperatingSystemFamily
-import org.gradle.nativeplatform.test.TestComponent
 import org.gradle.nativeplatform.toolchain.Clang
 import org.gradle.nativeplatform.toolchain.VisualCpp
 
