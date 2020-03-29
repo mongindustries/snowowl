@@ -4,20 +4,36 @@
 #pragma once
 
 #include <string>
+
+#include <map>
 #include <vector>
 
 #include "headerconv.hpp"
 
 SNOW_OWL_NAMESPACE(cx)
 
-/**
- * Enum for a <code>Path</code>'s type.
+struct PathError: public std::exception {
+
+	PathError(const std::string &why): exception(why.c_str()) {
+	}
+};
+
+/***
+ * The components of a <code>Path</code> object.
  */
-enum class PathType {
-	/// Denotes that the path is a uniform resource locator.
-	url,
-	/// Denotes that the path is a location in the file system.
-	file,
+struct PathComponents {
+	/// The protocol used. Can be blank. (eg: http: of http://google.com)
+	std::string protocol;
+	/// The full locator path. (eg: /usr/bin/gradle of /usr/bin/gradle)
+	std::string fullPath;
+
+	/// Individualized components of <code>fullPath</code>. (eg: [ "/usr", "/bin", "/gradle" ] of /usr/bin/gradle ])
+	std::vector<std::string> pathItems;
+
+	/// Full query path. (eg: ?authuser=1 of https://google.com?authuser=1)
+	std::string fullQuery;
+	/// Individualized components of <code>fullQuery</code>. (eg: { "authuser" : [ "1" ] } of https://google.com?authuser=1)
+	std::map<std::string, std::vector<std::string>> query;
 };
 
 /**
@@ -44,29 +60,33 @@ struct Path {
 
 	/// The absolute location of the path (as it was created in the initializer).
 	std::string absolutePath;
-	/// The path extension, if defined.
-	std::string extension;
-	/// The path's last component.
-	std::string lastComponent;
-	/// The path type.
-	PathType type;
 
 	// properties
 
 	/// Gets path's individual components.
-	std::vector<std::string> components() const;
+	[[nodiscard]] PathComponents components() const;
 
-	/// Gets the platform-native path of this <code>Path</code>.
-	std::string platformPath() const;
+	/// Gets the platform-native path.
+	[[nodiscard]] std::string platformPath() const;
+
+	/// Gets the last component.
+	[[nodiscard]] std::string lastComponent() const;
+
+	/// Normalizes the absolute path.
+	/// @example
+	/// @code
+	/// Path something(":deps:googletest");
+	/// Path normalized = something.normalized(); // returns "/deps/googletest"
+	[[nodiscard]] Path normalized() const;
 
 	// modifiers
 
-	void append_path(const Path &toAppend);
+	void appendPath(const Path &toAppend);
 
-	void append_path(const std::string &toAppend, char separator = '/');
+	void appendPath(const std::string &toAppend);
 
 
-	void append_extension(const std::string &extension);
+	void appendExtension(const std::string &extension);
 
 	// initializers
 
@@ -75,22 +95,17 @@ struct Path {
 	 * @param [in] absolutePath The absolute path to define this <code>Path</code>.
 	 * @param [in] separator The separator style of the path. Defaults to \"/\".
 	 */
-	Path(const std::string &absolutePath, char separator = '/');
-
-	/**
-	 * Creates an appended <code>Path</code> from a source path. This constructor guesses the path type.
-	 * @param source The source path that will be the prefix path.
-	 * @param append The path to be appended.
-	 * @param separator The separator style of the path. Defaults to \"/\".
-	 *
-	 */
-	Path(const Path &source, const std::string& append, char separator = '/');
+	Path(std::string absolutePath, char separator = '/');
 
 private:
+
+	char separator;
 
 	// platform-specific
 
 	static char SeparatorStyle;
+
+	static std::string GetPlatformPath(const Path *path);
 };
 
 SNOW_OWL_NAMESPACE_END

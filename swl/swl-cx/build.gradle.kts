@@ -8,8 +8,6 @@ group = "engine"
 
 library {
   configureCppProject(project)
-
-  linkage.set(listOf(Linkage.STATIC))
 }
 
 unitTest {

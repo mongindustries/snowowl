@@ -6,3 +6,6 @@
 build
 local.properties
 *.xcodeproj
+*.sln
+*.vcxproj
+*.vcxproj.filters
