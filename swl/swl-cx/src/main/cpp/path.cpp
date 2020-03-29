@@ -96,6 +96,7 @@ vector<string>
 
 string
 	Path::platformPath() const {
+		return "";
 	}
 
 
@@ -110,7 +111,13 @@ void
 	}
 
 void
-	Path::append_path(const std::string &toAppend) {
+	Path::append_path(const std::string &toAppend, char separator) {
+
+		const auto toAdd = componetizePath(toAppend, separator);
+		const auto pFrom = componetizePath(absolutePath, '/');
+
+		absolutePath  = normalizePath(appendPath(toAdd, pFrom));
+		lastComponent = toAdd.back();
 	}
 
 

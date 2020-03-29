@@ -63,7 +63,7 @@ struct Path {
 
 	void append_path(const Path &toAppend);
 
-	void append_path(const std::string &toAppend);
+	void append_path(const std::string &toAppend, char separator = '/');
 
 
 	void append_extension(const std::string &extension);

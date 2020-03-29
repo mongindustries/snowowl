@@ -43,7 +43,8 @@ fun CppComponent.configureCppProject(master: Project) = run {
 
       is VisualCpp -> {
         logger.lifecycle("  Applying c++17 language standard.")
-        compileArgs.add("/std:c++17")
+        compileArgs.add("/std:c++latest")
+        compileArgs.add("/EHsc")
       }
     }
 
