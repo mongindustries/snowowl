@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/deps/googletest" />
             <option value="$PROJECT_DIR$/swl-cx" />
             <option value="$PROJECT_DIR$/swl-gx" />
+            <option value="$PROJECT_DIR$/swl-ui" />
           </set>
         </option>
       </GradleProjectSettings>

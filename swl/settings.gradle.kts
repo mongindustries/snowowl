@@ -4,5 +4,6 @@ include(
   ":app",
   ":swl-cx",
   ":swl-gx",
+  ":swl-ui",
   ":deps:googletest"
 )
