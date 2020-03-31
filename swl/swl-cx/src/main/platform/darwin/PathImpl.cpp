@@ -8,3 +8,7 @@ using namespace std;
 using namespace swl::cx;
 
 char Path::SeparatorStyle = '/';
+
+string Path::GetPlatformPath(const Path *path) {
+	return "";
+}

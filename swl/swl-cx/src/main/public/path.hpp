@@ -14,8 +14,14 @@ SNOW_OWL_NAMESPACE(cx)
 
 struct PathError: public std::exception {
 
-	PathError(const std::string &why): exception(why.c_str()) {
+	explicit PathError(const std::string &why): std::exception(), reason(why) {
 	}
+
+	const char* what() const noexcept override;
+
+private:
+
+	std::string reason;
 };
 
 /***
@@ -72,12 +78,23 @@ struct Path {
 	/// Gets the last component.
 	[[nodiscard]] std::string lastComponent() const;
 
-	/// Normalizes the absolute path.
-	/// @example
-	/// @code
-	/// Path something(":deps:googletest");
-	/// Path normalized = something.normalized(); // returns "/deps/googletest"
+	/**
+	 * Normalizes the absolute path.
+	 * @return The normalized path.
+	 *
+	 * @example
+	 * @code
+	 * Path something(":deps:googletest");
+	 * Path normalized = something.normalized(); // returns "/deps/googletest"
+	 */
 	[[nodiscard]] Path normalized() const;
+
+	/**
+	 * Denormalizes the absolute path: converts '/' separators into <code>separator</code>.
+	 * @param separator The separator to replace '/'.
+	 * @return The denormalized path.
+	 */
+	[[nodiscard]] Path denormalized(char separator);
 
 	// modifiers
 

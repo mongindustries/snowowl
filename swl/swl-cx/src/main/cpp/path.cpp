@@ -13,6 +13,11 @@ using namespace std;
 using namespace swl::cx;
 using namespace swl::cx_private;
 
+const char*
+	PathError::what() const noexcept {
+		return reason.c_str();
+	}
+
 Path::Path
 	(string absolutePath, char separator): absolutePath(std::move(absolutePath)), separator(separator) {
 
@@ -70,11 +75,6 @@ Path
 
 void
 	Path::appendPath(const Path &toAppend) {
-		if (toAppend.separator != separator) {
-			// normalize paths first before appending
-		} else {
-
-		}
 	}
 
 void
