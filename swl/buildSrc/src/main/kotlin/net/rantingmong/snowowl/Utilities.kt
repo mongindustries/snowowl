@@ -47,6 +47,7 @@ fun CppComponent.configureCppProject(master: Project) = run {
 
       privateHeaders {
         from.add("src/main/platform/$platform")
+        from.add("src/main/headers")
       }
 
       source {
