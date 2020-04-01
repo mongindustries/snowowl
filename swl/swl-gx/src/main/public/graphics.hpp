@@ -12,4 +12,6 @@ struct Graphics {
 	static std::string version;
 };
 
+typedef unsigned int DriverHandle;
+
 SNOW_OWL_NAMESPACE_END

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <headerconv.hpp>
 #include <hidden_implem.hpp>
@@ -11,6 +12,7 @@
 
 #include "device_backend.hpp"
 #include "surface.hpp"
+#include "screen.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
@@ -22,12 +24,9 @@ struct Device {
 
 	// device properties
 
-	/**
-	 * Returns the main display's screen size.
-	 * @param pointScaled Set to true to return the device independent size, false for the raw size.
-	 * @return A <code>Size2D</code> that contains the screen size.
-	 */
-	cx::Size2D displaySize(bool pointScaled) const;
+	Screen mainScreen() const;
+
+	std::vector<Screen> screens() const;
 
 	// ops for creating device-bound / cpu-bound resource
 

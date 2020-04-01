@@ -10,6 +10,7 @@
 #include <point.hpp>
 #include <rect.hpp>
 #include <hidden_implem.hpp>
+#include <screen.hpp>
 
 #include "event.hpp"
 
@@ -29,6 +30,9 @@ struct Window {
 
 	// window properties
 
+	gx::Screen getScreen() const;
+
+
 	void setName(const std::string &name);
 
 	void setFrame(const cx::Rect &frame);
@@ -40,6 +44,8 @@ struct Window {
 	void addEventActiveState(Event<void, const Window&, State> event);
 
 	void addEventClose(Event<void, const Window&> event);
+
+	void addEventScreenMoved(Event<void, const Window&, gx::Screen> event);
 
 private:
 

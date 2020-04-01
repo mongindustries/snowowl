@@ -29,7 +29,10 @@ protected:
 	std::size_t contentSize;
 };
 
-struct MutableData: Data {
+struct MutableData: public Data {
+
+	MutableData(const DataPointer contents, std::size_t size): Data(contents, size) {
+	}
 
 	void set(DataPointer newContents);
 

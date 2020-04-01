@@ -5,7 +5,6 @@
 #include "device.hpp"
 
 #include "swl_vulkan.hpp"
-#include "swl_vulkan_mac.hpp"
 
 using namespace swl::gx;
 using namespace swl::gx_private;

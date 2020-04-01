@@ -22,3 +22,11 @@ void Surface::surfaceDestroy(const Window &window) {
 
 void Surface::surfaceUpdated(const Window &window, Rect rect) {
 }
+
+Data Surface::contents() const noexcept {
+	return Data(nullptr, 0);
+}
+
+MutableData Surface::mutableContents() const {
+	return MutableData(nullptr, 0);
+}

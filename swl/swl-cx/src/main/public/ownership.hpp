@@ -41,14 +41,14 @@ struct Own {
 	Own(Params... params): value(new Type(params...)) { }
 
 	template<typename = std::enable_if<std::is_move_constructible_v<Type>>>
-	Own(const Type &&move): value(new Type(std::move(move))) { }
+	Own(Type &&move): value(new Type(std::move(move))) { }
 
 	template<typename = std::enable_if<std::is_copy_constructible_v<Type>>>
 	Own(const Type &copy): value(new (Type)(copy)) { }
 
 
 
-	Own(const Own &&cpy) = delete; // own cannot be copied, selfish siya eh
+	Own(const Own &cpy) = delete; // own cannot be copied, selfish siya eh
 
 	Own(Own &&mov) = default; // but it can be moved
 

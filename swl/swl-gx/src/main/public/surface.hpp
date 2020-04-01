@@ -8,6 +8,8 @@
 #include <data.hpp>
 #include <window.hpp>
 
+#include "graphics.hpp"
+
 SNOW_OWL_NAMESPACE(gx)
 
 struct Surface {
@@ -15,14 +17,18 @@ struct Surface {
 	Surface(ui::Window &window);
 
 
-	cx::Data contents() const noexcept;
+	[[nodiscard]] cx::Data contents() const noexcept;
 
-	cx::MutableData mutableContents() const;
+	[[nodiscard]] cx::MutableData mutableContents() const;
 
 
 	void surfaceUpdated(const ui::Window &window, cx::Rect rect);
 
 	void surfaceDestroy(const ui::Window &window);
+
+private:
+
+	DriverHandle handle;
 };
 
 SNOW_OWL_NAMESPACE_END
