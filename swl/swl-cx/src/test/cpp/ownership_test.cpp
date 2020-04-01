@@ -45,7 +45,7 @@ void intentionToModify(MutateOwn<somethingStruct> mutate) {
 
 void intentionToRead(Lend<somethingStruct> lend) {
 
-	lend.refer->boop;
+	const auto something = lend.refer->boop;
 }
 
 void something() {

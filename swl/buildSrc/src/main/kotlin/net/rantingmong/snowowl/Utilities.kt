@@ -15,14 +15,15 @@ fun CppComponent.configureCppProject(master: Project) = run {
 
   val logger = master.logger
 
-  logger.lifecycle("[mong] Begin configuration:")
+  logger.lifecycle("[mong|$name] Begin configuration:")
 
   if (this is CppLibrary) {
-    linkage.set(listOf(Linkage.STATIC))
+    linkage.set(listOf(Linkage.SHARED))
   }
 
+  val componentName = name
   binaries.whenElementFinalized {
-    logger.lifecycle("$name:")
+    logger.lifecycle("$componentName|$name:")
 
     val compileArgs = mutableListOf<String>()
     val targetMachine = targetMachine.operatingSystemFamily.name
@@ -83,6 +84,6 @@ fun CppComponent.configureCppProject(master: Project) = run {
       }
     }
 
-    compileTask.get().compilerArgs.set(compileArgs)
+    compileTask.get().compilerArgs.addAll(compileArgs)
   }
 }

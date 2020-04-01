@@ -14,11 +14,19 @@ struct Himplem {
 
 	Himplem(Wrapped* introduce): __implem(introduce) { }
 
-	~Himplem() { delete __implem; }
+	~Himplem() {
+		if (__implem != nullptr) {
+		delete __implem;
+		}
+	}
 
 
 	Wrapped& operator()() const {
 		return *__implem;
+	}
+
+	void invalidate() {
+		__implem = nullptr;
 	}
 
 private:

@@ -9,6 +9,7 @@
 #include <headerconv.hpp>
 #include <hidden_implem.hpp>
 #include <window.hpp>
+#include <ownership.hpp>
 
 #include "device_backend.hpp"
 #include "surface.hpp"
@@ -18,9 +19,11 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct Device {
 
-	explicit Device(DeviceBackend backend);
+	explicit Device(cx::Own<DeviceBackend> backend);
 
-	[[nodiscard]] std::string name() const;
+	[[nodiscard]] std::string name() const {
+		return backend->name();
+	}
 
 	// device properties
 
@@ -43,7 +46,7 @@ struct Device {
 
 private:
 
-	DeviceBackend backend;
+	cx::Own<DeviceBackend> backend;
 };
 
 SNOW_OWL_NAMESPACE_END
