@@ -1,4 +1,5 @@
 import net.rantingmong.snowowl.configureCppProject
+import java.nio.file.Paths
 
 plugins {
   `cpp-library`
@@ -15,19 +16,28 @@ if (localPropFile.exists()) {
 
 val vulkanSDK = prop.getProperty("vulkan.sdk")
 
+inline fun <reified Library : CppComponent>targetVulkan(component: Library, sdkPath: String) {
+
+  val includePath = Paths.get(sdkPath, "include")
+  val libPath = Paths.get(sdkPath, "lib")
+
+  component.privateHeaders {
+    logger.lifecycle("Including $includePath to include paths...")
+    from.add(includePath)
+  }
+
+  component.binaries.configureEach(CppTestExecutable::class.java) {
+    linkTask.get().linkerArgs.add("-L$libPath")
+  }
+}
+
 library {
 
   targetMachines.set(listOf(machines.macOS.x86_64, machines.windows.x86_64))
 
   if (vulkanSDK != null) {
     logger.lifecycle("Vulkan SDK found: $vulkanSDK")
-    privateHeaders {
-      val vulkanIncl = java.nio.file.Paths.get(vulkanSDK, "include")
-
-      logger.lifecycle("Including $vulkanIncl to include paths...")
-
-      from.add(vulkanIncl)
-    }
+    targetVulkan(this, vulkanSDK)
   }
 
   configureCppProject(project)
@@ -41,9 +51,8 @@ library {
 unitTest {
 
   if (vulkanSDK != null) {
-    privateHeaders {
-      from.add(java.nio.file.Paths.get(vulkanSDK, "include"))
-    }
+    logger.lifecycle("Vulkan SDK found: $vulkanSDK")
+    targetVulkan(this, vulkanSDK)
   }
 
   configureCppProject(project)

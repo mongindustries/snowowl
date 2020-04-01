@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <string>
 #include <headerconv.hpp>
 #include <hidden_implem.hpp>
 
@@ -10,17 +11,12 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct DeviceBackend {
 
-	struct Context;
+	DeviceBackend() = default;
+
+	virtual ~DeviceBackend() = default;
 
 
-	DeviceBackend(const DeviceBackend &cpy) = delete;
-
-	DeviceBackend(DeviceBackend &&mov) = default;
-
-
-private:
-
-	cx::Himplem<Context> context;
+	virtual std::string name() const = 0;
 };
 
 SNOW_OWL_NAMESPACE_END
