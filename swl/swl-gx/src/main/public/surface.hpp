@@ -12,14 +12,9 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct Surface {
+struct SWL_EXPORT Surface {
 
-	Surface(ui::Window &window);
-
-
-	[[nodiscard]] cx::Data contents() const noexcept;
-
-	[[nodiscard]] cx::MutableData mutableContents() const;
+	explicit Surface(ui::Window &window);
 
 
 	void surfaceUpdated(const ui::Window &window, cx::Rect rect);

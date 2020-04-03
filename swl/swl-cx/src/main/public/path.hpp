@@ -12,7 +12,7 @@
 
 SNOW_OWL_NAMESPACE(cx)
 
-struct PathError: public std::exception {
+struct SWL_EXPORT PathError: public std::exception {
 
 	explicit PathError(const std::string &why): std::exception(), reason(why) {
 	}
@@ -27,7 +27,7 @@ private:
 /***
  * The components of a <code>Path</code> object.
  */
-struct PathComponents {
+struct SWL_EXPORT PathComponents {
 	/// The protocol used. Can be blank. (eg: http: of http://google.com)
 	std::string protocol;
 	/// The full locator path. (eg: /usr/bin/gradle of /usr/bin/gradle)
@@ -60,7 +60,7 @@ struct PathComponents {
  * @endcode
  *
  */
-struct Path {
+struct SWL_EXPORT Path {
 
 	// attributes
 

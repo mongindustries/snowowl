@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="snow_owl" targetName="gx" />
+      <config projectName="snow_owl" targetName="ui" />
+      <config projectName="snow_owl" targetName="cx" />
+    </generated>
+  </component>
+  <component name="CMakeSettings" AUTO_RELOAD="true">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-GNinja" GENERATION_DIR="../build" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4e9f6557-01f3-4fd3-b1aa-81b26dc3509f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/swl.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CMakeSettings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/test/cpp/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinScripting.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildSrc/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildSrc/settings.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildSrc/src/main/kotlin/net/rantingmong/snowowl/Utilities.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/path_ops.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/data.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/headerconv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/headerconv.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/path.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/path.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/point.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/point.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/point_operators.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/point_operators.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/rect.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/rect.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/device.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/context.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/device_backend_vulkan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/context_backend_vulkan.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/surface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/surface.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/swl_vulkan.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/headers/swl_vulkan.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/swl_vulkan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/swl_vulkan.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan_win32.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan_win32.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/device.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/context.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/device_backend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/context_backend.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/device_backend_vulkan.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/context_backend_vulkan.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/screen.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/screen.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/surface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/surface.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/test/cpp/device_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/test/cpp/context_test.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/ui.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/ui.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="21hbx65x" />
+  </component>
+  <component name="ProjectId" id="1a2fiq5WoYuFka90x6wILDHL2Sn" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="false" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../build" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
+  </component>
+  <component name="RunManager" selected="CMake Application.ui">
+    <configuration name="cx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.cx" />
+      <item itemvalue="CMake Application.gx" />
+      <item itemvalue="CMake Application.ui" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4e9f6557-01f3-4fd3-b1aa-81b26dc3509f" name="Default Changelist" comment="" />
+      <created>1585938738912</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585938738912</updated>
+      <workItem from="1585938744785" duration="254000" />
+      <workItem from="1585939010256" duration="582000" />
+      <workItem from="1585940944963" duration="464000" />
+      <workItem from="1585941421802" duration="71000" />
+      <workItem from="1585941705935" duration="422000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="552" y="161" key="#Plugins" timestamp="1585941411737">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="161" key="#Plugins/0.0.1920.1040@0.0.1920.1040" timestamp="1585941411737" />
+    <state x="752" y="378" key="#Scopes" timestamp="1585941187845">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="752" y="378" key="#Scopes/0.0.1920.1040@0.0.1920.1040" timestamp="1585941187845" />
+    <state x="834" y="270" width="866" height="669" key="EnvironmentVariablesDialog" timestamp="1585939050147">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="834" y="270" width="866" height="669" key="EnvironmentVariablesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585939050147" />
+    <state x="746" y="275" key="FileChooserDialogImpl" timestamp="1585939490146">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="746" y="275" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1585939490146" />
+    <state x="540" y="263" key="IDE.errors.dialog" timestamp="1585941393293">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="263" key="IDE.errors.dialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585941393293" />
+    <state x="155" y="143" width="1374" height="749" key="SettingsEditor" timestamp="1585941362914">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="155" y="143" width="1374" height="749" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1585941362914" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1585941398987">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585941398987" />
+  </component>
+</project>

@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 
-SNOW_OWL_NAMESPACE(gx_private)
+SNOW_OWL_NAMESPACE(gx::internal)
 
-struct VulkanPlatform {
+struct SWL_EXPORT VulkanPlatform {
 
 	static std::vector<const char*> extensions_c_const();
 

@@ -10,13 +10,13 @@ SNOW_OWL_NAMESPACE(cx)
 
 // 2d point operations
 
-Point2D
+SWL_EXPORT Point2D
 	operator!    (const Point2D &pos);
 
-Point2D
+SWL_EXPORT Point2D
 	operator+    (const Point2D &lhs, const Point2D &rhs);
 
-bool
+SWL_EXPORT bool
 	operator==   (const Point2D &lhs, const Point2D &rhs);
 
 bool
@@ -37,10 +37,10 @@ inline Point3D
 
 // 3d point operations
 
-Point3D
+SWL_EXPORT Point3D
 	operator+    (const Point3D &lhs, const Point3D &rhs);
 
-bool
+SWL_EXPORT bool
 	operator==   (const Point3D &lhs, const Point3D &rhs);
 
 bool

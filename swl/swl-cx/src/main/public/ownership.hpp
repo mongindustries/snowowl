@@ -6,18 +6,12 @@
 #include "headerconv.hpp"
 
 #include <utility>
+#include <type_traits>
 #include <functional>
 
 SNOW_OWL_NAMESPACE(cx)
 
 struct BadOwnership: std::exception { };
-
-template<typename Type>
-struct Own;
-
-/// Definite ownership mutating consumer.
-template<typename Type>
-using MutateOwn = Own<Type>&;
 
 /// Definite upon-instantiation borrowed ownership.
 template<typename Type>
@@ -29,35 +23,27 @@ using Lend = Type const&;
  * This is similar to <code>std's</code> <code>unique_ptr</code> construct wherein
  * <code>Own</code>'s ownership can only be moved.
  *
- * But it is different from <code>unique_ptr</code> as it can be <code>Lend</code>ed
- * at any time.
+ * But it is different from <code>unique_ptr</code> as it can be borrowd through
+ * <code>Lend</code> at any time.
  *
  * @tparam Type The type that <code>Own</code> holds.
  */
-template<typename Type>
+template<typename Type, typename std::enable_if_t< std::is_class_v<Type>, int> = 0>
 struct Own {
-
-	template<typename... Params>
-	Own(Params... params): value(new Type(params...)) { }
-
-	template<typename = std::enable_if<std::is_move_constructible_v<Type>>>
-	Own(Type &&move): value(new Type(std::move(move))) { }
-
-	template<typename = std::enable_if<std::is_copy_constructible_v<Type>>>
-	Own(const Type &copy): value(new (Type)(copy)) { }
-
-
-	template<typename Derive, typename = std::enable_if<std::is_base_of_v<Type, Derive> && std::is_move_constructible_v<Type>>>
-	Own(Derive &&move): value(new Derive(std::move(move))) { }
-
-	template<typename Derive, typename = std::enable_if<std::is_base_of_v<Type, Derive> && std::is_copy_constructible_v<Type>>>
-	Own(const Derive &copy): value(new (Derive)(copy)) { }
-
-
 
 	Own(const Own &cpy) = delete; // own cannot be copied, selfish siya eh
 
-	Own(Own &&mov) = default; // but it can be moved
+	Own(Own &&mov) noexcept = default;
+
+
+	explicit Own(Type* fast): value(fast) { } // fast init, does not destruct Type.
+
+	template< typename Param1, typename... ParamRemain >
+	Own(Param1 param1, ParamRemain... parameters): value(new Type(param1, parameters...)) { }
+
+	template<typename Derive, std::enable_if_t< std::is_base_of_v< Type, Derive >, int > = 0>
+	Own(Derive &&move): value(new Derive(move)) { } // slow but terse init, destructs Type upon move.
+
 
 	~Own() {
 		if (value != nullptr) {
@@ -65,10 +51,16 @@ struct Own {
 		}
 	}
 
-	bool isValid() const {
+
+	[[nodiscard]] bool isValid() const {
 		return value != nullptr;
 	}
 
+	void mutate(std::function<void(Type* const)> mutate) {
+		mutate(value);
+	}
+
+	// access
 
 	Type const* operator->() const {
 
@@ -79,7 +71,7 @@ struct Own {
 		return value;
 	}
 
-	Lend<Type> operator* () const {
+	Lend<Type>  operator* () const {
 
 		if (!isValid()) {
 			throw BadOwnership();
@@ -88,22 +80,26 @@ struct Own {
 		return *value;
 	}
 
+	// assignments
 
-	void mutate(std::function<void(Type* const)> mutate) {
-		mutate(value);
-	}
+	Own&  operator= (const Own &copy) = delete;
 
-	Own<Type> operator= (Own<Type> &copy) = delete;
-
-	void operator= (std::function<void(Type* const)> rhs) {
-		mutate(rhs);
-	}
+	Own&  operator= (Own &&move) = default;
 
 
 private:
 
 	Type *value;
 };
+
+/// Definite ownership mutating consumer.
+template<typename Type>
+using MutateOwn = Own<Type>&;
+
+template<typename Impl, typename... Params>
+Own<Impl> make_own(Params... params) {
+	return Own(new Impl(params...));
+}
 
 /// Late binding borrowed ownership. Use <code>bind()</code> to indicate lending.
 template<typename Type>
@@ -112,19 +108,19 @@ struct LateLend {
 	LateLend(): refer(nullptr) {
 	}
 
-	LateLend(std::nullptr_t null): refer(nullptr) {
+	explicit LateLend(std::nullptr_t null): refer(nullptr) {
 	}
 
-	LateLend(Own<Type> &early): refer(&early) {
+	explicit LateLend(Own<Type> &early): refer(&early) {
 	}
 
-	LateLend(Lend<Type> lend): refer(&lend) {
+	explicit LateLend(Lend<Type> lend): refer(&lend) {
 	}
 
 
 	LateLend(LateLend &cpy) = default;
 
-	LateLend(LateLend &&mov) = default;
+	LateLend(LateLend &&mov) noexcept = default;
 
 
 	void bind(Own<Type> &own) {

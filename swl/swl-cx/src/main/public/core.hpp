@@ -4,9 +4,10 @@
 #pragma once
 
 #include <string>
+#include "headerconv.hpp"
 
-namespace swl::cx {
-struct Core {
+SNOW_OWL_NAMESPACE(cx)
+struct SWL_EXPORT Core {
 	static std::string version;
 };
-}
+SNOW_OWL_NAMESPACE_END

@@ -8,7 +8,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct Graphics {
+struct SWL_EXPORT Graphics {
 	static std::string version;
 };
 

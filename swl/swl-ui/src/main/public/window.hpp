@@ -7,16 +7,15 @@
 #include <string>
 
 #include <headerconv.hpp>
+#include <hidden_implem.hpp>
 #include <point.hpp>
 #include <rect.hpp>
-#include <hidden_implem.hpp>
-#include <screen.hpp>
 
 #include "event.hpp"
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct Window {
+struct SWL_EXPORT Window {
 
 	enum class State {
 		active,
@@ -24,14 +23,11 @@ struct Window {
 		background
 	};
 
-	Window(const std::string &window_name, const cx::Size2D &size);
+	Window();
 
 	Window(const std::string &window_name, const cx::Rect &frame);
 
 	// window properties
-
-	gx::Screen getScreen() const;
-
 
 	void setName(const std::string &name);
 
@@ -44,8 +40,6 @@ struct Window {
 	void addEventActiveState(Event<void, const Window&, State> event);
 
 	void addEventClose(Event<void, const Window&> event);
-
-	void addEventScreenMoved(Event<void, const Window&, gx::Screen> event);
 
 private:
 

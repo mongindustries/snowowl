@@ -1,21 +1,19 @@
 //
 // Created by Michael Ong on 31/3/20.
 //
-#include <window.hpp>
-
 #include "window.hpp"
+
+#include <type_traits>
 
 using namespace std;
 using namespace swl::cx;
 using namespace swl::ui;
 
-Window::Window(const std::string &window_name, const Size2D &size) {
-
-}
 
 Window::Window(const std::string &window_name, const Rect &size) {
-
 }
+
+Window::Window() = default;
 
 
 void Window::setName(const std::string &name) {

@@ -3,13 +3,16 @@
 //
 #pragma once
 
+#include <array>
 #include <headerconv.hpp>
 
 #include "graphics.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct Screen {
+struct SWL_EXPORT Context;
+
+struct SWL_EXPORT Screen {
 
 	DriverHandle handle;
 
@@ -18,15 +21,11 @@ struct Screen {
 
 	float scale;
 
-	short colorBitDepth[4];
+	std::array<short, 4> colorBitDepth;
 
 	bool canHdr;
 
-	friend class Device;
-
-private:
-
-	Device& device;
+	Screen() { }
 };
 
 SNOW_OWL_NAMESPACE_END

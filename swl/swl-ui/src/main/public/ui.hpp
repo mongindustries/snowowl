@@ -8,7 +8,7 @@
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct Ui {
+struct SWL_EXPORT Ui {
 	static std::string version;
 };
 

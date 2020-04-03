@@ -3,7 +3,7 @@
 //
 
 #include "swl_vulkan.hpp"
-#include "swl_vulkan_mac.hpp"
+#include "swl_vulkan_win32.hpp"
 
 using namespace std;
 using namespace swl::gx::internal;
@@ -11,7 +11,7 @@ using namespace swl::gx::internal;
 vector<const char *> VulkanPlatform::extensions_c_const() {
 	return {
 		VK_KHR_SURFACE_EXTENSION_NAME,
-		VK_MVK_MACOS_SURFACE_EXTENSION_NAME
+		VK_KHR_WIN32_SURFACE_EXTENSION_NAME
 	};
 }
 

@@ -5,78 +5,40 @@
 #include "ownership.hpp"
 #include <iostream>
 #include <vector>
+#include <gtest/gtest.h>
 
 using namespace std;
 using namespace swl::cx;
 
-struct anotherStruct {
+struct TestStruct {
 
-	int boop;
+	int value;
 
-	void foo() {
-
-	}
-};
-
-struct somethingStruct {
-
-	int baz;
-	std::string bleep;
-
-	Own<anotherStruct> refer;
-
-	void foo() {
-
+	explicit TestStruct(int value): value(value) {
+		cout << "Test Struct Allocated." << endl;
 	}
 
-	void bar() const {
-
-	}
-};
-
-void intentionToModify(MutateOwn<somethingStruct> mutate) {
-
-	mutate = [](somethingStruct* const item) {
-		item->refer = [](anotherStruct* const item) {
-			item->foo();
-		};
+	~TestStruct() {
+		value = 0;
+		cout << "Test Struct Deallocated." << endl;
 	};
-}
-
-void intentionToRead(Lend<somethingStruct> lend) {
-
-	const auto something = lend.refer->boop;
-}
-
-void something() {
-
-	Own<somethingStruct> owner;
-
-	intentionToModify(owner);
-	intentionToRead(*owner);
-}
-
-
-struct Node {
-	LateLend<Node> _parent;
-	std::vector<Own<Node>> _children;
 };
 
-void modify(Lend<Node> node) {
+TEST(Ownership, ShouldDestruct) {
 
+	auto pointer = make_own<TestStruct>(100);
+	ASSERT_EQ(pointer.isValid(), true);
 }
 
-void root() {
+TEST(Ownership, OutsideShouldNotBeValidUponGoingInside) {
 
-	auto root = Own<Node>({ nullptr, { } });
+	auto pointer = make_own<TestStruct>(100);
+	ASSERT_EQ(pointer.isValid(), true);
 
-	root = [&root](Node *const mut) {
+	{
+		auto moved = move(pointer);
+		ASSERT_EQ(moved.isValid(), true);
+	}
 
-		mut->_children.push_back({ { root, { } } });
-		mut->_children.push_back({ { root, { } } });
-		mut->_children.push_back({ { root, { } } });
-		mut->_children.push_back({ { root, { } } });
-
-		mut->_children.push_back({ { root, { } } });
-	};
+	ASSERT_EQ(pointer.isValid(), false);
 }

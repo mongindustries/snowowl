@@ -10,14 +10,14 @@ SNOW_OWL_NAMESPACE(cx)
 /**
  * A two coordinate location in space.
  */
-struct Point2D {
+struct SWL_EXPORT Point2D {
 	float x, y;
 };
 
 /**
  * A three coordinate location in space.
  */
-struct Point3D {
+struct SWL_EXPORT Point3D {
 	float x, y, z;
 };
 
