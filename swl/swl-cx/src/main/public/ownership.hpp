@@ -33,7 +33,9 @@ struct Own {
 
 	Own(const Own &cpy) = delete; // own cannot be copied, selfish siya eh
 
-	Own(Own &&mov) noexcept = default;
+	Own(Own &&mov) noexcept : value(mov.value) {
+		mov.value = nullptr;
+	}
 
 
 	explicit Own(Type* fast): value(fast) { } // fast init, does not destruct Type.
@@ -42,7 +44,7 @@ struct Own {
 	Own(Param1 param1, ParamRemain... parameters): value(new Type(param1, parameters...)) { }
 
 	template<typename Derive, std::enable_if_t< std::is_base_of_v< Type, Derive >, int > = 0>
-	Own(Derive &&move): value(new Derive(move)) { } // slow but terse init, destructs Type upon move.
+	Own(Derive &&move): value(new Derive(std::forward<Derive>(move))) { } // slow but terse init, destructs Type upon move.
 
 
 	~Own() {
@@ -62,7 +64,7 @@ struct Own {
 
 	// access
 
-	Type const* operator->() const {
+	Type *const operator->() const {
 
 		if (!isValid()) {
 			throw BadOwnership();
@@ -84,8 +86,18 @@ struct Own {
 
 	Own&  operator= (const Own &copy) = delete;
 
-	Own&  operator= (Own &&move) = default;
+	Own&  operator= (Own &&move) noexcept {
+		value = move.value;
+		move.value = nullptr;
 
+		return *this;
+	}
+
+	// comparison
+
+	bool operator==(const Type* rhs) const {
+		return *value == *rhs;
+	}
 
 private:
 

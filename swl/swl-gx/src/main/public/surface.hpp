@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <core.hpp>
 #include <headerconv.hpp>
 
 #include <data.hpp>
@@ -14,16 +15,13 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct SWL_EXPORT Surface {
 
-	explicit Surface(ui::Window &window);
+	Surface();
 
-
-	void surfaceUpdated(const ui::Window &window, cx::Rect rect);
-
-	void surfaceDestroy(const ui::Window &window);
+	cx::DriverHandle getHandle() const { return handle; }
 
 private:
 
-	DriverHandle handle;
+	cx::DriverHandle handle;
 };
 
 SNOW_OWL_NAMESPACE_END

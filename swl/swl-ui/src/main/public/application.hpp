@@ -20,6 +20,14 @@ struct SWL_EXPORT Application {
 
 	// methods
 
+	/**
+	 * Creates a new window. Window reference is held by this instance.
+	 * @param caption The caption for the window.
+	 * @param frame Initial frame for the window. For OS that requires a fullscreen window, this param is ignored.
+	 * @return A mutable reference <code>MutateOwn</code> that has the reference to the created window.
+	 */
+	cx::MutateOwn<ui::Window> createWindow(const std::string &caption, const cx::Rect &frame);
+
 	// hooks
 
 	virtual void applicationCreate() {
@@ -28,26 +36,28 @@ struct SWL_EXPORT Application {
 	virtual void applicationDestroy() {
 	}
 
+	template<typename App, std::enable_if_t< std::is_base_of_v<Application, App>, int > = 0>
+	static unsigned int runApplication(App app) {
+
+		App::PreHeat(app);
+		app.applicationCreate();
+		App::RunLoop(app);
+
+		return 0;
+	}
+
+	friend struct backend::WindowBackend;
+
 private:
 
 	void* nativeInstance;
 
-	cx::Own<Window> window;
-
 	std::vector<cx::Own<Window>> windowList;
+
+
+	static void PreHeat(Application &app);
 
 	static void RunLoop(Application &app);
 };
-
-
-template<typename App, std::enable_if_t< std::is_base_of_v<Application, App>, int > = 0>
-void runApplication(App app) {
-
-	app.applicationCreate();
-
-	App::RunLoop(app);
-
-	app.applicationDestroy();
-}
 
 SNOW_OWL_NAMESPACE_END

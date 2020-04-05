@@ -3,8 +3,10 @@
 //
 
 #include "ownership.hpp"
+
 #include <iostream>
 #include <vector>
+
 #include <gtest/gtest.h>
 
 using namespace std;

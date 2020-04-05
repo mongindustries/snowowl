@@ -4,6 +4,7 @@
 #pragma once
 
 #include <array>
+#include <core.hpp>
 #include <headerconv.hpp>
 
 #include "graphics.hpp"
@@ -14,7 +15,7 @@ struct SWL_EXPORT Context;
 
 struct SWL_EXPORT Screen {
 
-	DriverHandle handle;
+	cx::DriverHandle handle;
 
 	int width;
 	int height;
@@ -25,7 +26,7 @@ struct SWL_EXPORT Screen {
 
 	bool canHdr;
 
-	Screen() { }
+	Screen() = default;
 };
 
 SNOW_OWL_NAMESPACE_END

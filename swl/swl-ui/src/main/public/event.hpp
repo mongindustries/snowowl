@@ -15,84 +15,32 @@ SNOW_OWL_NAMESPACE(ui)
 template<typename Return, typename... Parameters>
 struct Event {
 
-	template<typename Scope, typename = std::enable_if<std::is_object_v<std::decay<Scope>>>>
-	using member_function = Return (Scope::*)(Parameters...);
-
 	Event() = default;
 
-	explicit Event(std::function<Return(Parameters...)> functor) {
+	explicit Event(std::function<Return(Parameters...)> functor): _fn(functor) {
 
 	}
 
 	template<typename Scope>
-	Event(Scope *target, member_function<Scope> functor) {
-
-	}
-};
-
-//
-
-template<typename Return, typename Param>
-struct Event<Return, Param> {
-
-	template<typename Scope, typename = std::enable_if<std::is_object_v<std::decay<Scope>>>>
-	using member_function = Return (Scope::*)(Param);
-
-	Event() = default;
-
-	explicit Event(std::function<Return(Param)> functor) {
-
+	Event(Scope *target, Return (Scope::*functor)(Parameters...)) {
+		_fn = [target, &functor](Parameters... params) -> Return {
+			if (target != nullptr) {
+				return (target->*functor)(params...);
+			}
+		};
 	}
 
-	template<typename Scope>
-	Event(Scope*, member_function<Scope> memberFunction) {
-
+	inline Return invoke(Parameters... params) const {
+		return _fn(params...);
 	}
 
-	Return invoke(Param param1) {
-	}
-};
-
-template<typename Return, typename Param1, typename Param2>
-struct Event<Return, Param1, Param2> {
-
-	template<typename Scope, typename = std::enable_if<std::is_object_v<std::decay<Scope>>>>
-	using member_function = Return (Scope::*)(Param1, Param2);
-
-	Event() = default;
-
-	explicit Event(std::function<Return(Param1, Param2)> functor) {
-
+	Return operator() (Parameters... params) const {
+		return invoke(params...);
 	}
 
-	template<typename Scope>
-	Event(Scope*, member_function<Scope> memberFunction) {
+private:
 
-	}
-
-	Return invoke(Param1 param1, Param2 param2) {
-	}
-};
-
-template<typename Return, typename Param1, typename Param2, typename Param3>
-struct Event<Return, Param1, Param2, Param3> {
-
-	template<typename Scope, typename = std::enable_if<std::is_object_v<std::decay<Scope>>>>
-	using member_function = Return (Scope::*)(Param1, Param2, Param3);
-
-	Event() = default;
-
-	explicit Event(std::function<Return(Param1, Param2)> functor) {
-
-	}
-
-	template<typename Scope>
-	Event(Scope*, member_function<Scope> memberFunction) {
-
-	}
-
-	Return invoke(Param1 param1, Param2 param2, Param3 param3) {
-	}
+	std::function<Return(Parameters...)> _fn;
 };
 
 SNOW_OWL_NAMESPACE_END

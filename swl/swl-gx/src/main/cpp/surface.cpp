@@ -10,15 +10,6 @@ using namespace swl::cx;
 using namespace swl::gx;
 using namespace swl::ui;
 
-Surface::Surface(swl::ui::Window &window) {
+Surface::Surface(): handle(Core::makeHandle()) {
 
-	window.addEventFrame({ this, &Surface::surfaceUpdated });
-	window.addEventClose({ this, &Surface::surfaceDestroy });
-}
-
-
-void Surface::surfaceDestroy(const Window &window) {
-}
-
-void Surface::surfaceUpdated(const Window &window, Rect rect) {
 }
