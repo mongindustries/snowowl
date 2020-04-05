@@ -9,7 +9,7 @@
 SNOW_OWL_NAMESPACE(cx)
 
 template<typename Object>
-Object* tell(Object *instance, std::function<void(Object *)> block) {
+Object* Tell(Object *instance, std::function<void(Object *)> block) {
 	block(instance);
 	return instance;
 }

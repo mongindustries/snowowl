@@ -17,7 +17,7 @@ set(SOURCE_LIST
     cpp/graphics.cpp
     cpp/surface.cpp)
 
-if(WINDOWS)
+if(WIN32)
     set(PLATFORM_SOURCE_LIST)
 
     set(PLATFORM_HEADER_LIST)

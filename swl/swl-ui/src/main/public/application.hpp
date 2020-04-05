@@ -14,9 +14,22 @@
 
 SNOW_OWL_NAMESPACE(ui)
 
+
 struct SWL_EXPORT Application {
 
-	explicit Application(void* nativeInstance);
+	explicit Application(void* native_instance);
+
+	Application(const Application& copy) = delete;
+
+	Application& operator= (const Application& copy) = delete;
+	
+
+	Application(Application&& mov) noexcept;
+
+	Application& operator= (Application&& move) noexcept;
+
+	
+	virtual ~Application() = default;
 
 	// methods
 
@@ -26,7 +39,7 @@ struct SWL_EXPORT Application {
 	 * @param frame Initial frame for the window. For OS that requires a fullscreen window, this param is ignored.
 	 * @return A mutable reference <code>MutateOwn</code> that has the reference to the created window.
 	 */
-	cx::MutateOwn<ui::Window> createWindow(const std::string &caption, const cx::Rect &frame);
+	cx::MutableBorrow<Window> createWindow(const std::string& caption, const cx::Rect& frame);
 
 	// hooks
 
@@ -37,27 +50,31 @@ struct SWL_EXPORT Application {
 	}
 
 	template<typename App, std::enable_if_t< std::is_base_of_v<Application, App>, int > = 0>
-	static unsigned int runApplication(App app) {
+	static int runApplication(App app) {
 
-		App::PreHeat(app);
+		App::preHeat(app);
 		app.applicationCreate();
-		App::RunLoop(app);
+		App::runLoop(app);
 
 		return 0;
 	}
+
+	static cx::DriverHandle windowFromNativeHandle(void* native_handle);
+
+	static Window& windowWithHandle(cx::DriverHandle handle);
+	
 
 	friend struct backend::WindowBackend;
 
 private:
 
-	void* nativeInstance;
+	void* _native_instance;
 
-	std::vector<cx::Own<Window>> windowList;
+	std::vector<cx::Own<Window>> _window_list;
 
+	static void preHeat(Application &app);
 
-	static void PreHeat(Application &app);
-
-	static void RunLoop(Application &app);
+	static void runLoop(Application &app);
 };
 
 SNOW_OWL_NAMESPACE_END

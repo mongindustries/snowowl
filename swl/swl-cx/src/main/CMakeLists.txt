@@ -20,7 +20,7 @@ set(SOURCE_LIST
         cpp/path_ops.cpp
         cpp/point_operators.cpp)
 
-if(WINDOWS)
+if(WIN32)
     set(PLATFORM_SOURCE_LIST
             platform/windows/PathImpl.cpp)
 endif()

@@ -26,22 +26,23 @@ namespace backend {
 struct SWL_EXPORT Window {
 
 	enum class State {
-		active,
-		paused,
-		background
+		Active,
+		Paused,
+		Background
 	};
 
 	Window();
 
 	Window(std::string window_name, const cx::Rect &frame);
 
+
 	// window properties
 
 	void setTitle    (const std::string &new_title);
 	void setFrame    (const cx::Rect &new_frame);
 
-	cx::DriverHandle getHandle  () const { return handle; }
-	windowSurface getSurface    () const;
+	[[nodiscard]] cx::DriverHandle getHandle  () const { return _handle; }
+	[[nodiscard]] windowSurface getSurface    () const;
 
 	// window events
 
@@ -51,8 +52,8 @@ struct SWL_EXPORT Window {
 
 	friend struct backend::WindowBackend;
 
-	bool operator==(const Window &rhs) {
-		return handle == rhs.handle;
+	bool operator==(const Window &rhs) const {
+		return _handle == rhs._handle;
 	}
 
 private:
@@ -62,14 +63,12 @@ private:
 
 	typedef std::vector<Event<void, const Window&>>           EventCloseList;
 
-	std::string           title{};
-	cx::Rect              frame{};
+	std::string      _title{};
+	cx::Rect         _frame{};
 
-	cx::DriverHandle      handle{};
+	cx::DriverHandle _handle{0};
 
-	EventFrameList        event_frame;
-	EventActiveStateList  event_activateState;
-	EventCloseList        event_closeList;
+	EventCloseList   _event_close_list;
 };
 
 SNOW_OWL_NAMESPACE_END

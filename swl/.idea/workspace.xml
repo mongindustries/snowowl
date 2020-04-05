@@ -28,7 +28,6 @@
       <config projectName="snow_owl" targetName="gtest" />
       <config projectName="snow_owl" targetName="gmock" />
       <config projectName="snow_owl" targetName="app" />
-      <config projectName="snow_owl" targetName="ui-test" />
       <config projectName="snow_owl" targetName="gx" />
       <config projectName="snow_owl" targetName="gx-test" />
       <config projectName="snow_owl" targetName="gmock_main" />
@@ -38,68 +37,29 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="System" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-cx/src/main/public/tell.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-cx/src/test/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsBuffer.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsSwapchain.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/test/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.hxx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.hxx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.hxx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.hxx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window_backend.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/test/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/test/cpp/main_darwin.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.vscode/settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cmake/variable.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_window_backend.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/headers/app.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/context.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/context_backend_vulkan.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/surface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/surface.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/swl_vulkan.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/swl_vulkan_mac.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan_win32.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/swl_vulkan_win32.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/context.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/context_backend.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/context_backend_vulkan.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/screen.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/screen.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/surface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/surface.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/test/cpp/context_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/test/cpp/context_test.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/test/cpp/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/test/cpp/main_win32.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,6 +182,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.splitter.proportion" value="0.23727088" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
   <component name="RecentsManager">
@@ -233,7 +194,7 @@
       <recent name="$PROJECT_DIR$/swl-gx/src/main/cpp" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.app">
+  <component name="RunManager" selected="CMake Application.ui">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -241,30 +202,22 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="gx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ui-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="ui-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="cx-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="cx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gx-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -282,11 +235,10 @@
     <list>
       <item itemvalue="CMake Application.app" />
       <item itemvalue="CMake Application.cx" />
+      <item itemvalue="CMake Application.cx-test" />
       <item itemvalue="CMake Application.gx" />
+      <item itemvalue="CMake Application.gx-test" />
       <item itemvalue="CMake Application.ui" />
-      <item itemvalue="Google Test.ui-test" />
-      <item itemvalue="Google Test.cx-test" />
-      <item itemvalue="Google Test.gx-test" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -338,6 +290,9 @@
       <workItem from="1585945966963" duration="7891000" />
       <workItem from="1585985856965" duration="5203000" />
       <workItem from="1585995768166" duration="23550000" />
+      <workItem from="1586067689508" duration="1200000" />
+      <workItem from="1586073749554" duration="148000" />
+      <workItem from="1586087292789" duration="202000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
@@ -505,11 +460,12 @@
     </state>
     <state x="0" y="0" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585526512968" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585376473157" />
-    <state x="214" y="100" width="1012" height="722" key="SettingsEditor" timestamp="1586010628470">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="285" y="116" width="1012" height="722" key="SettingsEditor" timestamp="1586087301450">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586010628470" />
     <state x="0" y="0" width="1680" height="1050" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1585380212419" />
+    <state x="285" y="116" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586087301450" />
     <state x="240" y="154" key="SettingsEditor/0.23.1680.1027@0.23.1680.1027" timestamp="1585217700264" />
     <state x="0" y="0" width="1440" height="900" key="SettingsEditor/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585162897664" />
     <state x="229" y="110" key="SettingsEditor/1440.23.1920.1057/0.23.1440.877@0.23.1440.877" timestamp="1585158833820" />
@@ -534,11 +490,12 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1585674031758" />
-    <state x="385" y="214" width="671" height="660" key="search.everywhere.popup" timestamp="1586015786428">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup" timestamp="1586087477856">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1586006358503" />
     <state x="449" y="229" width="782" height="789" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1585387662135" />
+    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586087477856" />
     <state x="385" y="214" width="671" height="660" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1586015786428" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987242259" />
     <state x="1953" y="235" width="895" height="813" key="search.everywhere.popup/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718451785" />

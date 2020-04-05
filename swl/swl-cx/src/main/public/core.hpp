@@ -7,13 +7,13 @@
 #include "headerconv.hpp"
 
 SNOW_OWL_NAMESPACE(cx)
+
+typedef unsigned long long DriverHandle;
+
 struct SWL_EXPORT Core {
 	static std::string version;
 
-	static unsigned long makeHandle();
+	static DriverHandle makeHandle();
 };
-
-typedef unsigned long DriverHandle;
-
 
 SNOW_OWL_NAMESPACE_END

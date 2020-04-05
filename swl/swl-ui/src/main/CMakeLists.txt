@@ -15,10 +15,10 @@ set(SOURCE_LIST
         cpp/application.cpp
         cpp/window.cpp)
 
-if(WINDOWS)
+if(WIN32)
     set(PLATFORM_SOURCE_LIST
             platform/windows/swl_win32_app.cpp
-            platform/windows/swl_win32_window.cpp)
+            platform/windows/swl_win32_window.cpp "platform/windows/swl_window_backend.cpp")
 
     set(PLATFORM_HEADER_LIST
             platform/windows/swl_win32_window.hpp)

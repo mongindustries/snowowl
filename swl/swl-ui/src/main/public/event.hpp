@@ -10,8 +10,6 @@
 
 SNOW_OWL_NAMESPACE(ui)
 
-// master event bus, for general case: using this will lead to a crash.
-
 template<typename Return, typename... Parameters>
 struct Event {
 

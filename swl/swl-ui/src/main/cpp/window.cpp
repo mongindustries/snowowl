@@ -18,8 +18,8 @@ WindowBackend *WindowBackend::backend = new WindowBackend();
 Window::Window() = default;
 
 Window::Window(string window_name, const Rect &frame):
-	title       (std::move(window_name)),
-	frame       (frame) {
+	_title       (std::move(window_name)),
+	_frame       (frame) {
 
 	WindowBackend::backend->Spawn(this);
 }
@@ -27,13 +27,13 @@ Window::Window(string window_name, const Rect &frame):
 
 void Window::setTitle(const std::string &new_title) {
 
-	title = new_title;
+	_title = new_title;
 	WindowBackend::backend->UpdateTitle(this);
 }
 
 void Window::setFrame(const cx::Rect &new_frame) {
 
-	frame = new_frame;
+	_frame = new_frame;
 	WindowBackend::backend->UpdateFrame(this);
 }
 
@@ -44,13 +44,10 @@ windowSurface Window::getSurface() const {
 
 
 void Window::addEventFrame(const Event<void, const Window&, cx::Rect> &event) {
-	event_frame.push_back(event);
 }
 
 void Window::addEventActivate(const Event<void, const Window&, State> &event) {
-	event_activateState.push_back(event);
 }
 
 void Window::addEventClose(const Event<void, const Window&> &event) {
-	event_closeList.push_back(event);
 }
