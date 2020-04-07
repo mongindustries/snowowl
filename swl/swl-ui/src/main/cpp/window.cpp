@@ -21,33 +21,37 @@ Window::Window(string window_name, const Rect &frame):
 	_title       (std::move(window_name)),
 	_frame       (frame) {
 
-	WindowBackend::backend->Spawn(this);
+	WindowBackend::backend->Spawn(*this);
 }
 
 
 void Window::setTitle(const std::string &new_title) {
 
 	_title = new_title;
-	WindowBackend::backend->UpdateTitle(this);
+	WindowBackend::backend->UpdateTitle(*this);
 }
 
 void Window::setFrame(const cx::Rect &new_frame) {
 
 	_frame = new_frame;
-	WindowBackend::backend->UpdateFrame(this);
+	WindowBackend::backend->UpdateFrame(*this);
 }
 
 
-windowSurface Window::getSurface() const {
-	return WindowBackend::backend->Surface(this);
+WindowSurface Window::getSurface() const {
+	return WindowBackend::backend->PrepareSurface(*this);
 }
 
-
-void Window::addEventFrame(const Event<void, const Window&, cx::Rect> &event) {
-}
-
-void Window::addEventActivate(const Event<void, const Window&, State> &event) {
-}
 
 void Window::addEventClose(const Event<void, const Window&> &event) {
+	_event_close_list.emplace_back(event);
+}
+
+
+bool Window::operator<  (const Window &rhs) const {
+	return _handle < rhs._handle;
+}
+
+bool Window::operator== (const Window &rhs) const {
+	return _handle == rhs._handle;
 }

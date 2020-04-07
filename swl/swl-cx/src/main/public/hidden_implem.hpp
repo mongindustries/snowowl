@@ -10,31 +10,46 @@
 SNOW_OWL_NAMESPACE(cx)
 
 template<typename Wrapped>
-struct Himplem {
+struct PartialImplementation {
 
-	Himplem(): _implem(new Wrapped()) { }
+	PartialImplementation(): _implementation(nullptr) { }
 
-	explicit Himplem(Wrapped* introduce): _implem(introduce) { }
+	explicit PartialImplementation(Wrapped* introduce): _implementation(introduce) { }
 
 
-	~Himplem() {
-		if (_implem != nullptr) {
-		delete _implem;
+	PartialImplementation(PartialImplementation<Wrapped> &&mov): _implementation(mov._implementation) {
+		mov._implementation = nullptr;
+	}
+
+	PartialImplementation<Wrapped>& operator=(PartialImplementation<Wrapped> &&mov) {
+		_implementation = mov._implementation;
+		mov._implementation = nullptr;
+	}
+
+
+	PartialImplementation(const PartialImplementation<Wrapped>&) = delete;
+
+	PartialImplementation<Wrapped>& operator=(const PartialImplementation<Wrapped>&) = delete;
+
+
+	~PartialImplementation() {
+		if (_implementation != nullptr) {
+			delete _implementation;
 		}
 	}
 
 
 	Wrapped& operator()() const {
-		return *_implem;
+		return *_implementation;
 	}
 
 	void invalidate() {
-		_implem = nullptr;
+		_implementation = nullptr;
 	}
 
 private:
 
-	Wrapped* _implem;
+	Wrapped* _implementation;
 };
 
 SNOW_OWL_NAMESPACE_END

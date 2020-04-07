@@ -67,7 +67,7 @@ struct Borrow {
 	explicit Borrow(Own<ClassType>&);
 
 
-	ClassType const* operator()() const;
+	ClassType const& operator()() const;
 
 private:
 
@@ -79,7 +79,7 @@ struct MutableBorrow {
 
 	explicit MutableBorrow(Own<ClassType>&);
 
-	ClassType* operator()() const;
+	ClassType& operator()() const;
 
 private:
 
@@ -164,8 +164,8 @@ template <typename ClassType>
 Borrow<ClassType>::Borrow(Own<ClassType> &to_borrow): _borrow(to_borrow) {}
 
 template <typename ClassType>
-ClassType const* Borrow<ClassType>::operator()() const {
-	return const_cast<ClassType const*>(_borrow());
+ClassType const& Borrow<ClassType>::operator()() const {
+	return const_cast<ClassType const&>(*_borrow());
 }
 
 // MARK: Mutable Borrow Implementation
@@ -174,8 +174,8 @@ template <typename ClassType>
 MutableBorrow<ClassType>::MutableBorrow(Own<ClassType> &to_borrow): _mutable_borrow(to_borrow()) {}
 
 template <typename ClassType>
-ClassType* MutableBorrow<ClassType>::operator()() const {
-	return _mutable_borrow();
+ClassType& MutableBorrow<ClassType>::operator()() const {
+	return *_mutable_borrow;
 }
 
 SNOW_OWL_NAMESPACE_END

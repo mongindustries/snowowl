@@ -9,14 +9,14 @@
 using namespace std;
 using namespace swl::cx;
 
-string Core::version = "1.0.0";
+const char* Core::version = "1.0.0";
 
 DriverHandle Core::makeHandle() {
 
 	random_device rd_device;
 	default_random_engine engine(rd_device());
 
-	const uniform_int_distribution<short> distribution(short(0), short(0xff));
+	uniform_int_distribution<int> distribution(0, 0xff'ff'ff'ff);
 
 	const auto one = static_cast<DriverHandle>(distribution(engine)) << 0;
 	const auto two = static_cast<DriverHandle>(distribution(engine)) << 8;

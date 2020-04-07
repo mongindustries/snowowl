@@ -15,13 +15,15 @@
 #include "event.hpp"
 #include "windowSurface.hpp"
 
+SNOW_OWL_NAMESPACE(ui::backend)
+
+namespace backend { struct WindowBackend; }
+
+SNOW_OWL_NAMESPACE_END
+
 SNOW_OWL_NAMESPACE(ui)
 
 struct SWL_EXPORT Application;
-
-namespace backend {
-	struct WindowBackend;
-}
 
 struct SWL_EXPORT Window {
 
@@ -35,33 +37,38 @@ struct SWL_EXPORT Window {
 
 	Window(std::string window_name, const cx::Rect &frame);
 
-
 	// window properties
 
-	void setTitle    (const std::string &new_title);
-	void setFrame    (const cx::Rect &new_frame);
+	void
+		setTitle      (const std::string &new_title);
 
-	[[nodiscard]] cx::DriverHandle getHandle  () const { return _handle; }
-	[[nodiscard]] windowSurface getSurface    () const;
+	void
+		setFrame      (const cx::Rect &new_frame);
+
+
+	[[nodiscard]] cx::DriverHandle
+		getHandle     () const { return _handle; }
+
+	[[nodiscard]] WindowSurface
+		getSurface    () const;
 
 	// window events
 
-	void addEventFrame    (const Event<void, const Window&, cx::Rect> &event);
-	void addEventActivate (const Event<void, const Window&, State> &event);
-	void addEventClose    (const Event<void, const Window&> &event);
+	void
+		addEventClose (const Event<void, const Window&> &event);
+
+
+	bool
+		operator<     (const Window &rhs) const;
+
+	bool
+		operator==    (const Window &rhs) const;
 
 	friend struct backend::WindowBackend;
 
-	bool operator==(const Window &rhs) const {
-		return _handle == rhs._handle;
-	}
-
 private:
 
-	typedef std::vector<Event<void, const Window&, cx::Rect>> EventFrameList;
-	typedef std::vector<Event<void, const Window&, State>>    EventActiveStateList;
-
-	typedef std::vector<Event<void, const Window&>>           EventCloseList;
+	typedef std::vector<Event<void, const Window&>> EventCloseList;
 
 	std::string      _title{};
 	cx::Rect         _frame{};

@@ -28,6 +28,7 @@
       <config projectName="snow_owl" targetName="gtest" />
       <config projectName="snow_owl" targetName="gmock" />
       <config projectName="snow_owl" targetName="app" />
+      <config projectName="snow_owl" targetName="ui-test" />
       <config projectName="snow_owl" targetName="gx" />
       <config projectName="snow_owl" targetName="gx-test" />
       <config projectName="snow_owl" targetName="gmock_main" />
@@ -37,29 +38,45 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="System" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_window_backend.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/platform/darwin/Info.plist.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsContext.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkanGraphicsBackend.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsCanvas.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsContext.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanImport.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/windowSurface.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/surface.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/swl_vulkan.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsBuffer.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsSwapchain.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/screen.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/surface.hpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.hxx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window_backend.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window_backend.mm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,6 +173,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="raisj8uk" />
   </component>
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-gx" />
+  </component>
   <component name="ProjectId" id="1ZdAUJ2I3s0uKeIXM4jRjJpF1e7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -187,14 +207,14 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main" />
       <recent name="$PROJECT_DIR$/swl-ui/src/main/cpp" />
       <recent name="$PROJECT_DIR$/swl-ui/src/main" />
       <recent name="$PROJECT_DIR$/swl-gx/src/main" />
       <recent name="$PROJECT_DIR$/swl-cx/src/main" />
-      <recent name="$PROJECT_DIR$/swl-gx/src/main/cpp" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.ui">
+  <component name="RunManager" selected="CMake Application.app">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -202,12 +222,19 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
+    <configuration name="cx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cx-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test">
+    <configuration name="gx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -217,12 +244,12 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="gx-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test">
+    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug">
+    <configuration name="ui-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="ui-test">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -235,10 +262,11 @@
     <list>
       <item itemvalue="CMake Application.app" />
       <item itemvalue="CMake Application.cx" />
-      <item itemvalue="CMake Application.cx-test" />
       <item itemvalue="CMake Application.gx" />
-      <item itemvalue="CMake Application.gx-test" />
       <item itemvalue="CMake Application.ui" />
+      <item itemvalue="CMake Application.ui-test" />
+      <item itemvalue="Google Test.cx-test" />
+      <item itemvalue="Google Test.gx-test" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -293,6 +321,8 @@
       <workItem from="1586067689508" duration="1200000" />
       <workItem from="1586073749554" duration="148000" />
       <workItem from="1586087292789" duration="202000" />
+      <workItem from="1586103966093" duration="14030000" />
+      <workItem from="1586174495293" duration="15991000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
@@ -365,10 +395,11 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="674" y="167" width="331" height="463" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585212358051" />
-    <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1586016110742">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1586178393885">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1586007649901" />
+    <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1586178393885" />
+    <state x="458" y="207" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.813@0.23.1440.813" timestamp="1586108154601" />
     <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.877@0.23.1440.877" timestamp="1586016110742" />
     <state x="515" y="391" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1585217785029">
       <screen x="0" y="0" width="1680" height="1050" />
@@ -378,81 +409,89 @@
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="1440" y="0" width="1920" height="1080" key="CommitChangelistDialog2/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718376367" />
-    <state width="444" height="400" key="DebuggerActiveHint" timestamp="1586006763990">
+    <state width="502" height="400" key="DebuggerActiveHint" timestamp="1586182480504">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="444" height="400" key="DebuggerActiveHint/0.0.1440.900@0.0.1440.900" timestamp="1586006763990" />
+    <state width="502" height="400" key="DebuggerActiveHint/0.0.1440.900@0.0.1440.900" timestamp="1586182480504" />
     <state width="466" height="466" key="DebuggerActiveHint/0.0.1680.1050@0.0.1680.1050" timestamp="1585224987155" />
     <state x="1540" y="100" width="1720" height="880" key="DiffContextDialog" timestamp="1585718466262">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="1540" y="100" width="1720" height="880" key="DiffContextDialog/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718466262" />
-    <state width="1440" height="367" key="GridCell.Tab.0.bottom" timestamp="1586021792756">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.0.bottom" timestamp="1586200535745">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1586011224777" />
+    <state width="1087" height="347" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1586200535745" />
     <state width="1680" height="507" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486663" />
-    <state width="1440" height="367" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1586021792756" />
+    <state width="1141" height="237" key="GridCell.Tab.0.bottom/0.23.1440.813@0.23.1440.813" timestamp="1586154323617" />
+    <state width="1134" height="367" key="GridCell.Tab.0.bottom/0.23.1440.877@0.23.1440.877" timestamp="1586105193567" />
     <state width="1138" height="566" key="GridCell.Tab.0.bottom/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987258994" />
     <state width="1920" height="375" key="GridCell.Tab.0.bottom/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718466053" />
     <state width="1920" height="498" key="GridCell.Tab.0.bottom/1440.0.1920.1080/0.23.1440.877@1440.0.1920.1080" timestamp="1585390893343" />
-    <state width="1440" height="367" key="GridCell.Tab.0.center" timestamp="1586021792755">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.0.center" timestamp="1586200535744">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1586011224776" />
+    <state width="1087" height="347" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1586200535744" />
     <state width="1680" height="507" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486662" />
-    <state width="1440" height="367" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1586021792755" />
+    <state width="1141" height="237" key="GridCell.Tab.0.center/0.23.1440.813@0.23.1440.813" timestamp="1586154323617" />
+    <state width="1134" height="367" key="GridCell.Tab.0.center/0.23.1440.877@0.23.1440.877" timestamp="1586105193567" />
     <state width="1138" height="566" key="GridCell.Tab.0.center/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987258967" />
     <state width="1920" height="375" key="GridCell.Tab.0.center/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718466050" />
     <state width="1920" height="498" key="GridCell.Tab.0.center/1440.0.1920.1080/0.23.1440.877@1440.0.1920.1080" timestamp="1585390893340" />
-    <state width="1440" height="367" key="GridCell.Tab.0.left" timestamp="1586021792755">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.0.left" timestamp="1586200535744">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1586011224775" />
+    <state width="1087" height="347" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1586200535744" />
     <state width="1680" height="507" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486661" />
-    <state width="1440" height="367" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1586021792755" />
+    <state width="1141" height="237" key="GridCell.Tab.0.left/0.23.1440.813@0.23.1440.813" timestamp="1586154323616" />
+    <state width="1134" height="367" key="GridCell.Tab.0.left/0.23.1440.877@0.23.1440.877" timestamp="1586105193566" />
     <state width="1138" height="566" key="GridCell.Tab.0.left/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987258952" />
     <state width="1920" height="375" key="GridCell.Tab.0.left/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718466049" />
     <state width="1920" height="498" key="GridCell.Tab.0.left/1440.0.1920.1080/0.23.1440.877@1440.0.1920.1080" timestamp="1585390893339" />
-    <state width="1440" height="367" key="GridCell.Tab.0.right" timestamp="1586021792756">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.0.right" timestamp="1586200535745">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1586011224777" />
+    <state width="1087" height="347" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1586200535745" />
     <state width="1680" height="507" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486663" />
-    <state width="1440" height="367" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1586021792756" />
+    <state width="1141" height="237" key="GridCell.Tab.0.right/0.23.1440.813@0.23.1440.813" timestamp="1586154323617" />
+    <state width="1134" height="367" key="GridCell.Tab.0.right/0.23.1440.877@0.23.1440.877" timestamp="1586105193567" />
     <state width="1138" height="566" key="GridCell.Tab.0.right/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987258986" />
     <state width="1920" height="375" key="GridCell.Tab.0.right/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718466051" />
     <state width="1920" height="498" key="GridCell.Tab.0.right/1440.0.1920.1080/0.23.1440.877@1440.0.1920.1080" timestamp="1585390893341" />
-    <state width="1440" height="367" key="GridCell.Tab.1.bottom" timestamp="1586021792757">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.1.bottom" timestamp="1586200535639">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1586011224778" />
+    <state width="1087" height="347" key="GridCell.Tab.1.bottom/0.0.1440.900@0.0.1440.900" timestamp="1586200535639" />
     <state width="1680" height="507" key="GridCell.Tab.1.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486665" />
-    <state width="1440" height="367" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1586021792757" />
+    <state width="1141" height="171" key="GridCell.Tab.1.bottom/0.23.1440.813@0.23.1440.813" timestamp="1586154323612" />
+    <state width="1134" height="367" key="GridCell.Tab.1.bottom/0.23.1440.877@0.23.1440.877" timestamp="1586105193482" />
     <state width="1440" height="312" key="GridCell.Tab.1.bottom/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585166870350" />
     <state width="1680" height="507" key="GridCell.Tab.1.bottom/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585392689682" />
-    <state width="1440" height="367" key="GridCell.Tab.1.center" timestamp="1586021792756">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.1.center" timestamp="1586200535638">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1586011224778" />
+    <state width="1087" height="347" key="GridCell.Tab.1.center/0.0.1440.900@0.0.1440.900" timestamp="1586200535638" />
     <state width="1680" height="507" key="GridCell.Tab.1.center/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486664" />
-    <state width="1440" height="367" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1586021792756" />
+    <state width="1141" height="171" key="GridCell.Tab.1.center/0.23.1440.813@0.23.1440.813" timestamp="1586154323612" />
+    <state width="1134" height="367" key="GridCell.Tab.1.center/0.23.1440.877@0.23.1440.877" timestamp="1586105193481" />
     <state width="1440" height="312" key="GridCell.Tab.1.center/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585166870349" />
     <state width="1680" height="507" key="GridCell.Tab.1.center/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585392689672" />
-    <state width="1440" height="367" key="GridCell.Tab.1.left" timestamp="1586021792756">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.1.left" timestamp="1586200535638">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1586011224777" />
+    <state width="1087" height="347" key="GridCell.Tab.1.left/0.0.1440.900@0.0.1440.900" timestamp="1586200535638" />
     <state width="1680" height="507" key="GridCell.Tab.1.left/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486663" />
-    <state width="1440" height="367" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1586021792756" />
+    <state width="1141" height="171" key="GridCell.Tab.1.left/0.23.1440.813@0.23.1440.813" timestamp="1586154323611" />
+    <state width="1134" height="367" key="GridCell.Tab.1.left/0.23.1440.877@0.23.1440.877" timestamp="1586105193481" />
     <state width="1440" height="312" key="GridCell.Tab.1.left/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585166870348" />
     <state width="1680" height="507" key="GridCell.Tab.1.left/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585392689668" />
-    <state width="1440" height="367" key="GridCell.Tab.1.right" timestamp="1586021792757">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state width="1087" height="347" key="GridCell.Tab.1.right" timestamp="1586200535639">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1134" height="276" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1586011224778" />
+    <state width="1087" height="347" key="GridCell.Tab.1.right/0.0.1440.900@0.0.1440.900" timestamp="1586200535639" />
     <state width="1680" height="507" key="GridCell.Tab.1.right/0.0.1680.1050@0.0.1680.1050" timestamp="1585389486665" />
-    <state width="1440" height="367" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1586021792757" />
+    <state width="1141" height="171" key="GridCell.Tab.1.right/0.23.1440.813@0.23.1440.813" timestamp="1586154323612" />
+    <state width="1134" height="367" key="GridCell.Tab.1.right/0.23.1440.877@0.23.1440.877" timestamp="1586105193482" />
     <state width="1440" height="312" key="GridCell.Tab.1.right/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585166870349" />
     <state width="1680" height="507" key="GridCell.Tab.1.right/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585392689677" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog" timestamp="1585526512968">
@@ -460,12 +499,14 @@
     </state>
     <state x="0" y="0" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585526512968" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585376473157" />
-    <state x="285" y="116" width="1012" height="722" key="SettingsEditor" timestamp="1586087301450">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="214" y="100" width="1140" height="722" key="SettingsEditor" timestamp="1586174652611">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586010628470" />
+    <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586174652611" />
     <state x="0" y="0" width="1680" height="1050" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1585380212419" />
     <state x="285" y="116" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586087301450" />
+    <state x="150" y="68" width="1140" height="722" key="SettingsEditor/0.23.1440.813@0.23.1440.813" timestamp="1586130553866" />
+    <state x="0" y="23" width="1440" height="877" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1586103993117" />
     <state x="240" y="154" key="SettingsEditor/0.23.1680.1027@0.23.1680.1027" timestamp="1585217700264" />
     <state x="0" y="0" width="1440" height="900" key="SettingsEditor/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585162897664" />
     <state x="229" y="110" key="SettingsEditor/1440.23.1920.1057/0.23.1440.877@0.23.1440.877" timestamp="1585158833820" />
@@ -490,12 +531,13 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1585674031758" />
-    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup" timestamp="1586087477856">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup" timestamp="1586200206915">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1586006358503" />
+    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1586200206915" />
     <state x="449" y="229" width="782" height="789" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1585387662135" />
     <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586087477856" />
+    <state x="385" y="200" width="672" height="613" key="search.everywhere.popup/0.23.1440.813@0.23.1440.813" timestamp="1586131457246" />
     <state x="385" y="214" width="671" height="660" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1586015786428" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987242259" />
     <state x="1953" y="235" width="895" height="813" key="search.everywhere.popup/1440.0.1920.1080/0.0.1440.900@1440.0.1920.1080" timestamp="1585718451785" />

@@ -7,9 +7,12 @@
 #include <headerconv.hpp>
 
 #include <map>
+#include <windowSurface.hpp>
+
 
 #include "window.hpp"
 #include "windowSurface.hpp"
+
 #include "application.hpp"
 
 SNOW_OWL_NAMESPACE(ui)
@@ -25,19 +28,20 @@ struct WindowBackend {
 	static WindowBackend* backend;
 
 
-	void Spawn(Window *window);
-
-	void UpdateTitle(Window const* window);
-
-	void UpdateFrame(Window const* window);
+	void Spawn(Window &window);
 
 
-	void Close(Window const* window);
+	void UpdateTitle(Window const& window);
 
-	void Resized(Window* window, const cx::Rect &rect);
+	void UpdateFrame(Window const& window);
 
 
-	windowSurface Surface(const Window* window);
+	void Close(Window const& window);
+
+	void Resized(Window& window, const cx::Rect &rect);
+
+
+	WindowSurface PrepareSurface(const Window& window);
 
 
 	friend struct ui::Application;
@@ -46,7 +50,7 @@ private:
 
 	Application* application;
 
-	std::map< cx::DriverHandle, void* > activeNativeHandles;
+	std::map< std::reference_wrapper<Window>, void*, std::less<const Window> > activeNativeHandles;
 };
 
 SNOW_OWL_NAMESPACE_END

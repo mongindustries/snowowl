@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16.0)
 
-project(snow_owl VERSION 0.1.0 LANGUAGES CXX)
+project(snow_owl VERSION 0.1.0 LANGUAGES CXX OBJC)
 
 # c++ stuff
 
@@ -14,6 +14,11 @@ set(SRC_ROOT "cpp")
 
 set(PRI_HEAD "headers")
 set(PUB_HEAD "public")
+
+file(READ local.properties PROPS)
+string(REGEX MATCHALL [[vulkan\.sdk=((\/[a-zA-Z0-9._-]+)+)]] PROP_LIST ${PROPS})
+
+set(VULKAN_SDK ${CMAKE_MATCH_1})
 
 option(PACKAGE_TESTS "Build tests" ON)
 
@@ -53,8 +58,7 @@ if (PACKAGE_TESTS)
     mark_as_advanced(
             BUILD_GMOCK BUILD_GTEST BUILD_SHARED_LIBS
             gmock_build_tests gtest_build_samples gtest_build_tests
-            gtest_disable_pthreads gtest_force_shared_crt gtest_hide_internal_symbols
-    )
+            gtest_disable_pthreads gtest_force_shared_crt gtest_hide_internal_symbols)
 
     set_target_properties(gtest PROPERTIES FOLDER extern)
     set_target_properties(gtest_main PROPERTIES FOLDER extern)

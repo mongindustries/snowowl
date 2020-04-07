@@ -3,7 +3,6 @@
 //
 #pragma once
 
-#include <string>
 #include "headerconv.hpp"
 
 SNOW_OWL_NAMESPACE(cx)
@@ -11,7 +10,7 @@ SNOW_OWL_NAMESPACE(cx)
 typedef unsigned long long DriverHandle;
 
 struct SWL_EXPORT Core {
-	static std::string version;
+	static const char* version;
 
 	static DriverHandle makeHandle();
 };

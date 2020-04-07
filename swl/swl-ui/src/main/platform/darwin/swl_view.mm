@@ -14,13 +14,14 @@
 
 	if (self = [super initWithFrame:frame]) {
 		self.wantsLayer = YES;
+		self.layer.backgroundColor = [NSColor whiteColor].CGColor;
 	}
 
 	return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder*)codeable {
-	if (self = [super initWithCoder:codeable]) {
+- (instancetype)initWithCoder:(NSCoder*)coder {
+	if (self = [super initWithCoder:coder]) {
 		self.wantsLayer = YES;
 	}
 
@@ -28,7 +29,7 @@
 }
 
 - (CALayer *)makeBackingLayer {
-	return swl::cx::tell<CAMetalLayer>([[CAMetalLayer alloc] init], [](CAMetalLayer *layer) {
+	return swl::cx::Tell<CAMetalLayer>([[CAMetalLayer alloc] init], [](CAMetalLayer *layer) {
 			layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
 	});
 }

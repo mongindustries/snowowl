@@ -13,12 +13,14 @@ set(SOURCE_LIST
         cpp/ui.cpp
 
         cpp/application.cpp
-        cpp/window.cpp)
+        cpp/window.cpp
+        cpp/windowSurface.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST
             platform/windows/swl_win32_app.cpp
-            platform/windows/swl_win32_window.cpp "platform/windows/swl_window_backend.cpp")
+            platform/windows/swl_win32_window.cpp
+            platform/windows/swl_window_backend.cpp)
 
     set(PLATFORM_HEADER_LIST
             platform/windows/swl_win32_window.hpp)
@@ -52,7 +54,8 @@ target_include_directories(ui
 
     PRIVATE ../../../swl-cx/src/main/public
 
-    PRIVATE ${SRC_OS})
+    PRIVATE ${SRC_OS}
+    PRIVATE ${VULKAN_SDK}/include)
 
 target_link_libraries(ui
     PUBLIC cx)

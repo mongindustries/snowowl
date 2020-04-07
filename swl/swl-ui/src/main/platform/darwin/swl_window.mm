@@ -21,7 +21,7 @@ using namespace swl::ui::backend;
 
 - (void)windowWillClose: (NSNotification*) notification {
 	if (_window != nullptr) {
-		WindowBackend::backend->Close(_window);
+		WindowBackend::backend->Close(*_window);
 		_window = nullptr;
 	}
 }
@@ -35,7 +35,8 @@ using namespace swl::ui::backend;
 			{ (float) frame.size.width, (float) frame.size.height }
 		};
 
-		WindowBackend::backend->Resized(_window, wRect);
+		auto& ref_window = *_window;
+		WindowBackend::backend->Resized(ref_window, wRect);
 	}
 }
 
@@ -50,10 +51,11 @@ using namespace swl::ui::backend;
 	auto screen = [NSScreen mainScreen];
 	auto window = [[swlWindow alloc] initWithContentRect:CGRectZero styleMask:masks backing:NSBackingStoreBuffered defer:NO screen:screen];
 
-	return tell<swlWindow>(window, [&controller](swlWindow *ctx) {
+	return Tell<swlWindow>(window, [&controller](swlWindow *ctx) {
 		ctx.delegate = ctx;
 
 		ctx.contentViewController = controller;
+		ctx.minSize = NSMakeSize(400, 400);
 
 		ctx.titlebarAppearsTransparent = YES;
 		ctx.titleVisibility = NSWindowTitleVisible;
