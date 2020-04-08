@@ -18,7 +18,8 @@ using namespace swl::ui::backend;
 using namespace swl::cx;
 
 
-NSWindow* getWindowFromHandle(const map<reference_wrapper<Window>, void*, less<const Window>> &list, Window &check) {
+NSWindow* getWindowFromHandle
+	(const map<reference_wrapper<Window>, void*, less<const Window>> &list, Window &check) {
 
 	reference_wrapper<Window> windowKey { check };
 	auto item = list.at(windowKey);
@@ -35,7 +36,7 @@ void WindowBackend::Spawn
 	auto frame = window._frame;
 	auto viewFrame = NSRect { { frame.origin.x, frame.origin.y }, { frame.size.x, frame.size.y } };
 
-	auto controller = Tell<swlViewController>([[swlViewController alloc] initWithNibName:nil bundle:nil], [&window, viewFrame](swlViewController *ctx) {
+	auto controller = Tell<swlViewController>([[swlViewController alloc] initWithNibName:nil bundle:nil], [viewFrame](swlViewController *ctx) {
 		Tell<NSView>(ctx.view, [viewFrame](NSView *view) {
 			view.frame = viewFrame;
 		});
