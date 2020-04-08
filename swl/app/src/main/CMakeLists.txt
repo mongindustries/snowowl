@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.16.0)
 
 if(WIN32)
     add_executable(app WIN32
-            cpp/app.cpp)
+            cpp/app.cpp
+            platform/windows/app.rc
+            platform/windows/resource.h "cpp/renderer.cpp" "headers/renderer.hpp")
 endif()
 
 if(APPLE)
@@ -21,6 +23,7 @@ if(APPLE)
 endif()
 
 target_include_directories(app
+    PUBLIC headers
     PUBLIC ../../../swl-cx/src/main/public
     PUBLIC ../../../swl-ui/src/main/public
     PUBLIC ../../../swl-gx/src/main/public

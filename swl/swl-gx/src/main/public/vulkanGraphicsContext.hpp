@@ -16,14 +16,32 @@ struct VulkanGraphicsContext final: GraphicsContext {
 
 	VulkanGraphicsContext();
 
+	~VulkanGraphicsContext();
 
-	void makeSurface(ui::WindowSurface &surface) override;
 
+	VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept;
+
+	VulkanGraphicsContext& operator=(VulkanGraphicsContext&& mov) noexcept;
+
+
+	void makeSurface(ui::WindowSurface &surface) const override;
+
+
+
+	vk::Instance const&  getInstance
+		() const { return _instance.get(); }
+
+	vk::Device const&    getActiveDevice
+		() const { return _active_device.get(); }
+	
+	
 private:
 
-	vk::UniqueInstance _instance;
+	vk::DynamicLoader*  loader;
+	
+	vk::UniqueInstance  _instance;
 
-	vk::UniqueDevice _active_device;
+	vk::UniqueDevice    _active_device;
 };
 
 SNOW_OWL_NAMESPACE_END

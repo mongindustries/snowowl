@@ -3,24 +3,28 @@ cmake_minimum_required(VERSION 3.16.0)
 set(HEADER_LIST
     public/graphics.hpp
     public/graphicsContext.hpp
-    public/graphicsCanvas.hpp public/vulkanGraphicsContext.hpp)
+    public/graphicsCanvas.hpp
+    public/vulkanGraphicsContext.hpp
+    public/vulkanImport.h)
 
 set(PRIVATE_HEADER_LIST
-        )
+    headers/vulkanGraphicsBackend.hpp)
 
 set(SOURCE_LIST
-    cpp/graphics.cpp cpp/vulkanGraphicsContext.cpp platform/darwin/vulkanGraphicsBackend.cpp)
+    cpp/graphics.cpp cpp/vulkanGraphicsContext.cpp )
 
 if(WIN32)
-    set(PLATFORM_SOURCE_LIST)
+    set(PLATFORM_SOURCE_LIST 
+        platform/windows/vulkanGraphicsBackend.cpp)
 
     set(PLATFORM_HEADER_LIST)
 endif()
 
 if(APPLE)
-    set(PLATFORM_SOURCE_LIST)
+    set(PLATFORM_SOURCE_LIST
+        platform/darwin/vulkanGraphicsBackend.cpp)
 
-    set(PLATFORM_HEADER_LIST headers/vulkanGraphicsBackend.hpp public/vulkanImport.h)
+    set(PLATFORM_HEADER_LIST)
 endif()
 
 add_library(gx

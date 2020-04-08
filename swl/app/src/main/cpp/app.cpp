@@ -1,7 +1,9 @@
-#include <application.hpp>
+﻿#include <application.hpp>
 
 #include <graphicsCanvas.hpp>
 #include <vulkanGraphicsContext.hpp>
+
+#include "renderer.hpp"
 
 using namespace swl;
 using namespace cx;
@@ -11,18 +13,20 @@ struct App: Application {
 
 	WindowSurface surface;
 
-	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas { gx::implem::VulkanGraphicsContext() };
+	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas{ gx::implem::VulkanGraphicsContext() };
+
+	cx::Own<app::Renderer> renderer;
 
 
-	App(void* instance): Application(instance) {
+	App(void* instance): Application(instance), renderer(nullptr) {
 	}
 
 	void applicationCreate  () override {
 
-		auto window = createWindow("Caption Title", Rect { { 100, 100 }, { 800, 480 } });
-		surface     = window().getSurface();
+		auto window = createWindow("[SnowOwl:] App",
+			Rect { { 100, 100 }, { 800, 480 } });
 
-		canvas.context().makeSurface(surface);
+		renderer = new app::Renderer(canvas.context(), window());
 	}
 
 	void applicationDestroy () override {

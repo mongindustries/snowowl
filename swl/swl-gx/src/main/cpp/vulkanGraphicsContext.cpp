@@ -15,10 +15,10 @@ using namespace std;
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE;
 
-VulkanGraphicsContext::VulkanGraphicsContext() {
+VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) {
 
-	vk::DynamicLoader loader;
-	PFN_vkGetInstanceProcAddr getInstanceProcAddr = loader.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
+	const auto getInstanceProcAddr = loader->getProcAddress<PFN_vkGetInstanceProcAddr>(
+		"vkGetInstanceProcAddr");
 	VULKAN_HPP_DEFAULT_DISPATCHER.init(getInstanceProcAddr);
 
 	vk::ApplicationInfo appInfo(
@@ -27,9 +27,11 @@ VulkanGraphicsContext::VulkanGraphicsContext() {
 		VK_API_VERSION_1_1);
 
 	auto& extensions = backend::VulkanGraphicsBackend::vulkanExtensions;
+	auto& layers = backend::VulkanGraphicsBackend::vulkanLayers;
+
 	vk::InstanceCreateInfo instanceCreateInfo({},
 		&appInfo,
-		0, nullptr,
+		layers.size(), layers.data(),
 		extensions.size(), extensions.data());
 
 	_instance = vk::createInstanceUnique(instanceCreateInfo);
@@ -61,15 +63,41 @@ VulkanGraphicsContext::VulkanGraphicsContext() {
 			array<vk::DeviceQueueCreateInfo, 1> { deviceQueueCreateInfo }.data());
 
 		_active_device = physicalDevice.createDeviceUnique(deviceCreateInfo);
+		VULKAN_HPP_DEFAULT_DISPATCHER.init(_active_device.get());
 		break;
 	}
 
 	cout << "VulkanGraphicsContext: Device created!" << endl;
 }
 
-void VulkanGraphicsContext::makeSurface(ui::WindowSurface &surface) {
-	std::cout << "vulkan create surface" << std::endl;
+VulkanGraphicsContext::~VulkanGraphicsContext() {
 
+	_active_device.release().destroy();
+	_instance.release().destroy();
+	
+	if (loader) {
+		delete loader;
+	}
+}
+
+VulkanGraphicsContext::VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept:
+	loader(mov.loader),
+	_instance(move(mov._instance)),
+	_active_device(move(mov._active_device)) {
+	mov.loader = nullptr;
+}
+
+VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& mov) noexcept {
+
+	loader = mov.loader;
+	_instance = move(mov._instance);
+	_active_device = move(mov._active_device);
+	mov.loader = nullptr;
+	
+	return *this;
+}
+
+void VulkanGraphicsContext::makeSurface(ui::WindowSurface &surface) const {
 	// to backend
 	backend::VulkanGraphicsBackend::instance->makeSurface(_instance.get(), surface);
 }

@@ -3,12 +3,9 @@
 //
 #pragma once
 
-#include <core.hpp>
 #include <headerconv.hpp>
 
 #include <map>
-#include <windowSurface.hpp>
-
 
 #include "window.hpp"
 #include "windowSurface.hpp"
@@ -48,7 +45,7 @@ struct WindowBackend {
 
 private:
 
-	Application* application;
+	Application* application{};
 
 	std::map< std::reference_wrapper<Window>, void*, std::less<const Window> > activeNativeHandles;
 };

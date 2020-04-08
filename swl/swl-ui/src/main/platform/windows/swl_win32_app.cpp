@@ -4,6 +4,8 @@
 
 #include "application.hpp"
 
+#include "window.hpp"
+
 #include "swl_window_backend.hpp"
 #include "swl_win32_window.hpp"
 
@@ -23,8 +25,8 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			return 0;
 		}
 
-		auto window = Application::windowWithHandle(handlw);
-		backend::WindowBackend::backend->Close(&window);
+		auto &window = Application::windowWithHandle(handlw);
+		backend::WindowBackend::backend->Close(window);
 		return 0;
 	}
 	case WM_GETMINMAXINFO: {
@@ -40,11 +42,11 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			return DefWindowProc(hwnd, message, wparam, lparam);
 		}
 
-		auto window = Application::windowWithHandle(handlw);
+		auto &window = Application::windowWithHandle(handlw);
 		const auto info = reinterpret_cast<WINDOWPOS*>(lparam);
-		backend::WindowBackend::backend->Resized(&window, Rect{
-			{ (float)info->x, (float)info->y },
-			{ (float)info->cx, (float)info->cy } });
+		backend::WindowBackend::backend->Resized(window, Rect{
+			{ float(info->x), float(info->y) },
+			{ float(info->cx), float(info->cy) } });
 		return 0;
 	}
 	case WM_QUIT:
@@ -57,26 +59,35 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 
 DriverHandle Application::windowFromNativeHandle(void* native_handle) {
 
-	auto& handles = backend::WindowBackend::backend->activeNativeHandles;
-	auto result = find_if(handles.begin(), handles.end(), [native_handle](const pair<DriverHandle, void*> &item) {
-		return static_cast<backend::win32_window*>(get<1>(item))->hwnd == static_cast<HWND>(native_handle);
+	auto& nh = backend::WindowBackend::backend->activeNativeHandles;
+
+	const auto result = find_if(nh.begin(), nh.end(), [native_handle](const pair<const reference_wrapper<Window>, void*> &item) -> bool {
+		return static_cast<backend::win32_window*>(item.second)->hwnd == native_handle;
 	});
 
-	if (result != handles.end()) {
-		return result->first;
+	if (result == nh.end()) {
+		return 0;
 	}
 
-	return 0;
+	return get<0>(*result).get().getHandle();
 }
 
-Window& Application::windowWithHandle(cx::DriverHandle handle) {
-	const auto item = static_cast<backend::win32_window*>(backend::WindowBackend::backend->activeNativeHandles.at(handle));
-	return *item->reference;
+Window& Application::windowWithHandle(DriverHandle handle) {
+
+	auto& nh = backend::WindowBackend::backend->activeNativeHandles;
+
+	const auto result = find_if(nh.begin(), nh.end(), [handle](const pair<const reference_wrapper<Window>, void*>& item) -> bool {
+		return item.first.get().getHandle() == handle;
+	});
+
+	return get<0>(*result);
 }
 
 
 void Application::preHeat(Application &app) {
 
+	HINSTANCE instance = (HINSTANCE)app._native_instance;
+	
 	constexpr wchar_t* className = L"snowowl: window";
 	WNDCLASSEX customClass { };
 
@@ -86,12 +97,12 @@ void Application::preHeat(Application &app) {
 
 	customClass.cbSize = sizeof(WNDCLASSEX);
 	customClass.lpfnWndProc = win32_windowProc;
-	customClass.hInstance = (HINSTANCE) app._native_instance;
+	customClass.hInstance = instance;
 	customClass.lpszClassName = className;
-	customClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	customClass.hIcon = LoadIcon(instance, MAKEINTRESOURCE(108));
 	customClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	customClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	customClass.hIconSm = LoadIcon(NULL, IDI_WINLOGO);
+	customClass.hIconSm = LoadIcon(instance, MAKEINTRESOURCE(108));
 
 	RegisterClassEx(&customClass);
 }

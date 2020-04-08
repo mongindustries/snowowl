@@ -9,11 +9,13 @@
 #include <headerconv.hpp>
 #include <core.hpp>
 
-SNOW_OWL_NAMESPACE(ui)
+SNOW_OWL_NAMESPACE(ui::backend)
 
-namespace backend {
-		struct SWL_EXPORT WindowBackend;
-}
+struct WindowBackend;
+
+SNOW_OWL_NAMESPACE_END
+
+SNOW_OWL_NAMESPACE(ui)
 
 struct SWL_EXPORT Window;
 
@@ -42,10 +44,10 @@ struct SWL_EXPORT WindowSurface {
 		presentAndWait  ();
 
 
-	void*
+	[[nodiscard]] void*
 		getNativeHandle () const { return _native_surface_handle; }
 
-	cx::DriverHandle
+	[[nodiscard]] cx::DriverHandle
 		getHandle       () const { return _handle; }
 
 
@@ -60,12 +62,12 @@ struct SWL_EXPORT WindowSurface {
 
 private:
 
-	cx::DriverHandle  _handle;
+	cx::DriverHandle  _handle{};
 
 
-	const Window*     _window;
+	const Window*     _window{};
 
-	void*             _native_surface_handle;
+	void*             _native_surface_handle{};
 };
 
 SNOW_OWL_NAMESPACE_END

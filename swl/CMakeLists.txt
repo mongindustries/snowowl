@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+if(APPLE)
 project(snow_owl VERSION 0.1.0 LANGUAGES CXX OBJC)
+endif()
+
+if(WIN32)
+project(snow_owl VERSION 0.1.0 LANGUAGES CXX)
+endif()
 
 # c++ stuff
 
@@ -16,9 +22,16 @@ set(PRI_HEAD "headers")
 set(PUB_HEAD "public")
 
 file(READ local.properties PROPS)
-string(REGEX MATCHALL [[vulkan\.sdk=((\/[a-zA-Z0-9._-]+)+)]] PROP_LIST ${PROPS})
+message("loca.prop: ${PROPS}")
+
+if(APPLE)
+    string(REGEX MATCHALL [[vulkan\.sdk=((\/[a-zA-Z0-9._-]+)+)]] PROP_LIST ${PROPS})
+elseif(WIN32)
+    string(REGEX MATCHALL [[vulkan\.sdk=([C-Z]:(\\[a-zA-Z0-9._-]+)+)]] PROP_LIST ${PROPS})
+endif()
 
 set(VULKAN_SDK ${CMAKE_MATCH_1})
+message("Vulkan SDK location: ${VULKAN_SDK}")
 
 option(PACKAGE_TESTS "Build tests" ON)
 

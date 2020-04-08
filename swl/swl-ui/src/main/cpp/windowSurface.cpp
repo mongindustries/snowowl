@@ -8,8 +8,8 @@ using namespace swl::ui;
 
 
 WindowSurface::WindowSurface(WindowSurface &&mov) noexcept :
-	_native_surface_handle(mov._native_surface_handle),
-	_window(mov._window) {
+	_window(mov._window),
+	_native_surface_handle(mov._native_surface_handle) {
 }
 
 WindowSurface& WindowSurface::operator=(WindowSurface &&mov)  noexcept {

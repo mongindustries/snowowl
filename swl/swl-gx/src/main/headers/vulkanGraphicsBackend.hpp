@@ -17,10 +17,13 @@ struct VulkanGraphicsBackend {
 
 	static VulkanGraphicsBackend* instance;
 
+	
 	static std::vector<const char*> vulkanExtensions;
 
+	static std::vector<const char*> vulkanLayers;
 
-	void makeSurface(vk::Instance &instance, ui::WindowSurface &surface);
+
+	void makeSurface(vk::Instance const &instance, ui::WindowSurface &surface);
 
 private:
 

@@ -19,18 +19,25 @@ struct Own {
 	Own<ClassType>& operator=(const Own<ClassType>& copy) = delete;
 
 
-	explicit Own(swl::cx::Own< ClassType >&& mov) noexcept;
+	explicit Own(Own< ClassType >&& mov) noexcept;
 
-	Own<ClassType>& operator=(swl::cx::Own< ClassType >&& mov) noexcept;
+	Own<ClassType>& operator=(Own< ClassType >&& mov) noexcept;
+
+
+	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, Derive>::value, int> = 0>
+	explicit Own(Derive* fast); // fast init
+
+	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, Derive>::value, int> = 0>
+	Own<ClassType>& operator=(Derive* fast);
+	
+
+	explicit Own(std::nullptr_t) noexcept : _value(nullptr) { }
 
 
 	template<typename Param1, typename... Parameters>
 	explicit Own(Param1 param1, Parameters... params);
 
-	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, Derive>::value, int> = 1>
-	explicit Own(Derive* fast); // fast init
-
-	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, std::decay_t< Derive >>::value, int> = 2>
+	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, std::decay_t< Derive >>::value, int> = 0>
 	explicit Own(const Derive& forward) noexcept;
 
 
@@ -45,13 +52,13 @@ struct Own {
 	ClassType* operator()       () const;
 
 	
-	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 3>
+	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 0>
 	bool operator==             (const Own<Derive>& rhs) const;
 
-	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 3>
+	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 0>
 	bool operator==             (const Derive& rhs) const;
 
-	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 3>
+	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 0>
 	bool operator==             (const Derive* rhs) const;
 
 
@@ -98,6 +105,18 @@ Own<ClassType>::Own(Param1 param1, Parameters... params) : _value(new ClassType(
 template <typename ClassType>
 template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int>>
 Own<ClassType>::Own(Derive* fast) : _value(fast) { }
+
+template <typename ClassType>
+template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int>>
+Own<ClassType>& Own<ClassType>::operator=(Derive* fast) {
+	if (_value) {
+		delete _value;
+	}
+
+	_value = fast;
+
+	return *this;
+}
 
 template <typename ClassType>
 template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, std::decay_t<Derive>>::value, int>>

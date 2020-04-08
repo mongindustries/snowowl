@@ -7,8 +7,6 @@
 #include <string>
 
 #include <headerconv.hpp>
-#include <hidden_implem.hpp>
-#include <point.hpp>
 #include <rect.hpp>
 #include <core.hpp>
 
@@ -17,7 +15,7 @@
 
 SNOW_OWL_NAMESPACE(ui::backend)
 
-namespace backend { struct WindowBackend; }
+struct WindowBackend;
 
 SNOW_OWL_NAMESPACE_END
 

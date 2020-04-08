@@ -12,6 +12,12 @@
 
 #include "window.hpp"
 
+SNOW_OWL_NAMESPACE(ui::backend)
+
+struct WindowBackend;
+
+SNOW_OWL_NAMESPACE_END
+
 SNOW_OWL_NAMESPACE(ui)
 
 
@@ -62,10 +68,9 @@ struct SWL_EXPORT Application {
 	static cx::DriverHandle windowFromNativeHandle(void* native_handle);
 
 	static Window& windowWithHandle(cx::DriverHandle handle);
-	
 
 	friend struct backend::WindowBackend;
-
+	
 private:
 
 	void* _native_instance;

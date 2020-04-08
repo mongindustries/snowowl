@@ -10,7 +10,7 @@
 #if defined(SWL_DARWIN)
 #define VK_USE_PLATFORM_MACOS_MVK
 #elif defined(SWL_WIN32)
-#define VK_VK_USE_PLATFORM_WIN32_KHR
+#define VK_USE_PLATFORM_WIN32_KHR
 #endif
 
 #include <vulkan/vulkan.hpp>

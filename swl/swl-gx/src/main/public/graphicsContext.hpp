@@ -13,7 +13,7 @@ struct GraphicsContext {
 	virtual ~GraphicsContext() { }
 
 
-	virtual void makeSurface(ui::WindowSurface &surface) = 0;
+	virtual void makeSurface(ui::WindowSurface &surface) const = 0;
 
 
 
