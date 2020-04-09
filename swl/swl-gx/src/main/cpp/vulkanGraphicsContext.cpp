@@ -47,23 +47,7 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 		auto properties = physicalDevice.getProperties();
 		cout << "\t" << properties.deviceName << endl;
 
-		auto queueProps = physicalDevice.getQueueFamilyProperties();
-
-		auto index = std::distance(queueProps.begin(),
-		              std::find_if(queueProps.begin(), queueProps.end(),
-                    [](const vk::QueueFamilyProperties& item) { return item.queueFlags & (vk::QueueFlagBits::eGraphics | vk::QueueFlagBits::eTransfer); }));
-
-		vk::DeviceQueueCreateInfo deviceQueueCreateInfo({},
-			index,
-			1,
-			array<float, 1> { 0 }.data());
-
-		vk::DeviceCreateInfo deviceCreateInfo({},
-			1,
-			array<vk::DeviceQueueCreateInfo, 1> { deviceQueueCreateInfo }.data());
-
-		_active_device = physicalDevice.createDeviceUnique(deviceCreateInfo);
-		VULKAN_HPP_DEFAULT_DISPATCHER.init(_active_device.get());
+		_active_device = physicalDevice;
 		break;
 	}
 
@@ -72,9 +56,8 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 
 VulkanGraphicsContext::~VulkanGraphicsContext() {
 
-	_active_device.release().destroy();
 	_instance.release().destroy();
-	
+
 	if (loader) {
 		delete loader;
 	}
@@ -100,4 +83,8 @@ VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& 
 void VulkanGraphicsContext::makeSurface(ui::WindowSurface &surface) const {
 	// to backend
 	backend::VulkanGraphicsBackend::instance->makeSurface(_instance.get(), surface);
+}
+
+vk::SurfaceKHR const& VulkanGraphicsContext::getSurface(const ui::WindowSurface &surface) const {
+	return backend::VulkanGraphicsBackend::instance->surfaces.at(reference_wrapper(const_cast<ui::WindowSurface&>(surface)));
 }

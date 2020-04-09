@@ -14,7 +14,11 @@ vector<const char*> VulkanGraphicsBackend::vulkanExtensions = {
 	VK_MVK_MACOS_SURFACE_EXTENSION_NAME
 };
 
-void VulkanGraphicsBackend::makeSurface(vk::Instance &instance, ui::WindowSurface &surface) {
+vector<const char*> VulkanGraphicsBackend::vulkanLayers = {
+
+};
+
+void VulkanGraphicsBackend::makeSurface(vk::Instance const &instance, ui::WindowSurface &surface) {
 
 	vk::MacOSSurfaceCreateInfoMVK createInfo({ }, surface.getNativeHandle());
 	surfaces.emplace(pair { reference_wrapper(surface), instance.createMacOSSurfaceMVK(createInfo) });

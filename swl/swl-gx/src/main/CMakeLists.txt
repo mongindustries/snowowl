@@ -11,7 +11,8 @@ set(PRIVATE_HEADER_LIST
     headers/vulkanGraphicsBackend.hpp)
 
 set(SOURCE_LIST
-    cpp/graphics.cpp cpp/vulkanGraphicsContext.cpp )
+    cpp/graphics.cpp
+    cpp/vulkanGraphicsContext.cpp )
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST 

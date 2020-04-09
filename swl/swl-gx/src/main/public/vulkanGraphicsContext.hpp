@@ -5,10 +5,10 @@
 
 #include <headerconv.hpp>
 
-#include "graphicsContext.hpp"
+#include "vulkanImport.h"
 #include "windowSurface.hpp"
 
-#include "vulkanImport.h"
+#include "graphicsContext.hpp"
 
 SNOW_OWL_NAMESPACE(gx::implem)
 
@@ -26,13 +26,17 @@ struct VulkanGraphicsContext final: GraphicsContext {
 
 	void makeSurface(ui::WindowSurface &surface) const override;
 
+	vk::SurfaceKHR const& getSurface(ui::WindowSurface const &surface) const;
 
 
-	vk::Instance const&  getInstance
+
+	vk::Instance const&          getInstance
 		() const { return _instance.get(); }
 
-	vk::Device const&    getActiveDevice
-		() const { return _active_device.get(); }
+	vk::PhysicalDevice const&    getActiveDevice
+		() const { return _active_device; }
+
+
 	
 	
 private:
@@ -41,7 +45,7 @@ private:
 	
 	vk::UniqueInstance  _instance;
 
-	vk::UniqueDevice    _active_device;
+	vk::PhysicalDevice  _active_device;
 };
 
 SNOW_OWL_NAMESPACE_END

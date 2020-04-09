@@ -1,15 +1,22 @@
 cmake_minimum_required(VERSION 3.16.0)
 
+set(APP_SOURCES
+    cpp/app.cpp
+    cpp/renderer.cpp
+    headers/renderer.hpp
+    cpp/rendererQueue.cpp
+    headers/rendererQueue.hpp)
+
 if(WIN32)
     add_executable(app WIN32
-            cpp/app.cpp
+            ${APP_SOURCES}
             platform/windows/app.rc
-            platform/windows/resource.h "cpp/renderer.cpp" "headers/renderer.hpp")
+            platform/windows/resource.h)
 endif()
 
 if(APPLE)
     add_executable(app MACOSX_BUNDLE
-            cpp/app.cpp)
+            ${APP_SOURCES})
 
     set_target_properties(app PROPERTIES
             MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/Info.plist.in)

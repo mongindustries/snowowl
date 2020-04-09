@@ -9,6 +9,8 @@
 #include <headerconv.hpp>
 
 #include "vulkanImport.h"
+#include "vulkanGraphicsContext.hpp"
+
 #include "windowSurface.hpp"
 
 SNOW_OWL_NAMESPACE(gx::backend)
@@ -24,6 +26,8 @@ struct VulkanGraphicsBackend {
 
 
 	void makeSurface(vk::Instance const &instance, ui::WindowSurface &surface);
+
+	friend struct gx::implem::VulkanGraphicsContext;
 
 private:
 

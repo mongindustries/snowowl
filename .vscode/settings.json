@@ -1,3 +1,5 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/swl"
+    "cmake.sourceDirectory": "${workspaceFolder}/swl",
+    "cmake.buildDirectory": "${workspaceFolder}/build/vscode",
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
