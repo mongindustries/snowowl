@@ -2,10 +2,14 @@
 // Created by Michael Ong on 6/4/20.
 //
 #include <functional>
+
 #include "windowSurface.hpp"
+#include "swl_window_backend.hpp"
+
+using namespace std;
 
 using namespace swl::ui;
-
+using namespace swl::cx;
 
 WindowSurface::WindowSurface(WindowSurface &&mov) noexcept :
 	_window(mov._window),
@@ -29,8 +33,8 @@ WindowSurface::~WindowSurface() {
 }
 
 
-void WindowSurface::presentAndWait() {
-
+Size2D WindowSurface::getSize() const {
+	return _window->getSize();
 }
 
 
@@ -43,10 +47,10 @@ bool WindowSurface::operator==  (const WindowSurface &rhs) const {
 }
 
 
-bool operator<  (const std::reference_wrapper<WindowSurface> lhr, const std::reference_wrapper<WindowSurface> rhs) {
+bool operator<  (const reference_wrapper<WindowSurface> lhr, const reference_wrapper<WindowSurface> rhs) {
 	return lhr.get().getHandle() < rhs.get().getHandle();
 }
 
-bool operator== (const std::reference_wrapper<WindowSurface> lhr, const std::reference_wrapper<WindowSurface> rhs) {
+bool operator== (const reference_wrapper<WindowSurface> lhr, const reference_wrapper<WindowSurface> rhs) {
 	return lhr.get().getHandle() == rhs.get().getHandle();
 }

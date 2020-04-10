@@ -4,8 +4,6 @@
 #pragma once
 
 #include <functional>
-#include <utility>
-
 #include <headerconv.hpp>
 
 SNOW_OWL_NAMESPACE(ui)
@@ -19,16 +17,8 @@ struct Event {
 
 	}
 
-	template<typename Scope>
-	Event(Scope *target, Return (Scope::*functor)(Parameters...)) {
-		_fn = [target, &functor](Parameters... params) -> Return {
-			if (target != nullptr) {
-				return (target->*functor)(params...);
-			}
-		};
-	}
 
-	inline Return invoke(Parameters... params) const {
+	Return invoke(Parameters... params) const {
 		return _fn(params...);
 	}
 
@@ -39,6 +29,27 @@ struct Event {
 private:
 
 	std::function<Return(Parameters...)> _fn;
+};
+
+template<typename... Parameters>
+struct Event<void, Parameters...> {
+
+	explicit Event(std::function<void(Parameters...)> functor) : _fn(functor) {
+
+	}
+
+	
+	void invoke(Parameters... params) const {
+		return _fn(params...);
+	}
+
+	void operator() (Parameters... params) const {
+		return invoke(params...);
+	}
+
+private:
+
+	std::function<void(Parameters...)> _fn;
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -15,18 +15,30 @@ struct App: Application {
 
 	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas{ gx::implem::VulkanGraphicsContext() };
 
-	cx::Own<app::Renderer> renderer;
+	Own<app::Renderer> renderer;
 
 
-	App(void* instance): Application(instance), renderer(nullptr) {
+	explicit App(void* instance): Application(instance), renderer(nullptr) {
 	}
 
 	void applicationCreate  () override {
 
-		auto window = createWindow("[SnowOwl:] App",
-			Rect { { 100, 100 }, { 800, 480 } });
+		const auto window = createWindow("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
 
-		renderer = new app::Renderer(canvas.context(), window());
+		auto& window_ref = window();
+
+		renderer = new app::Renderer(canvas.context(), window_ref);
+
+		const std::function<void(const Window&, const Window::State&)> event = [&, this](const Window&, const Window::State& state) -> void {
+			renderer()->frame();
+		};
+
+		const std::function<void(const Window&, const Rect&)> sizeEvent = [&, this](const Window&, const Rect&) -> void {
+			renderer()->frame();
+		};
+
+		window_ref._event_state_list.emplace_back(event);
+		window_ref._event_size_list.emplace_back(sizeEvent);
 	}
 
 	void applicationDestroy () override {

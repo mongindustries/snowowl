@@ -23,3 +23,10 @@ void VulkanGraphicsBackend::makeSurface(vk::Instance const& instance, ui::Window
 
 	surfaces.emplace(pair{ reference_wrapper{surface}, instance.createWin32SurfaceKHR(win32SurfaceCreate) });
 }
+
+void VulkanGraphicsBackend::destroySurfaces(const vk::Instance& device) {
+
+	for (const auto& item : surfaces) {
+		device.destroySurfaceKHR(item.second);
+	}
+}

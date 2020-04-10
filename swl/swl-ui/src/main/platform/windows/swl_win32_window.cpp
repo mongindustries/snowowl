@@ -20,15 +20,18 @@ win32_window::win32_window(HINSTANCE instance, const string &name) {
 	w_name.resize(w_nameSize);
 	MultiByteToWideChar(CP_UTF8, 0, name.c_str(), -1, w_name.data(), w_nameSize);
 
+	RECT windowRect = { 0, 0, 400, 400 };
+	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
+	
 	hwnd = CreateWindowEx(
 		0,
 		className,
 		w_name.c_str(),
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		800,
-		480,
+		windowRect.right - windowRect.left,
+		windowRect.bottom - windowRect.top,
 		nullptr,
 		nullptr,
 		instance,

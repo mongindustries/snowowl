@@ -3,27 +3,39 @@
 #include <headerconv.hpp>
 #include <vulkanGraphicsContext.hpp>
 
-#include <window.hpp>
 #include <windowSurface.hpp>
 
+#include "ownership.hpp"
+#include "rendererBuffer.hpp"
 #include "rendererQueue.hpp"
+#include "rendererSwapchain.hpp"
 
 SNOW_OWL_NAMESPACE(app)
 
 struct Renderer {
 
-	vk::Instance&       _instance;
-	vk::PhysicalDevice& _device;
+	vk::Instance&       instance;
+	vk::PhysicalDevice  physical_device;
 
-	vk::Device          _logicalDevice;
+	vk::UniqueDevice    logical_device;
 
-	ui::WindowSurface   _surface;
+	vk::SurfaceKHR      surface;
+
+	vk::UniqueSemaphore frameSemaphore;
 
 
-	RendererQueue _graphicsQueue;
-	RendererQueue _presentQueue;
+	cx::Own<RendererQueue>       graphics_queue;
+	cx::Own<RendererQueue>       present_queue;
+
+	cx::Own<RendererSwapchain>   swapchain;
+
+
+	cx::Own<RendererBuffer>      commands;
 
 	Renderer(const gx::implem::VulkanGraphicsContext& context, const ui::Window& target_window);
+
+
+	void frame();
 };
 
 SNOW_OWL_NAMESPACE_END

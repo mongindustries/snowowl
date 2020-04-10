@@ -28,7 +28,6 @@
       <config projectName="snow_owl" targetName="gtest" />
       <config projectName="snow_owl" targetName="gmock" />
       <config projectName="snow_owl" targetName="app" />
-      <config projectName="snow_owl" targetName="ui-test" />
       <config projectName="snow_owl" targetName="gx" />
       <config projectName="snow_owl" targetName="gx-test" />
       <config projectName="snow_owl" targetName="gmock_main" />
@@ -38,24 +37,33 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="System" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build/clion" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-GNinja -DCMAKE_OSX_DEPLOYMENT_TARGET=10.14" GENERATION_DIR="../build/clion" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/app/src/main/cpp/rendererQueue.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/headers/rendererQueue.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../.vscode/settings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.vscode/c_cpp_properties.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/CMakeFiles/app.dir/Info.plist" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/renderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/rendererQueue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/rendererQueue.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/headers/renderer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/headers/renderer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/headers/rendererQueue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/headers/rendererQueue.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsContext.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsContext.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkanGraphicsBackend.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkanGraphicsBackend.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsContext.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsContext.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/vulkanGraphicsBackend.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/vulkanGraphicsBackend.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/windowSurface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/windowSurface.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_window_backend.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_window_backend.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,7 +188,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.23727088" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -228,11 +236,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ui-test" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="ui-test">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -243,7 +246,6 @@
       <item itemvalue="CMake Application.cx" />
       <item itemvalue="CMake Application.gx" />
       <item itemvalue="CMake Application.ui" />
-      <item itemvalue="CMake Application.ui-test" />
       <item itemvalue="Google Test.cx-test" />
       <item itemvalue="Google Test.gx-test" />
     </list>
@@ -305,6 +307,8 @@
       <workItem from="1586351311932" duration="299000" />
       <workItem from="1586359846964" duration="776000" />
       <workItem from="1586416962869" duration="579000" />
+      <workItem from="1586434485600" duration="180000" />
+      <workItem from="1586440938476" duration="78000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
@@ -481,12 +485,12 @@
     </state>
     <state x="0" y="0" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585526512968" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585376473157" />
-    <state x="214" y="100" width="1140" height="722" key="SettingsEditor" timestamp="1586360168987">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="814" y="243" width="998" height="708" key="SettingsEditor" timestamp="1586441012037">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586360168987" />
     <state x="0" y="0" width="1680" height="1050" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1585380212419" />
-    <state x="285" y="116" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586087301450" />
+    <state x="814" y="243" width="998" height="708" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586441012037" />
     <state x="150" y="68" width="1140" height="722" key="SettingsEditor/0.23.1440.813@0.23.1440.813" timestamp="1586130553866" />
     <state x="0" y="23" width="1440" height="877" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1586103993117" />
     <state x="240" y="154" key="SettingsEditor/0.23.1680.1027@0.23.1680.1027" timestamp="1585217700264" />

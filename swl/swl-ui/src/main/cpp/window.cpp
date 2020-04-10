@@ -42,9 +42,8 @@ WindowSurface Window::getSurface() const {
 	return WindowBackend::backend->PrepareSurface(*this);
 }
 
-
-void Window::addEventClose(const Event<void, const Window&> &event) {
-	_event_close_list.emplace_back(event);
+Point2D Window::getSize() const {
+	return _frame.size;
 }
 
 

@@ -132,12 +132,12 @@ Own<ClassType>::~Own() {
 
 template <typename ClassType>
 ClassType const& Own<ClassType>::operator->() const {
-	return *this->_value;
+	return *(this->_value);
 }
 
 template <typename ClassType>
 ClassType const& Own<ClassType>::operator*() const {
-	return *this->_value;
+	return *(this->_value);
 }
 
 template <typename ClassType>

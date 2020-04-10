@@ -38,7 +38,7 @@ struct WindowBackend {
 	void Resized(Window& window, const cx::Rect &rect);
 
 
-	WindowSurface PrepareSurface(const Window& window);
+	WindowSurface PrepareSurface(const Window& window) const;
 
 
 	friend struct ui::Application;

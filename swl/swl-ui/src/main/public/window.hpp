@@ -50,11 +50,10 @@ struct SWL_EXPORT Window {
 	[[nodiscard]] WindowSurface
 		getSurface    () const;
 
+	[[nodiscard]] cx::Point2D
+		getSize       () const;
+
 	// window events
-
-	void
-		addEventClose (const Event<void, const Window&> &event);
-
 
 	bool
 		operator<     (const Window &rhs) const;
@@ -68,12 +67,21 @@ private:
 
 	typedef std::vector<Event<void, const Window&>> EventCloseList;
 
+	typedef std::vector<Event<void, const Window&, const cx::Rect&>> EventSizeList;
+
+	typedef std::vector<Event<void, const Window&, const State&>> EventStateList;
+
+	
 	std::string      _title{};
 	cx::Rect         _frame{};
 
 	cx::DriverHandle _handle{0};
 
+public:
+
 	EventCloseList   _event_close_list;
+	EventSizeList    _event_size_list;
+	EventStateList   _event_state_list;
 };
 
 SNOW_OWL_NAMESPACE_END

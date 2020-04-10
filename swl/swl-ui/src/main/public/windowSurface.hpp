@@ -4,9 +4,8 @@
 
 #pragma once
 
-#include <functional>
-
 #include <headerconv.hpp>
+#include <point.hpp>
 #include <core.hpp>
 
 SNOW_OWL_NAMESPACE(ui::backend)
@@ -40,8 +39,8 @@ struct SWL_EXPORT WindowSurface {
 	~WindowSurface    ();
 
 
-	void
-		presentAndWait  ();
+	[[nodiscard]] cx::Size2D
+		getSize         () const;
 
 
 	[[nodiscard]] void*

@@ -4,12 +4,23 @@
 #include <vulkanGraphicsContext.hpp>
 
 SNOW_OWL_NAMESPACE(app)
+	struct RendererBuffer;
 
-struct RendererQueue {
+	struct RendererQueue {
 
-	vk::Queue queue;
+	unsigned int           index;
 
-	RendererQueue(const vk::Queue &queue);
+	vk::Device const*      device{};
+	vk::Queue              queue;
+
+	vk::UniqueCommandPool  command_pool;
+
+	RendererQueue();
+	
+	RendererQueue(unsigned int index, const vk::Device &device);
+
+	
+	void submit(const RendererBuffer &buffers) const;
 };
 
 SNOW_OWL_NAMESPACE_END

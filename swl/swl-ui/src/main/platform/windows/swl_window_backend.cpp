@@ -18,11 +18,13 @@ void WindowBackend::Spawn(Window& window) {
 	window._handle = Core::makeHandle();
 	win32Win->reference = &window;
 
+	RECT windowRect = { 0, 0, int(window._frame.size.x), int(window._frame.size.y) };
+	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
+
+	auto& frame = window._frame;
 	SetWindowPos(win32Win->hwnd, nullptr,
-		int(window._frame.origin.x),
-		int(window._frame.origin.y),
-		int(window._frame.size.x),
-		int(window._frame.size.y), 0);
+		int(frame.origin.x), int(frame.origin.y),
+		int(windowRect.right - windowRect.left), int(windowRect.bottom - windowRect.top), SWP_FRAMECHANGED);
 
 	ShowWindow(win32Win->hwnd, SW_SHOW | SW_SHOWNORMAL);
 	UpdateWindow(win32Win->hwnd);
@@ -52,8 +54,13 @@ void WindowBackend::UpdateFrame(Window const& window) {
 		reference_wrapper<Window> ref_window{ const_cast<Window&>(window) };
 		HWND handle = static_cast<win32_window*>(activeNativeHandles.at(ref_window))->hwnd;
 
+		RECT windowRect = { 0, 0, int(window._frame.size.x), int(window._frame.size.y) };
+		AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
+
 		auto& frame = window._frame;
-		SetWindowPos(handle, nullptr, frame.origin.x, frame.origin.y, frame.size.x, frame.size.y, 0);
+		SetWindowPos(handle, nullptr, 
+			int(frame.origin.x), int(frame.origin.y),
+			int(windowRect.right - windowRect.left), int(windowRect.bottom - windowRect.top), SWP_FRAMECHANGED);
 	}
 	catch (const out_of_range&) { }
 }
@@ -89,9 +96,13 @@ void WindowBackend::Close(Window const& window) {
 
 void WindowBackend::Resized(Window& window, const Rect& rect) {
 	window._frame = rect;
+
+	for(const auto &event: window._event_size_list) {
+		event.invoke(window, rect);
+	}
 }
 
-WindowSurface WindowBackend::PrepareSurface(const Window& window) {
+WindowSurface WindowBackend::PrepareSurface(const Window& window) const {
 
 	try {
 		const reference_wrapper<Window> ref_window{ const_cast<Window&>(window) };

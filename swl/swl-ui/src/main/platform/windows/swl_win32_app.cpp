@@ -2,12 +2,17 @@
 // Created by micha on 4/3/2020.
 //
 
+#include <iostream>
+
 #include "application.hpp"
 
 #include "window.hpp"
 
 #include "swl_window_backend.hpp"
 #include "swl_win32_window.hpp"
+
+#include <Windows.h>
+#include <dwmapi.h>
 
 using namespace std;
 using namespace swl::cx;
@@ -36,6 +41,32 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		
 		return 0;
 	}
+	case WM_ACTIVATE: {
+
+		if (handlw == 0) {
+			return DefWindowProc(hwnd, message, wparam, lparam);
+		}
+
+		const auto& window = Application::windowWithHandle(handlw);
+
+		Window::State state;
+
+		if (LOWORD(wparam) == WA_INACTIVE) {
+			state = Window::State::Paused;
+		} else {
+			state = Window::State::Active;
+		}
+
+		if (HIWORD(wparam)) {
+			state = Window::State::Background;
+		}
+
+		for (const auto& item : window._event_state_list) {
+			item.invoke(window, state);
+		}
+
+		return 0;
+	}
 	case WM_WINDOWPOSCHANGED: {
 
 		if (handlw == 0) {
@@ -43,10 +74,13 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		}
 
 		auto &window = Application::windowWithHandle(handlw);
-		const auto info = reinterpret_cast<WINDOWPOS*>(lparam);
+
+		RECT windowRect;
+		GetClientRect(hwnd, &windowRect);
+
 		backend::WindowBackend::backend->Resized(window, Rect{
-			{ float(info->x), float(info->y) },
-			{ float(info->cx), float(info->cy) } });
+			{ float(windowRect.left), float(windowRect.top) },
+			{ float(windowRect.right - windowRect.left), float(windowRect.bottom - windowRect.top) } });
 		return 0;
 	}
 	case WM_QUIT:
@@ -101,7 +135,7 @@ void Application::preHeat(Application &app) {
 	customClass.lpszClassName = className;
 	customClass.hIcon = LoadIcon(instance, MAKEINTRESOURCE(108));
 	customClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	customClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	customClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	customClass.hIconSm = LoadIcon(instance, MAKEINTRESOURCE(108));
 
 	RegisterClassEx(&customClass);

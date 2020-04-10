@@ -27,6 +27,9 @@ struct VulkanGraphicsBackend {
 
 	void makeSurface(vk::Instance const &instance, ui::WindowSurface &surface);
 
+	void destroySurfaces(const vk::Instance& device);
+	
+
 	friend struct gx::implem::VulkanGraphicsContext;
 
 private:

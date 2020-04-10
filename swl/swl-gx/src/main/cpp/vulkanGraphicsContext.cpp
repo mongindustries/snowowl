@@ -56,10 +56,16 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 
 VulkanGraphicsContext::~VulkanGraphicsContext() {
 
-	_instance.release().destroy();
+	if (_instance) {
 
-	if (loader) {
-		delete loader;
+		backend::VulkanGraphicsBackend::instance->destroySurfaces(_instance.get());
+		delete backend::VulkanGraphicsBackend::instance;
+
+		_instance.release().destroy();
+
+		if (loader) {
+			delete loader;
+		}
 	}
 }
 
