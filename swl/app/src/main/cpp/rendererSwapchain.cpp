@@ -60,13 +60,13 @@ void RendererSwapchain::createSwapchain(const ui::Window& window, vk::SwapchainK
 		swapchainExtent.width =
 			min(
 				max(
-					uint32_t(window.getSize().x),
+					uint32_t(window.getSize().x()),
 					surface_capabilities.minImageExtent.width),
 				surface_capabilities.maxImageExtent.width);
 		swapchainExtent.height =
 			min(
 				max(
-					uint32_t(window.getSize().y),
+					uint32_t(window.getSize().y()),
 					surface_capabilities.minImageExtent.height),
 				surface_capabilities.maxImageExtent.height);
 	}

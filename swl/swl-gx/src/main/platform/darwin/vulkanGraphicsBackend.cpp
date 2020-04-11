@@ -23,3 +23,10 @@ void VulkanGraphicsBackend::makeSurface(vk::Instance const &instance, ui::Window
 	vk::MacOSSurfaceCreateInfoMVK createInfo({ }, surface.getNativeHandle());
 	surfaces.emplace(pair { reference_wrapper(surface), instance.createMacOSSurfaceMVK(createInfo) });
 }
+
+void VulkanGraphicsBackend::destroySurfaces(const vk::Instance &device) {
+
+	for (const auto& item : surfaces) {
+		device.destroySurfaceKHR(item.second);
+	}
+}

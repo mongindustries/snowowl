@@ -28,19 +28,25 @@ struct TestStruct {
 
 TEST(Ownership, ShouldDestruct) {
 
-	auto pointer = make_own<TestStruct>(100);
-	ASSERT_EQ(pointer.isValid(), true);
+	auto pointer = Own<TestStruct>(100);
+	ASSERT_EQ(pointer.is_valid(), true);
+}
+
+TEST(Ownership, ImplicitCastBool) {
+
+	auto pointer = Own<TestStruct>(100);
+	ASSERT_EQ(bool(pointer), true);
 }
 
 TEST(Ownership, OutsideShouldNotBeValidUponGoingInside) {
 
-	auto pointer = make_own<TestStruct>(100);
-	ASSERT_EQ(pointer.isValid(), true);
+	auto pointer = Own<TestStruct>(100);
+	ASSERT_EQ(pointer.is_valid(), true);
 
 	{
-		auto moved = move(pointer);
-		ASSERT_EQ(moved.isValid(), true);
+		auto moved = std::move(pointer);
+		ASSERT_EQ(moved.is_valid(), true);
 	}
 
-	ASSERT_EQ(pointer.isValid(), false);
+	ASSERT_EQ(pointer.is_valid(), false);
 }

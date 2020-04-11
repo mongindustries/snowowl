@@ -39,7 +39,8 @@ endif()
 
 if(APPLE)
     add_executable(app MACOSX_BUNDLE
-            ${APP_SOURCES})
+            ${APP_SOURCES}
+            ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/app.xcassets)
 
     set_target_properties(app PROPERTIES
             MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/Info.plist.in)

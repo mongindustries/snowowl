@@ -18,7 +18,7 @@ set(SOURCE_LIST
         cpp/core.cpp
         cpp/path.cpp
         cpp/path_ops.cpp
-        cpp/point_operators.cpp)
+        )
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST

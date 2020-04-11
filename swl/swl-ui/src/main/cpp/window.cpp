@@ -42,7 +42,7 @@ WindowSurface Window::getSurface() const {
 	return WindowBackend::backend->PrepareSurface(*this);
 }
 
-Point2D Window::getSize() const {
+Size2D Window::getSize() const {
 	return _frame.size;
 }
 

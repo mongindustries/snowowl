@@ -33,10 +33,12 @@ void WindowBackend::Spawn
 
 	window._handle = Core::makeHandle();
 
-	auto frame = window._frame;
-	auto viewFrame = NSRect { { frame.origin.x, frame.origin.y }, { frame.size.x, frame.size.y } };
+	auto frame      = window._frame;
+	auto viewFrame  = NSMakeRect(frame.origin.x(), frame.origin.y(), frame.size.x(), frame.size.y());
 
-	auto controller = Tell<swlViewController>([[swlViewController alloc] initWithNibName:nil bundle:nil], [viewFrame](swlViewController *ctx) {
+	auto controller = Tell<swlViewController>(
+		[[swlViewController alloc] initWithNibName:nil bundle:nil],
+		[viewFrame](swlViewController *ctx) {
 		Tell<NSView>(ctx.view, [viewFrame](NSView *view) {
 			view.frame = viewFrame;
 		});
@@ -44,8 +46,8 @@ void WindowBackend::Spawn
 
 	swlWindow* ns_window = [swlWindow createWindow:controller];
 
-	ns_window.title   = [NSString stringWithCString:window._title.c_str() encoding:NSUTF8StringEncoding];
-	ns_window.window  = &window;
+	ns_window.title     = [NSString stringWithCString:window._title.c_str() encoding:NSUTF8StringEncoding];
+	ns_window.window    = &window;
 
 	[ns_window makeKeyAndOrderFront: [NSApplication sharedApplication]];
 	[ns_window makeMainWindow];
@@ -56,6 +58,10 @@ void WindowBackend::Spawn
 void WindowBackend::Resized
 	(Window &window, const cx::Rect &rect) {
 	window._frame = rect;
+
+	for (const auto &item : window._event_size_list) {
+		item.invoke(window, rect);
+	}
 }
 
 
@@ -77,13 +83,13 @@ void WindowBackend::UpdateFrame
 		auto ns_window = getWindowFromHandle(activeNativeHandles, const_cast<Window&>(window));
 
 		auto frame = window._frame;
-		[ns_window setFrame: NSMakeRect(frame.origin.x, frame.origin.y, frame.size.x, frame.size.y) display: YES];
+		[ns_window setFrame: NSMakeRect(frame.origin.x(), frame.origin.y(), frame.size.x(), frame.size.y()) display: YES];
 	} catch (const out_of_range&) {
 	}
 }
 
 WindowSurface WindowBackend::PrepareSurface
-	(Window const &window) {
+	(Window const &window) const {
 
 	try {
 

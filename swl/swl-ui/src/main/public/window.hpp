@@ -50,7 +50,7 @@ struct SWL_EXPORT Window {
 	[[nodiscard]] WindowSurface
 		getSurface    () const;
 
-	[[nodiscard]] cx::Point2D
+	[[nodiscard]] cx::Size2D
 		getSize       () const;
 
 	// window events

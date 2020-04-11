@@ -19,9 +19,9 @@ struct Own {
 	Own<ClassType>& operator=(const Own<ClassType>& copy) = delete;
 
 
-	explicit Own(Own< ClassType >&& mov) noexcept;
+	Own(Own<ClassType>&& mov) noexcept;
 
-	Own<ClassType>& operator=(Own< ClassType >&& mov) noexcept;
+	Own<ClassType>& operator=(Own<ClassType>&& mov) noexcept;
 
 
 	template<typename Derive, std::enable_if_t< std::is_base_of<ClassType, Derive>::value, int> = 0>
@@ -50,6 +50,11 @@ struct Own {
 
 
 	ClassType* operator()       () const;
+
+
+	explicit operator bool      () const {
+		return is_valid();
+	}
 
 	
 	template<typename Derive, std::enable_if_t< std::is_base_of_v<ClassType, Derive>, int> = 0>

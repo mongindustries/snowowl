@@ -3,59 +3,95 @@
 //
 #pragma once
 
+#include <complex>
 #include "headerconv.hpp"
 #include "point.hpp"
 
-SNOW_OWL_NAMESPACE(cx)
+template<typename ComponentType, uint16_t Components>
+swl::cx::Vector<ComponentType, Components> operator+(
+	const swl::cx::Vector<ComponentType, Components>& lhs,
+	const swl::cx::Vector<ComponentType, Components>& rhs) {
 
-// 2d point operations
+	std::array<ComponentType, Components> sum{};
 
-SWL_EXPORT Point2D
-	operator!    (const Point2D &pos);
-
-SWL_EXPORT Point2D
-	operator+    (const Point2D &lhs, const Point2D &rhs);
-
-SWL_EXPORT bool
-	operator==   (const Point2D &lhs, const Point2D &rhs);
-
-bool
-	operator!=   (const Point2D &lhs, const Point2D &rhs) {
-		return !(lhs == rhs);
+	for (uint16_t i = 0; i < Components; i += 1) {
+		sum[i] = lhs.components[i] + rhs.components[i];
 	}
 
-// 2d expansion
+	return swl::cx::Vector<ComponentType, Components> { sum };
+}
 
-inline Point3D
-	p3           (const Point2D &lhs) {
-		return {
-			lhs.x,
-			lhs.y,
-			0
-		};
+template<typename ComponentType, uint16_t Components>
+swl::cx::Vector<ComponentType, Components> operator-(
+	const swl::cx::Vector<ComponentType, Components>& lhs,
+	const swl::cx::Vector<ComponentType, Components>& rhs) {
+
+	std::array<ComponentType, Components> diff{};
+
+	for (uint16_t i = 0; i < Components; i += 1) {
+		diff[i] = lhs.components[i] - rhs.components[i];
 	}
 
-// 3d point operations
+	return swl::cx::Vector<ComponentType, Components> { diff };
+}
 
-SWL_EXPORT Point3D
-	operator+    (const Point3D &lhs, const Point3D &rhs);
+template<typename ComponentType, uint16_t Components>
+ComponentType norm(
+	const swl::cx::Vector<ComponentType, Components>&rhs) {
 
-SWL_EXPORT bool
-	operator==   (const Point3D &lhs, const Point3D &rhs);
+	ComponentType accumulate{};
 
-bool
-	operator!=   (const Point3D &lhs, const Point3D &rhs) {
-		return !(lhs == rhs);
+	for(uint16_t i = 0; i < Components; i += 1) {
+		accumulate += rhs.components[i] * rhs.components[i];
 	}
 
-// 3d trim
+	return std::sqrt(accumulate);
+}
 
-inline Point2D
-	p2           (const Point3D &lhs) {
-		return {
-			lhs.x,
-			lhs.y
-		};
+template<typename ComponentType, uint16_t Components>
+ComponentType product_dot(
+	const swl::cx::Vector<ComponentType, Components>& lhs,
+	const swl::cx::Vector<ComponentType, Components>& rhs) {
+
+	ComponentType accumulate{};
+
+	for (uint16_t i = 0; i < Components; i += 1) {
+		accumulate += component<i>(lhs) * component<i>(rhs);
 	}
 
-SNOW_OWL_NAMESPACE_END
+	return accumulate;
+}
+
+template<typename ComponentType, uint16_t Components>
+swl::cx::Vector<ComponentType, Components> negate(
+	const swl::cx::Vector<ComponentType, Components>&rhs) {
+
+	std::array<ComponentType, Components> negate{};
+
+	for (uint16_t i = 0; i < Components; i += 1) {
+		negate[i] = -1 * rhs.components[i];
+	}
+
+	return swl::cx::Vector<ComponentType, Components> { negate };
+}
+
+template<typename ComponentType, uint16_t Components>
+swl::cx::Vector<ComponentType, Components> unit(
+	const swl::cx::Vector<ComponentType, Components>&rhs) {
+
+	std::array<ComponentType, Components> result{};
+	ComponentType divisor = norm(rhs);
+
+	for(uint16_t i = 0; i < Components; i += 1) {
+		rhs.components[i];
+	}
+
+	return swl::cx::Vector<ComponentType, Components> { result };
+}
+
+template<typename ComponentType>
+swl::cx::Vector<ComponentType, 3> product_cross(
+	const swl::cx::Vector<ComponentType, 3>& lhs,
+	const swl::cx::Vector<ComponentType, 3>& rhs) {
+	return {};
+}
