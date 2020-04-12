@@ -5,10 +5,9 @@ using namespace std;
 using namespace swl::app;
 
 RendererSwapchain::RendererSwapchain(
-	const Renderer* renderer,
-	const ui::Window& window): renderer(renderer) {
+	const Renderer* renderer, const ui::Window& window): renderer(renderer), size(window.getSize()) {
 
-	createSwapchain(window, nullptr);
+	createSwapchain(nullptr);
 	
 	const std::function<void(const ui::Window&, const cx::Rect&)> resizeCallback = 
 		std::bind(&RendererSwapchain::resize, this, std::placeholders::_1, std::placeholders::_2);
@@ -16,7 +15,21 @@ RendererSwapchain::RendererSwapchain(
 	const_cast<ui::Window&>(window)._event_size_list.emplace_back(resizeCallback);
 }
 
-auto RendererSwapchain::getNextImage(const vk::Semaphore& signal) const -> std::tuple<uint32_t, vk::Image, vk::ImageView> {
+auto RendererSwapchain::getNextImage(const vk::Semaphore& signal) -> std::tuple<uint32_t, vk::Image, vk::ImageView> {
+
+	if (needsResize) {
+
+		renderer->logical_device->waitIdle();
+
+		lock_guard<mutex> lock(resizeLock);
+
+		auto oldSwapchain = swapchain.release();
+
+		createSwapchain(&oldSwapchain);
+		renderer->logical_device->destroySwapchainKHR(oldSwapchain);
+
+		needsResize = false;
+	}
 
 	uint32_t nextImage;
 	renderer->logical_device->acquireNextImageKHR(swapchain.get(), UINT64_MAX, signal, nullptr, &nextImage);
@@ -25,23 +38,26 @@ auto RendererSwapchain::getNextImage(const vk::Semaphore& signal) const -> std::
 	return tuple{ nextImage, get<0>(_pair), get<1>(_pair).get() };
 }
 
-void RendererSwapchain::present(const vk::Queue& queue, uint32_t swapchainFrameIndex, const vk::Semaphore& wait) const {
+void RendererSwapchain::present(const vk::Queue& queue, uint32_t swapchainFrameIndex, const vk::Semaphore& wait) {
 
 	const vk::PresentInfoKHR presentInfo(1, &wait, 1, &swapchain.get(), &swapchainFrameIndex);
-	assert(queue.presentKHR(presentInfo) == vk::Result::eSuccess);
+
+	try {
+		queue.presentKHR(presentInfo);
+	} catch (const vk::OutOfDateKHRError&) {
+		needsResize = true;
+	}
 }
 
 void RendererSwapchain::resize(const ui::Window& window, const cx::Rect& new_rect) {
 
-	renderer->logical_device->waitIdle();
-	
-	auto oldSwapchain = swapchain.release();
-	
-	createSwapchain(window, &oldSwapchain);
-	renderer->logical_device->destroySwapchainKHR(oldSwapchain);
+	lock_guard<mutex> lock(resizeLock);
+
+	size = new_rect.size;
+	needsResize = true;
 }
 
-void RendererSwapchain::createSwapchain(const ui::Window& window, vk::SwapchainKHR* oldSwapChain) {
+void RendererSwapchain::createSwapchain(vk::SwapchainKHR* oldSwapChain) {
 
 	if (!swapchain_views.empty()) {
 		swapchain_views.clear();
@@ -60,13 +76,13 @@ void RendererSwapchain::createSwapchain(const ui::Window& window, vk::SwapchainK
 		swapchainExtent.width =
 			min(
 				max(
-					uint32_t(window.getSize().x()),
+					uint32_t(size.x()),
 					surface_capabilities.minImageExtent.width),
 				surface_capabilities.maxImageExtent.width);
 		swapchainExtent.height =
 			min(
 				max(
-					uint32_t(window.getSize().y()),
+					uint32_t(size.y()),
 					surface_capabilities.minImageExtent.height),
 				surface_capabilities.maxImageExtent.height);
 	}
@@ -90,8 +106,8 @@ void RendererSwapchain::createSwapchain(const ui::Window& window, vk::SwapchainK
 	createSwapchainInfo.presentMode = presentModes[0];
 	createSwapchainInfo.oldSwapchain = oldSwapChain != nullptr ? *oldSwapChain : nullptr;
 
-	auto &pqueue = *renderer->present_queue;
-	auto &gqueue = *renderer->graphics_queue;
+	auto &pqueue = renderer->present_queue.get ();
+	auto &gqueue = renderer->graphics_queue.get();
 
 	if (pqueue.index != gqueue.index) {
 		createSwapchainInfo.imageSharingMode = vk::SharingMode::eConcurrent;

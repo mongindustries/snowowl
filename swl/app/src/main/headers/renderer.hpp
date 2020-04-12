@@ -32,7 +32,7 @@ struct Renderer {
 
 	cx::Own<RendererBuffer>      commands;
 
-	Renderer(const gx::implem::VulkanGraphicsContext& context, const ui::Window& target_window);
+	Renderer(const gx::implem::VulkanGraphicsContext& context, const ui::Window& target_window, const ui::WindowSurface& surface);
 
 
 	void frame();

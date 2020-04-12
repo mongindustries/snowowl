@@ -12,13 +12,13 @@ set(HEADER_LIST
         public/rect.hpp
         public/tell.hpp
 
-        headers/path_ops.hpp)
+        headers/path_ops.hpp public/game_loop.h)
 
 set(SOURCE_LIST
         cpp/core.cpp
         cpp/path.cpp
         cpp/path_ops.cpp
-        )
+        cpp/game_loop.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST

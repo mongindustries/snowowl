@@ -44,12 +44,10 @@ struct Own {
 	~Own();
 
 
-	ClassType const& operator-> () const;
+	ClassType* const operator-> ();
 
-	ClassType const& operator*  () const;
-
-
-	ClassType* operator()       () const;
+	template<typename Derive = ClassType>
+	Derive& get                 () const;
 
 
 	explicit operator bool      () const {
@@ -136,18 +134,14 @@ Own<ClassType>::~Own() {
 }
 
 template <typename ClassType>
-ClassType const& Own<ClassType>::operator->() const {
-	return *(this->_value);
+ClassType* const Own<ClassType>::operator->() {
+	return this->_value;
 }
 
 template <typename ClassType>
-ClassType const& Own<ClassType>::operator*() const {
-	return *(this->_value);
-}
-
-template <typename ClassType>
-ClassType* Own<ClassType>::operator()() const {
-	return _value;
+template <typename Derive>
+Derive& Own<ClassType>::get() const {
+	return *static_cast<Derive*>(this->_value);
 }
 
 template <typename ClassType>
@@ -195,7 +189,7 @@ ClassType const& Borrow<ClassType>::operator()() const {
 // MARK: Mutable Borrow Implementation
 
 template <typename ClassType>
-MutableBorrow<ClassType>::MutableBorrow(Own<ClassType> &to_borrow): _mutable_borrow(to_borrow()) {}
+MutableBorrow<ClassType>::MutableBorrow(Own<ClassType> &to_borrow): _mutable_borrow(&to_borrow.get()) {}
 
 template <typename ClassType>
 ClassType& MutableBorrow<ClassType>::operator()() const {

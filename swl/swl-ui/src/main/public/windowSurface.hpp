@@ -20,20 +20,6 @@ struct SWL_EXPORT Window;
 
 struct SWL_EXPORT WindowSurface {
 
-	WindowSurface
-		(const WindowSurface &copy) = delete;
-
-	WindowSurface& operator=
-		(const WindowSurface &copy) const = delete;
-
-
-	WindowSurface
-		(WindowSurface &&mov) noexcept;
-
-	WindowSurface& operator=
-		(WindowSurface &&mov) noexcept;
-
-
 	WindowSurface     () = default;
 
 	~WindowSurface    ();

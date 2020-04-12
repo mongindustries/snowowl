@@ -39,11 +39,15 @@ endif()
 
 if(APPLE)
     add_executable(app MACOSX_BUNDLE
-            ${APP_SOURCES}
-            ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/app.xcassets)
+        ${APP_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/app.xcassets)
 
     set_target_properties(app PROPERTIES
-            MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/Info.plist.in)
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/Info.plist.in
+        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME AppIcon)
+
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/platform/darwin/app.xcassets
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     target_link_libraries(app
             "-framework Foundation"

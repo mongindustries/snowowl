@@ -11,8 +11,8 @@ SNOW_OWL_NAMESPACE(gx)
 template<typename Context, std::enable_if_t< std::is_base_of_v<GraphicsContext, Context>, int> = 0xBEEF>
 struct GraphicsCanvas {
 
-	Context& context() {
-		return implementation;
+	Context& context() const {
+		return const_cast<Context&>(implementation);
 	}
 
 

@@ -18,10 +18,10 @@ vector<const char*> VulkanGraphicsBackend::vulkanLayers = {
 
 };
 
-void VulkanGraphicsBackend::makeSurface(vk::Instance const &instance, ui::WindowSurface &surface) {
+void VulkanGraphicsBackend::makeSurface(vk::Instance const &instance, const ui::WindowSurface &surface) {
 
 	vk::MacOSSurfaceCreateInfoMVK createInfo({ }, surface.getNativeHandle());
-	surfaces.emplace(pair { reference_wrapper(surface), instance.createMacOSSurfaceMVK(createInfo) });
+	surfaces.emplace(pair { surface, instance.createMacOSSurfaceMVK(createInfo) });
 }
 
 void VulkanGraphicsBackend::destroySurfaces(const vk::Instance &device) {

@@ -23,7 +23,7 @@ auto FindQueueFamily(const vector<vk::QueueFamilyProperties> &list, vk::QueueFla
 	return distance(list.begin(), item);
 }
 
-Renderer::Renderer(const implem::VulkanGraphicsContext& context, const Window& target_window) :
+Renderer::Renderer(const implem::VulkanGraphicsContext& context, const Window& target_window, const WindowSurface& window_surface) :
 	instance(const_cast<vk::Instance&>(context.getInstance())),
 	physical_device(const_cast<vk::PhysicalDevice&>(context.getActiveDevice())),
 
@@ -34,9 +34,6 @@ Renderer::Renderer(const implem::VulkanGraphicsContext& context, const Window& t
 
 	commands(nullptr) {
 
-	auto window_surface = target_window.getSurface();
-	
-	context.makeSurface(window_surface);
 	surface = context.getSurface(window_surface);
 
 	auto families = physical_device.getQueueFamilyProperties();
@@ -91,20 +88,20 @@ Renderer::Renderer(const implem::VulkanGraphicsContext& context, const Window& t
 
 	swapchain      = new RendererSwapchain(this, target_window);
 
-	commands       = new RendererBufferBasicClear(*graphics_queue);
+	commands       = new RendererBufferBasicClear(graphics_queue.get());
 }
 
 void Renderer::frame() {
 
-	const auto &swapchain = *(this->swapchain);
-	auto frame = swapchain.getNextImage(frameSemaphore.get());
+	auto& swapchain = this->swapchain.get();
+	auto  frame     = swapchain.getNextImage(frameSemaphore.get());
 
-	auto clear = static_cast<RendererBufferBasicClear*>(commands());
+	auto& clear     = commands.get<RendererBufferBasicClear>();
 
-	clear->imageToClear = &get<1>(frame);
-	clear->execute();
+	clear.imageToClear = &get<1>(frame);
+	clear.execute();
 
-	graphics_queue()->submit(*clear);
+	graphics_queue->submit(clear);
 
-	swapchain.present(present_queue()->queue, get<0>(frame), frameSemaphore.get());
+	swapchain.present(present_queue->queue, get<0>(frame), frameSemaphore.get());
 }

@@ -1,44 +1,66 @@
-﻿#include <application.hpp>
+#include <application.hpp>
 
+#include <game_loop.h>
 #include <graphicsCanvas.hpp>
 #include <vulkanGraphicsContext.hpp>
 
 #include "renderer.hpp"
 
+#include <iostream>
+
 using namespace swl;
 using namespace cx;
 using namespace ui;
 
-struct App: Application {
+struct AppGameLoop: GameLoop {
 
-	WindowSurface surface;
-
-	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas{ gx::implem::VulkanGraphicsContext() };
+	gx::implem::VulkanGraphicsContext& context;
 
 	Own<app::Renderer> renderer;
 
 
-	explicit App(void* instance): Application(instance), renderer(nullptr) {
+	Window& window;
+
+	WindowSurface surface;
+
+	AppGameLoop(gx::implem::VulkanGraphicsContext& context, Window& window, const WindowSurface &surface): GameLoop(60, 4),
+		context  (context),
+		renderer (nullptr),
+
+		window   (window),
+		surface  (surface) {
+	}
+
+	void create() override {
+		renderer = new app::Renderer(context, window, surface);
+	}
+
+	void update(std::chrono::milliseconds delta) override {
+	}
+
+	void render(float offset) override {
+		renderer->frame();
+	}
+};
+
+struct App: Application {
+
+	Own<AppGameLoop> gameLoop;
+
+	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas{ gx::implem::VulkanGraphicsContext() };
+
+	App(void* instance): Application(instance), gameLoop(nullptr) {
 	}
 
 	void applicationCreate  () override {
 
-		const auto window = createWindow("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
+		const auto window  = createWindow("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
+		auto       surface = window().getSurface();
 
-		auto& window_ref = window();
+		canvas.context().makeSurface(surface);
 
-		renderer = new app::Renderer(canvas.context(), window_ref);
-
-		const std::function<void(const Window&, const Window::State&)> event = [&, this](const Window&, const Window::State& state) -> void {
-			renderer()->frame();
-		};
-
-		const std::function<void(const Window&, const Rect&)> sizeEvent = [&, this](const Window&, const Rect&) -> void {
-			renderer()->frame();
-		};
-
-		window_ref._event_state_list.emplace_back(event);
-		window_ref._event_size_list.emplace_back(sizeEvent);
+		gameLoop = new AppGameLoop(canvas.context(), window(), surface);
+		gameLoop->open();
 	}
 
 	void applicationDestroy () override {
@@ -49,7 +71,6 @@ struct App: Application {
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdArgs, int cmdShow) {
 #elif defined(SWL_DARWIN)
 int main () {

@@ -25,7 +25,7 @@ struct VulkanGraphicsBackend {
 	static std::vector<const char*> vulkanLayers;
 
 
-	void makeSurface(vk::Instance const &instance, ui::WindowSurface &surface);
+	void makeSurface(vk::Instance const &instance, const ui::WindowSurface &surface);
 
 	void destroySurfaces(const vk::Instance& device);
 	
@@ -34,7 +34,7 @@ struct VulkanGraphicsBackend {
 
 private:
 
-	std::map<std::reference_wrapper<ui::WindowSurface>, vk::SurfaceKHR, std::less<const ui::WindowSurface>> surfaces;
+	std::map<ui::WindowSurface, vk::SurfaceKHR> surfaces;
 };
 
 SNOW_OWL_NAMESPACE_END

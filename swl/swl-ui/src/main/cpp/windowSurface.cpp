@@ -11,22 +11,6 @@ using namespace std;
 using namespace swl::ui;
 using namespace swl::cx;
 
-WindowSurface::WindowSurface(WindowSurface &&mov) noexcept :
-	_window(mov._window),
-	_native_surface_handle(mov._native_surface_handle) {
-}
-
-WindowSurface& WindowSurface::operator=(WindowSurface &&mov)  noexcept {
-	_native_surface_handle = mov._native_surface_handle;
-	_window = mov._window;
-
-	mov._native_surface_handle = nullptr;
-	mov._window = nullptr;
-
-	return *this;
-}
-
-
 WindowSurface::~WindowSurface() {
 	_native_surface_handle = nullptr;
 	_window = nullptr;
