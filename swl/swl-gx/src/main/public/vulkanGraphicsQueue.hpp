@@ -45,7 +45,7 @@ struct VulkanGraphicsQueue {
 
 	[[nodiscard]] bool supportsPresent(const VulkanGraphicsSwapChain& swapChain) const;
 
-	bool isReady() const;
+	[[nodiscard]] bool isReady() const;
 
 
 	[[nodiscard]] vk::UniqueCommandPool commandPool() const;
@@ -53,7 +53,7 @@ struct VulkanGraphicsQueue {
 
 	void submit(const std::vector<vk::CommandBuffer> &buffers, WaitType wait) const;
 
-	void present(const std::vector<std::pair<cx::Borrow<VulkanGraphicsSwapChain>, cx::Borrow<VulkanGraphicsSwapChain::Frame>>> &swapChains, WaitType wait) const;
+	void present(const std::vector<std::pair<cx::Borrow<VulkanGraphicsSwapChain>, cx::Borrow<VulkanGraphicsSwapChain::VulkanFrame>>> &swapChains, WaitType wait) const;
 };
 
 SNOW_OWL_NAMESPACE_END

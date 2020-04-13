@@ -42,7 +42,7 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const vk::SemaphoreCreateInfo createSemaphore;
 	swapChainSemaphore = device.createSemaphoreUnique(createSemaphore);
 
-	createSwapchain();
+	createSwapChain();
 
 	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const Rect& rect) {
 
@@ -51,29 +51,27 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	});
 }
 
-Borrow<VulkanGraphicsSwapChain::Frame>
+Borrow<VulkanGraphicsSwapChain::VulkanFrame>
 	VulkanGraphicsSwapChain::getFrame() {
 
 	if (needsResize) {
 		device.waitIdle();
-		createSwapchain();
+		createSwapChain();
 
 		needsResize = false;
 	}
 
 	try {
-		const auto result = device.acquireNextImageKHR(swapChain.get(), 32000000, swapChainSemaphore.get(), nullptr);
+		const auto result = device.acquireNextImageKHR(swapChain.get(), 32'000'000, swapChainSemaphore.get(), nullptr);
 
-		auto frame = activeFrames[result.value];
-		
-		return Borrow { frame };
+		return Borrow { activeFrames[result.value] };
 	} catch(const vk::OutOfDateKHRError&) {
 		return Borrow(activeFrames[0]);
 	}
 }
 
 void
-	VulkanGraphicsSwapChain::createSwapchain() {
+	VulkanGraphicsSwapChain::createSwapChain() {
 
 	auto& dev_surface = this->surface.get();
 
@@ -133,7 +131,9 @@ void
 	}
 
 	auto images = device.getSwapchainImagesKHR(swapChain.get());
-	activeFrames.resize(images.size());
+	activeFrames.reserve(images.size());
+
+	uint32_t index{0};
 
 	for (const vk::Image& image : images) {
 
@@ -149,10 +149,13 @@ void
 
 		auto frame = new VulkanFrame();
 
+		frame->index = index;
 		frame->image = image;
 		frame->imageView = device.createImageViewUnique(createImageView);
 
 		activeFrames.emplace_back(frame);
+
+		index += 1;
 	}
 }
 

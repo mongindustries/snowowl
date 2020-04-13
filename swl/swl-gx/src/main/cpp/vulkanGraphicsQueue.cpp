@@ -74,7 +74,7 @@ void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, Vulka
 	}
 }
 
-void VulkanGraphicsQueue::present(const vector<pair<Borrow<VulkanGraphicsSwapChain>, Borrow<VulkanGraphicsSwapChain::Frame>>> &swapChains, WaitType wait) const {
+void VulkanGraphicsQueue::present(const vector<pair<Borrow<VulkanGraphicsSwapChain>, Borrow<VulkanGraphicsSwapChain::VulkanFrame>>> &swapChains, WaitType wait) const {
 
 	vector<vk::SwapchainKHR> chains;
 	chains.reserve(swapChains.size());

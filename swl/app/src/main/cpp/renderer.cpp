@@ -33,28 +33,26 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 	presentReadySemaphore = context._device->createSemaphoreUnique(sema_create);
 }
 
-float _color = 0;
+float __color__ = 0;
 
 void Renderer::frame() {
 
-	auto frame = swapChain->getFrame();
-	// cout << "frame index: " << frame.get().index << endl;
+	auto frame  = swapChain->getFrame();
+	auto& image = frame.get().image;
 
 	auto& buffer = clearBuffer[frame.get().index].get();
 
-	const vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eSimultaneousUse } };
+	const vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eOneTimeSubmit } };
 	buffer.begin(recordBegin);
 
 	auto subrange = vk::ImageSubresourceRange{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 };
-	auto color    = vk::ClearColorValue(array { _color, 0.25f, 0.55f, 1.0f });
+	auto color    = vk::ClearColorValue(array {__color__, 0.25f, 0.55f, 1.0f });
 
-	_color += 0.01;
+	__color__ += 0.01;
 
-	if (_color > 1) {
-		_color = 0;
+	if (__color__ > 1) {
+		__color__ = 0;
 	}
-
-	auto &vkFrame = static_cast<const VulkanGraphicsSwapChain::VulkanFrame&>(frame.get());
 
 	vk::ImageMemoryBarrier barrier{};
 
@@ -67,13 +65,13 @@ void Renderer::frame() {
 	barrier.srcQueueFamilyIndex = graphicsQueue.get().familyIndex;
 	barrier.dstQueueFamilyIndex = graphicsQueue.get().familyIndex;
 
-	barrier.image = vkFrame.image;
+	barrier.image = image;
 	barrier.subresourceRange = subrange;
 
 	array from { barrier };
 	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eTransfer, { }, { }, { }, from);
 
-	buffer.clearColorImage(vkFrame.image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &subrange);
+	buffer.clearColorImage(image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &subrange);
 
 	barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
 	barrier.dstAccessMask = vk::AccessFlagBits::eMemoryRead;

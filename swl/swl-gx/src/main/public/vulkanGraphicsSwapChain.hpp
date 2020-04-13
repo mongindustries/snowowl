@@ -18,7 +18,10 @@ struct VulkanGraphicsQueue;
 
 struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 
-	struct VulkanFrame: Frame {
+	struct VulkanFrame {
+
+		uint32_t index;
+
 		vk::Image image;
 		vk::UniqueImageView imageView;
 	};
@@ -48,11 +51,11 @@ struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 		const ui::WindowSurface &surface);
 
 
-	[[nodiscard]] cx::Borrow<Frame>
-		getFrame  () override;
+	[[nodiscard]] cx::Borrow<VulkanFrame>
+		getFrame  ();
 
 	void
-		createSwapchain();
+		createSwapChain();
 };
 
 SNOW_OWL_NAMESPACE_END
