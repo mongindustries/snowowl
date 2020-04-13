@@ -30,15 +30,15 @@ struct VulkanGraphicsContext final: GraphicsContext<VulkanGraphicsContext> {
 		createDevice  (const std::vector<cx::MutableBorrow<VulkanGraphicsQueue>> &queues);
 
 
-	vk::UniqueInstance          _instance;
+	vk::UniqueInstance  _instance;
 
-	vk::PhysicalDevice          _active_device;
+	vk::PhysicalDevice  _active_device;
 
-	vk::UniqueDevice            _device;
+	vk::UniqueDevice    _device;
 
 private:
 
-	cx::Own<vk::DynamicLoader>  loader;
+	vk::DynamicLoader*  loader;
 };
 
 SNOW_OWL_NAMESPACE_END

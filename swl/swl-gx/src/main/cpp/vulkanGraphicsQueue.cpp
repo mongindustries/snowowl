@@ -1,10 +1,10 @@
 //
 // Created by Michael Ong on 13/4/20.
 //
-#import "vulkanGraphicsQueue.hpp"
+#include "vulkanGraphicsQueue.hpp"
 
-#import "vulkanGraphicsSwapChain.hpp"
-#import "vulkanGraphicsContext.hpp"
+#include "vulkanGraphicsSwapChain.hpp"
+#include "vulkanGraphicsContext.hpp"
 
 using namespace std;
 using namespace swl::cx;
@@ -101,7 +101,7 @@ void VulkanGraphicsQueue::present(const vector<pair<Borrow<VulkanGraphicsSwapCha
 	presentInfo.pWaitSemaphores    = wait.wait.data();
 
 	try {
-		queue.presentKHR(presentInfo);
+		(void) queue.presentKHR(presentInfo);
 
 		if (wait.shouldIdle) {
 			queue.waitIdle();

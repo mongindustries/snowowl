@@ -42,6 +42,10 @@ struct App: Application {
 
 		gameLoop = new AppGameLoop(surface);
 		gameLoop->open();
+
+		window->_event_close_list.emplace_back([&](const Window&) {
+			gameLoop->close();
+		});
 	}
 
 	void applicationDestroy () override {

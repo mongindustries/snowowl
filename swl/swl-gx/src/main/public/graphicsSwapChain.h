@@ -24,7 +24,7 @@ struct GraphicsSwapChain {
 	virtual ~GraphicsSwapChain() = default;
 
 
-	[[nodiscard]] virtual cx::Borrow<Frame> getFrame() const = 0;
+	[[nodiscard]] virtual cx::Borrow<Frame> getFrame() = 0;
 };
 
 SNOW_OWL_NAMESPACE_END

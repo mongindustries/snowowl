@@ -42,11 +42,11 @@ void Renderer::frame() {
 
 	auto& buffer = clearBuffer[frame.get().index].get();
 
-	vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eOneTimeSubmit } };
+	const vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eSimultaneousUse } };
 	buffer.begin(recordBegin);
 
 	auto subrange = vk::ImageSubresourceRange{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 };
-	auto color    = vk::ClearColorValue(array { 0.0f, 0.25f, 0.55f, 1.0f });
+	auto color    = vk::ClearColorValue(array { _color, 0.25f, 0.55f, 1.0f });
 
 	_color += 0.01;
 
@@ -61,7 +61,7 @@ void Renderer::frame() {
 	barrier.srcAccessMask = vk::AccessFlagBits::eMemoryRead;
 	barrier.dstAccessMask = vk::AccessFlagBits::eTransferWrite;
 
-	barrier.oldLayout = vk::ImageLayout::eGeneral;
+	barrier.oldLayout = vk::ImageLayout::eUndefined;
 	barrier.newLayout = vk::ImageLayout::eTransferDstOptimal;
 
 	barrier.srcQueueFamilyIndex = graphicsQueue.get().familyIndex;
@@ -73,7 +73,7 @@ void Renderer::frame() {
 	array from { barrier };
 	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eTransfer, { }, { }, { }, from);
 
-	buffer.clearColorImage(vkFrame.image, vk::ImageLayout::eGeneral, &color, 1, &subrange);
+	buffer.clearColorImage(vkFrame.image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &subrange);
 
 	barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
 	barrier.dstAccessMask = vk::AccessFlagBits::eMemoryRead;
@@ -82,15 +82,15 @@ void Renderer::frame() {
 	barrier.newLayout = vk::ImageLayout::ePresentSrcKHR;
 
 	array to { barrier };
-	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eTransfer, { }, { }, { }, to);
+	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eBottomOfPipe, { }, { }, { }, to);
 
 	buffer.end();
 
-	auto sp = vector { swapChain->swapChainSemaphore.get() };
-	auto rp = vector { presentReadySemaphore.get() };
+	const auto sp = vector { swapChain->swapChainSemaphore.get() };
+	const auto rp = vector { presentReadySemaphore.get() };
 
-	graphicsQueue->submit({ }, VulkanGraphicsQueue::WaitType::semaphores(sp, rp));
+	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::idle());
 
-	auto sc = vector { pair { Borrow(swapChain), frame } };
-	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(rp, {}));
+	const auto sc = vector { pair { Borrow(swapChain), frame } };
+	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(sp, { }));
 }

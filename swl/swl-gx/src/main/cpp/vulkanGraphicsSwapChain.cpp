@@ -1,15 +1,27 @@
 //
 // Created by Michael Ong on 12/4/20.
 //
+#include <algorithm>
+
 #include "vulkanGraphicsSwapChain.hpp"
 
+
+
+#include "application.hpp"
+#include "application.hpp"
 #include "vulkanGraphicsContext.hpp"
 #include "vulkanGraphicsBackend.hpp"
 
+#include "window.hpp"
+
+#undef min
+#undef max
+
 using namespace swl::cx;
 using namespace swl::gx;
+using namespace swl::ui;
 
-vk::Extent2D getExtent(const swl::ui::WindowSurface &surface, const vk::SurfaceCapabilitiesKHR &capabilities);
+vk::Extent2D getExtent(const Size2D &surface, const vk::SurfaceCapabilitiesKHR &capabilities);
 
 VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const VulkanGraphicsContext &context,
@@ -17,85 +29,138 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const VulkanGraphicsQueue& presentQueue,
 	const swl::ui::WindowSurface &surface) : GraphicsSwapChain(context, surface),
 
-	device  (context._device.get()),
-	surface (backend::VulkanGraphicsBackend::instance->makeSurface(context._instance.get(), surface)){
+	physicalDevice (context._active_device),
+	device         (context._device.get()),
 
-	vk::SemaphoreCreateInfo createSemaphore;
+	surface (backend::VulkanGraphicsBackend::instance->makeSurface(context._instance.get(), surface)),
+
+	presentQueue  (presentQueue),
+	graphicsQueue (graphicsQueue),
+
+	currentSize(surface.getSize()) {
+
+	const vk::SemaphoreCreateInfo createSemaphore;
 	swapChainSemaphore = device.createSemaphoreUnique(createSemaphore);
 
-	auto &dev_surface = this->surface.get();
+	createSwapchain();
 
-	auto capabilities = context._active_device.getSurfaceCapabilitiesKHR(dev_surface);
-	auto formats      = context._active_device.getSurfaceFormatsKHR     (dev_surface);
-	auto presents     = context._active_device.getSurfacePresentModesKHR(dev_surface);
+	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const Rect& rect) {
+
+		needsResize = true;
+		currentSize = rect.size;
+	});
+}
+
+Borrow<VulkanGraphicsSwapChain::Frame>
+	VulkanGraphicsSwapChain::getFrame() {
+
+	if (needsResize) {
+		device.waitIdle();
+		createSwapchain();
+
+		needsResize = false;
+	}
+
+	try {
+		const auto result = device.acquireNextImageKHR(swapChain.get(), 32000000, swapChainSemaphore.get(), nullptr);
+
+		auto frame = activeFrames[result.value];
+		
+		return Borrow { frame };
+	} catch(const vk::OutOfDateKHRError&) {
+		return Borrow(activeFrames[0]);
+	}
+}
+
+void
+	VulkanGraphicsSwapChain::createSwapchain() {
+
+	auto& dev_surface = this->surface.get();
+
+	auto capabilities = physicalDevice.getSurfaceCapabilitiesKHR(dev_surface);
+	auto formats = physicalDevice.getSurfaceFormatsKHR(dev_surface);
+	auto presents = physicalDevice.getSurfacePresentModesKHR(dev_surface);
 
 	vk::SwapchainCreateInfoKHR createSwapChain;
 
-	createSwapChain.surface           = dev_surface;
+	createSwapChain.surface = dev_surface;
 
-	createSwapChain.imageArrayLayers  = 1;
-	createSwapChain.imageColorSpace   = formats[0].colorSpace;
-	createSwapChain.imageExtent       = getExtent(surface, capabilities);
-	createSwapChain.imageFormat       = formats[0].format;
-	createSwapChain.imageUsage        = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eColorAttachment;
+	createSwapChain.imageArrayLayers = 1;
+	createSwapChain.imageColorSpace = formats[0].colorSpace;
+	createSwapChain.imageExtent = getExtent(currentSize, capabilities);
+	createSwapChain.imageFormat = formats[0].format;
+	createSwapChain.imageUsage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eColorAttachment;
 
-	createSwapChain.presentMode       = presents[0];
+	createSwapChain.presentMode = presents[0];
 
-	createSwapChain.minImageCount     = std::min(capabilities.minImageCount + 1, capabilities.maxImageCount);
+	createSwapChain.minImageCount = std::min(capabilities.minImageCount + 1, capabilities.maxImageCount);
 
 	assert(presentQueue.supportsPresent(*this));
 
 	if (presentQueue.familyIndex != graphicsQueue.familyIndex) {
 
-		createSwapChain.imageSharingMode      = vk::SharingMode::eConcurrent;
+		createSwapChain.imageSharingMode = vk::SharingMode::eConcurrent;
 
 		createSwapChain.queueFamilyIndexCount = 2;
-		createSwapChain.pQueueFamilyIndices   = std::array<uint32_t, 2> { presentQueue.familyIndex, graphicsQueue.familyIndex }.data();
-	} else {
-		createSwapChain.imageSharingMode      = vk::SharingMode::eExclusive;
+		createSwapChain.pQueueFamilyIndices = std::array<uint32_t, 2> { presentQueue.familyIndex, graphicsQueue.familyIndex }.data();
+	}
+	else {
+		createSwapChain.imageSharingMode = vk::SharingMode::eExclusive;
 	}
 
-	swapChain = device.createSwapchainKHRUnique(createSwapChain);
+	if (swapChain) {
+
+		const auto oldSwapChain = swapChain.release();
+		createSwapChain.oldSwapchain = oldSwapChain;
+
+		swapChain = device.createSwapchainKHRUnique(createSwapChain);
+
+		for (const auto& item : activeFrames) {
+
+			auto& frame = static_cast<VulkanFrame&>(item.get());
+
+			frame.image = vk::Image();
+			device.destroyImageView(frame.imageView.release());
+		}
+
+		activeFrames.clear();
+
+		device.destroySwapchainKHR(oldSwapChain);
+	}
+	else {
+
+		swapChain = device.createSwapchainKHRUnique(createSwapChain);
+	}
 
 	auto images = device.getSwapchainImagesKHR(swapChain.get());
+	activeFrames.resize(images.size());
 
-	for (const vk::Image &image : images) {
+	for (const vk::Image& image : images) {
 
 		vk::ImageViewCreateInfo createImageView;
 
-		createImageView.image   = image;
-		createImageView.format  = formats[0].format;
+		createImageView.image = image;
+		createImageView.format = formats[0].format;
 
-		createImageView.viewType          = vk::ImageViewType::e2D;
+		createImageView.viewType = vk::ImageViewType::e2D;
 
-		createImageView.components        = vk::ComponentMapping();
-		createImageView.subresourceRange  = vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
+		createImageView.components = vk::ComponentMapping();
+		createImageView.subresourceRange = vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
 
-		auto* frame = new VulkanFrame();
+		auto frame = new VulkanFrame();
 
-		frame->image     = image;
+		frame->image = image;
 		frame->imageView = device.createImageViewUnique(createImageView);
 
 		activeFrames.emplace_back(frame);
 	}
 }
 
-Borrow<VulkanGraphicsSwapChain::Frame>
-	VulkanGraphicsSwapChain::getFrame() const {
-
-	uint32_t index;
-	device.acquireNextImageKHR(swapChain.get(), UINT64_MAX, swapChainSemaphore.get(), nullptr, &index);
-
-	return Borrow(activeFrames[index]);
-}
-
 
 vk::Extent2D
-	getExtent(const swl::ui::WindowSurface &surface, const vk::SurfaceCapabilitiesKHR &capabilities) {
+	getExtent(const Size2D &size, const vk::SurfaceCapabilitiesKHR &capabilities) {
 
 	if (capabilities.currentExtent.width == UINT_MAX) {
-
-		auto size = surface.getSize();
 
 		vk::Extent2D extent;
 

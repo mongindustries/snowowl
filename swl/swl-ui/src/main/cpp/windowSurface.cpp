@@ -28,3 +28,7 @@ bool WindowSurface::operator==  (const WindowSurface &rhs) const {
 Size2D WindowSurface::getSize() const {
 	return _window.get().getSize();
 }
+
+MutableBorrow<Window> WindowSurface::getWindow() const {
+	return _window;
+}

@@ -14,19 +14,6 @@ vector<const char*> VulkanGraphicsBackend::vulkanExtensions = {
 vector<const char*> VulkanGraphicsBackend::vulkanLayers = {
 };
 
-void VulkanGraphicsBackend::makeSurface(vk::Instance const& instance, ui::WindowSurface& surface) {
-
-	vk::Win32SurfaceCreateInfoKHR win32SurfaceCreate({},
-		GetModuleHandle(nullptr),
-		(HWND)surface.getNativeHandle()
-	);
-
-	surfaces.emplace(pair{ reference_wrapper{surface}, instance.createWin32SurfaceKHR(win32SurfaceCreate) });
-}
-
-void VulkanGraphicsBackend::destroySurfaces(const vk::Instance& device) {
-
-	for (const auto& item : surfaces) {
-		device.destroySurfaceKHR(item.second);
-	}
+vk::UniqueSurfaceKHR VulkanGraphicsBackend::makeSurface(const vk::Instance &vk_instance, const swl::ui::WindowSurface &surface) {
+	return vk_instance.createWin32SurfaceKHRUnique(vk::Win32SurfaceCreateInfoKHR({ }, GetModuleHandle(nullptr), (HWND) (void*) surface));
 }

@@ -32,9 +32,11 @@ struct SWL_EXPORT WindowSurface {
 
 	[[nodiscard]] cx::Size2D getSize() const;
 
+	[[nodiscard]] cx::MutableBorrow<Window> getWindow() const;
+
 private:
 
-	cx::Borrow<Window> _window;
+	cx::MutableBorrow<Window> _window;
 
 	void*              _native_surface_handle{};
 };

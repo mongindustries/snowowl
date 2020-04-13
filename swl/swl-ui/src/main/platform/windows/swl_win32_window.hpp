@@ -19,7 +19,7 @@ struct SWL_EXPORT win32_window {
 
 	HWND hwnd;
 
-	Window* reference;
+	Window const* reference;
 
 	win32_window(HINSTANCE instance, const std::string &name);
 };
