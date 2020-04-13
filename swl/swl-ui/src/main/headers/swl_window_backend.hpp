@@ -25,29 +25,26 @@ struct WindowBackend {
 	static WindowBackend* backend;
 
 
-	void Spawn(Window &window);
+	Application* application{};
+
+	std::map< Window const*, void* > activeNativeHandles;
 
 
-	void UpdateTitle(Window const& window);
-
-	void UpdateFrame(Window const& window);
+	void Spawn            (Window const* window);
 
 
-	void Close(Window const& window);
+	void UpdateTitle      (Window const* window);
 
-	void Resized(Window& window, const cx::Rect &rect);
+	void UpdateFrame      (Window const* window);
 
 
-	WindowSurface PrepareSurface(const Window& window) const;
+	void RemoveEntry      (Window const* window);
+
+
+	void* NativeSurface   (Window const* window);
 
 
 	friend struct ui::Application;
-
-private:
-
-	Application* application{};
-
-	std::map< std::reference_wrapper<Window>, void*, std::less<const Window> > activeNativeHandles;
 };
 
 SNOW_OWL_NAMESPACE_END

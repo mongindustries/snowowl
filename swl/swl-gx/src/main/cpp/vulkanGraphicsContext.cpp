@@ -3,17 +3,35 @@
 //
 #include "vulkanGraphicsContext.hpp"
 #include "vulkanGraphicsBackend.hpp"
+#include "vulkanGraphicsSwapChain.hpp"
 
 #include <iostream>
 
 using namespace swl::cx;
-
 using namespace swl::gx;
-using namespace swl::gx::implem;
 
 using namespace std;
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE;
+
+VulkanGraphicsContext::VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept:
+	_instance      (move(mov._instance)),
+	_active_device (mov._active_device),
+	_device        (move(mov._device)),
+	loader         (move(mov.loader)) {
+}
+
+VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& mov) noexcept {
+
+	_instance       = move(mov._instance);
+	_active_device  = mov._active_device;
+	_device         = move(mov._device);
+	loader          = move(mov.loader);
+
+	return *this;
+}
+
+// implem
 
 VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) {
 
@@ -30,9 +48,9 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 	auto& layers = backend::VulkanGraphicsBackend::vulkanLayers;
 
 	vk::InstanceCreateInfo instanceCreateInfo({},
-		&appInfo,
-		layers.size(), layers.data(),
-		extensions.size(), extensions.data());
+	                                          &appInfo,
+	                                          layers.size(), layers.data(),
+	                                          extensions.size(), extensions.data());
 
 	_instance = vk::createInstanceUnique(instanceCreateInfo);
 	VULKAN_HPP_DEFAULT_DISPATCHER.init(_instance.get());
@@ -42,55 +60,46 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 	const auto devices = _instance->enumeratePhysicalDevices();
 	cout << "VulkanGraphicsContext: " << devices.size() << " devices found!" << endl;
 
-	for (const auto &physicalDevice : devices) {
+	_active_device  = devices.back();
 
-		auto properties = physicalDevice.getProperties();
-		cout << "\t" << properties.deviceName << endl;
-
-		_active_device = physicalDevice;
-		break;
-	}
+	auto properties = _active_device.getProperties();
+	cout << "\t" << properties.deviceName << endl;
 
 	cout << "VulkanGraphicsContext: Device created!" << endl;
 }
 
-VulkanGraphicsContext::~VulkanGraphicsContext() {
+void
+	VulkanGraphicsContext::createDevice(const vector<MutableBorrow<VulkanGraphicsQueue>> &queues) {
 
-	if (_instance) {
+	vector<vk::DeviceQueueCreateInfo> queueInfo(queues.size());
 
-		backend::VulkanGraphicsBackend::instance->destroySurfaces(_instance.get());
-		delete backend::VulkanGraphicsBackend::instance;
+	uint32_t index = 0;
+	float priorities = 1.0f;
 
-		_instance.release().destroy();
-
-		if (loader) {
-			delete loader;
-		}
+	for (const auto &queue: queues) {
+		queueInfo[index].queueFamilyIndex = queue.get().familyIndex;
+		queueInfo[index].queueCount = 1;
+		queueInfo[index].pQueuePriorities = &priorities;
 	}
-}
 
-VulkanGraphicsContext::VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept:
-	loader(mov.loader),
-	_instance(move(mov._instance)),
-	_active_device(move(mov._active_device)) {
-	mov.loader = nullptr;
-}
+	auto enabledExts = std::vector<const char*> {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
 
-VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& mov) noexcept {
+	vk::DeviceCreateInfo createDevice{};
 
-	loader = mov.loader;
-	_instance = move(mov._instance);
-	_active_device = move(mov._active_device);
-	mov.loader = nullptr;
-	
-	return *this;
-}
+	createDevice.queueCreateInfoCount = queueInfo.size();
+	createDevice.pQueueCreateInfos = queueInfo.data();
 
-void VulkanGraphicsContext::makeSurface(ui::WindowSurface &surface) const {
-	// to backend
-	backend::VulkanGraphicsBackend::instance->makeSurface(_instance.get(), surface);
-}
+	createDevice.enabledExtensionCount = enabledExts.size();
+	createDevice.ppEnabledExtensionNames = enabledExts.data();
 
-vk::SurfaceKHR const& VulkanGraphicsContext::getSurface(const ui::WindowSurface &surface) const {
-	return backend::VulkanGraphicsBackend::instance->surfaces.at(reference_wrapper(const_cast<ui::WindowSurface&>(surface)));
+	_device = _active_device.createDeviceUnique(createDevice);
+	VULKAN_HPP_DEFAULT_DISPATCHER.init(_device.get());
+
+	for (auto &queue: queues) {
+
+		queue.get().prepare(_device.get());
+		assert(queue.get().isReady());
+	}
 }

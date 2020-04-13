@@ -10,14 +10,7 @@ set(APP_SOURCES
     cpp/app.cpp
     cpp/renderer.cpp
     headers/renderer.hpp
-    cpp/rendererQueue.cpp
-    headers/rendererQueue.hpp
-    cpp/rendererSwapchain.cpp
-    headers/rendererSwapchain.hpp
-    cpp/rendererBuffer.cpp
-    headers/rendererBuffer.hpp
-    cpp/rendererBufferBasicClear.cpp
-    headers/rendererBufferBasicClear.hpp)
+        )
 
 if(WIN32)
 

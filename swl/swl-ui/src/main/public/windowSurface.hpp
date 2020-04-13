@@ -5,14 +5,10 @@
 #pragma once
 
 #include <headerconv.hpp>
+#include <ownership.hpp>
+
 #include <point.hpp>
 #include <core.hpp>
-
-SNOW_OWL_NAMESPACE(ui::backend)
-
-struct WindowBackend;
-
-SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(ui)
 
@@ -20,20 +16,7 @@ struct SWL_EXPORT Window;
 
 struct SWL_EXPORT WindowSurface {
 
-	WindowSurface     () = default;
-
-	~WindowSurface    ();
-
-
-	[[nodiscard]] cx::Size2D
-		getSize         () const;
-
-
-	[[nodiscard]] void*
-		getNativeHandle () const { return _native_surface_handle; }
-
-	[[nodiscard]] cx::DriverHandle
-		getHandle       () const { return _handle; }
+	explicit WindowSurface(cx::Own<Window>& window);
 
 
 	bool
@@ -43,16 +26,17 @@ struct SWL_EXPORT WindowSurface {
 		operator==  (const WindowSurface &rhs) const;
 
 
-	friend struct backend::WindowBackend;
+	explicit operator void*() const {
+		return _native_surface_handle;
+	}
+
+	[[nodiscard]] cx::Size2D getSize() const;
 
 private:
 
-	cx::DriverHandle  _handle{};
+	cx::Borrow<Window> _window;
 
-
-	const Window*     _window{};
-
-	void*             _native_surface_handle{};
+	void*              _native_surface_handle{};
 };
 
 SNOW_OWL_NAMESPACE_END

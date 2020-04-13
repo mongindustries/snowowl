@@ -30,22 +30,16 @@ struct SWL_EXPORT Application {
 	Application& operator= (const Application& copy) = delete;
 	
 
-	Application(Application&& mov) noexcept;
+	Application(Application&& mov) noexcept = default;
 
-	Application& operator= (Application&& move) noexcept;
+	Application& operator= (Application&& move) noexcept = default;
 
 	
 	virtual ~Application() = default;
 
 	// methods
 
-	/**
-	 * Creates a new window. Window reference is held by this instance.
-	 * @param caption The caption for the window.
-	 * @param frame Initial frame for the window. For OS that requires a fullscreen window, this param is ignored.
-	 * @return A mutable reference <code>MutateOwn</code> that has the reference to the created window.
-	 */
-	cx::MutableBorrow<Window> createWindow(const std::string& caption, const cx::Rect& frame);
+	cx::Own<Window> createWindow(const std::string& caption, const cx::Rect& frame);
 
 	// hooks
 
@@ -65,17 +59,11 @@ struct SWL_EXPORT Application {
 		return 0;
 	}
 
-	static cx::DriverHandle windowFromNativeHandle(void* native_handle);
-
-	static Window& windowWithHandle(cx::DriverHandle handle);
-
 	friend struct backend::WindowBackend;
-	
+
 private:
 
 	void* _native_instance;
-
-	std::vector<cx::Own<Window>> _window_list;
 
 	static void preHeat(Application &app);
 

@@ -44,6 +44,8 @@ struct Own {
 	~Own();
 
 
+	ClassType* const operator&  () const;
+
 	ClassType* const operator-> ();
 
 	template<typename Derive = ClassType>
@@ -74,10 +76,10 @@ private:
 template<typename ClassType>
 struct Borrow {
 
-	explicit Borrow(Own<ClassType>&);
+	explicit Borrow(const Own<ClassType>&);
 
 
-	ClassType const& operator()() const;
+	ClassType const& get() const;
 
 private:
 
@@ -89,7 +91,7 @@ struct MutableBorrow {
 
 	explicit MutableBorrow(Own<ClassType>&);
 
-	ClassType& operator()() const;
+	ClassType& get() const;
 
 private:
 
@@ -106,11 +108,11 @@ template <typename Param1, typename ... Parameters>
 Own<ClassType>::Own(Param1 param1, Parameters... params) : _value(new ClassType(param1, params...)) { }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int> >
 Own<ClassType>::Own(Derive* fast) : _value(fast) { }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of<ClassType, Derive>::value, int> >
 Own<ClassType>& Own<ClassType>::operator=(Derive* fast) {
 	if (_value) {
 		delete _value;
@@ -122,7 +124,7 @@ Own<ClassType>& Own<ClassType>::operator=(Derive* fast) {
 }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of<ClassType, std::decay_t<Derive>>::value, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of<ClassType, std::decay_t<Derive>>::value, int> >
 Own<ClassType>::Own(const Derive& forward) noexcept : _value(new Derive(std::move(forward))) { }
 
 
@@ -145,19 +147,19 @@ Derive& Own<ClassType>::get() const {
 }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int> >
 bool Own<ClassType>::operator==(const Own<Derive>& rhs) const {
 	return *_value == *rhs();
 }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int> >
 bool Own<ClassType>::operator==(const Derive& rhs) const {
 	return rhs == *_value;
 }
 
 template <typename ClassType>
-template <typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int>>
+template < typename Derive, std::enable_if_t<std::is_base_of_v<ClassType, Derive>, int> >
 bool Own<ClassType>::operator==(const Derive* rhs) const {
 	return *rhs == *_value;
 }
@@ -176,23 +178,30 @@ Own<ClassType>& Own<ClassType>::operator=(Own<ClassType>&& mov) noexcept {
 	return *this;
 }
 
+template<typename ClassType>
+ClassType *const Own<ClassType>::operator&() const {
+	return _value;
+}
+
+
 // MARK: Borrow Implementation
 
 template <typename ClassType>
-Borrow<ClassType>::Borrow(Own<ClassType> &to_borrow): _borrow(to_borrow) {}
+Borrow<ClassType>::Borrow(const Own<ClassType> &to_borrow): _borrow(to_borrow) {}
 
-template <typename ClassType>
-ClassType const& Borrow<ClassType>::operator()() const {
-	return const_cast<ClassType const&>(*_borrow());
+template<typename ClassType>
+ClassType const &Borrow<ClassType>::get() const {
+	return _borrow.get();
 }
+
 
 // MARK: Mutable Borrow Implementation
 
 template <typename ClassType>
 MutableBorrow<ClassType>::MutableBorrow(Own<ClassType> &to_borrow): _mutable_borrow(&to_borrow.get()) {}
 
-template <typename ClassType>
-ClassType& MutableBorrow<ClassType>::operator()() const {
+template<typename ClassType>
+ClassType &MutableBorrow<ClassType>::get() const {
 	return *_mutable_borrow;
 }
 

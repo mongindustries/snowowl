@@ -7,14 +7,14 @@ set(HEADER_LIST
         public/window.hpp public/windowSurface.hpp)
 
 set(PRIVATE_HEADER_LIST
-        headers/swl_window_backend.hpp)
+        headers/swl_window_backend.hpp headers/swl_window_sink.hpp)
 
 set(SOURCE_LIST
         cpp/ui.cpp
 
         cpp/application.cpp
         cpp/window.cpp
-        cpp/windowSurface.cpp)
+        cpp/windowSurface.cpp headers/swl_window_sink.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST

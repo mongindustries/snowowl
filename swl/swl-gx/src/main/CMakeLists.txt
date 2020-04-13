@@ -3,16 +3,18 @@ cmake_minimum_required(VERSION 3.16.0)
 set(HEADER_LIST
     public/graphics.hpp
     public/graphicsContext.hpp
-    public/graphicsCanvas.hpp
+    public/graphicsSwapChain.h
+    public/vulkanImport.h
     public/vulkanGraphicsContext.hpp
-    public/vulkanImport.h)
+    public/vulkanGraphicsSwapChain.hpp public/vulkanGraphicsQueue.hpp)
 
 set(PRIVATE_HEADER_LIST
     headers/vulkanGraphicsBackend.hpp)
 
 set(SOURCE_LIST
     cpp/graphics.cpp
-    cpp/vulkanGraphicsContext.cpp )
+    cpp/vulkanGraphicsContext.cpp
+    cpp/vulkanGraphicsSwapChain.cpp cpp/vulkanGraphicsQueue.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST 

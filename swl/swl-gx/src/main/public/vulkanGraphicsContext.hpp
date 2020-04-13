@@ -6,46 +6,39 @@
 #include <headerconv.hpp>
 
 #include "vulkanImport.h"
+#include "vulkanGraphicsQueue.hpp"
+
 #include "windowSurface.hpp"
 
 #include "graphicsContext.hpp"
 
-SNOW_OWL_NAMESPACE(gx::implem)
+SNOW_OWL_NAMESPACE(gx)
 
-struct VulkanGraphicsContext final: GraphicsContext {
+struct VulkanGraphicsContext final: GraphicsContext<VulkanGraphicsContext> {
+
+
+	VulkanGraphicsContext
+		(VulkanGraphicsContext&& mov) noexcept;
+
+	VulkanGraphicsContext& operator=
+		(VulkanGraphicsContext&& mov) noexcept;
+
 
 	VulkanGraphicsContext();
 
-	~VulkanGraphicsContext();
+	void
+		createDevice  (const std::vector<cx::MutableBorrow<VulkanGraphicsQueue>> &queues);
 
 
-	VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept;
+	vk::UniqueInstance          _instance;
 
-	VulkanGraphicsContext& operator=(VulkanGraphicsContext&& mov) noexcept;
+	vk::PhysicalDevice          _active_device;
 
+	vk::UniqueDevice            _device;
 
-	void makeSurface(ui::WindowSurface &surface) const override;
-
-	vk::SurfaceKHR const& getSurface(ui::WindowSurface const &surface) const;
-
-
-
-	vk::Instance const&          getInstance
-		() const { return _instance.get(); }
-
-	vk::PhysicalDevice const&    getActiveDevice
-		() const { return _active_device; }
-
-
-	
-	
 private:
 
-	vk::DynamicLoader*  loader;
-	
-	vk::UniqueInstance  _instance;
-
-	vk::PhysicalDevice  _active_device;
+	cx::Own<vk::DynamicLoader>  loader;
 };
 
 SNOW_OWL_NAMESPACE_END

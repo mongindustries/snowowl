@@ -17,127 +17,78 @@ using namespace swl::ui::backend;
 
 using namespace swl::cx;
 
-
-NSWindow* getWindowFromHandle
-	(const map<reference_wrapper<Window>, void*, less<const Window>> &list, Window &check) {
-
-	reference_wrapper<Window> windowKey { check };
-	auto item = list.at(windowKey);
-
-	return (__bridge NSWindow *) item;
-}
+WindowBackend *WindowBackend::backend = new WindowBackend();
 
 
 void WindowBackend::Spawn
-	(Window &window) {
+	(const Window *window) {
 
-	window._handle = Core::makeHandle();
-
-	auto frame      = window._frame;
+	auto frame      = window->getFrame();
 	auto viewFrame  = NSMakeRect(frame.origin.x(), frame.origin.y(), frame.size.x(), frame.size.y());
 
-	auto controller = Tell<swlViewController>(
-		[[swlViewController alloc] initWithNibName:nil bundle:nil],
-		[viewFrame](swlViewController *ctx) {
-		Tell<NSView>(ctx.view, [viewFrame](NSView *view) {
-			view.frame = viewFrame;
-		});
-	});
+	auto controller = [[swlViewController alloc] initWithNibName:nil bundle:nil];
+	[controller loadView];
 
-	swlWindow* ns_window = [swlWindow createWindow:controller];
+	controller.view.frame = viewFrame;
 
-	ns_window.title     = [NSString stringWithCString:window._title.c_str() encoding:NSUTF8StringEncoding];
-	ns_window.window    = &window;
+	auto ns_window = [swlWindow createWindow:controller engineWindow:window];
 
 	[ns_window makeKeyAndOrderFront: [NSApplication sharedApplication]];
 	[ns_window makeMainWindow];
 
-	activeNativeHandles.emplace(pair { reference_wrapper { window }, (__bridge_retained void*) ns_window });
-}
-
-void WindowBackend::Resized
-	(Window &window, const cx::Rect &rect) {
-	window._frame = rect;
-
-	for (const auto &item : window._event_size_list) {
-		item.invoke(window, rect);
-	}
+	activeNativeHandles.emplace(window, (__bridge_retained void*) ns_window);
 }
 
 
 void WindowBackend::UpdateTitle
-	(Window const &window) {
-	try {
+	(Window const *window) {
 
-		auto ns_window = getWindowFromHandle(activeNativeHandles, const_cast<Window&>(window));
+	dispatch_async(dispatch_get_main_queue(), ^{
 
-		ns_window.contentViewController.title = [NSString stringWithCString:window._title.c_str() encoding:NSUTF8StringEncoding];
-	} catch (const out_of_range&) {
-	}
+		void* pre_ref   = activeNativeHandles.at(window);
+		auto  ns_window = (__bridge NSWindow*) pre_ref;
+
+		[ns_window setTitle:[NSString stringWithCString:window->getTitle().c_str() encoding:NSUTF8StringEncoding]];
+	});
 }
 
 void WindowBackend::UpdateFrame
-	(Window const &window) {
-	try {
+	(Window const *window) {
 
-		auto ns_window = getWindowFromHandle(activeNativeHandles, const_cast<Window&>(window));
+	dispatch_async(dispatch_get_main_queue(), ^{
 
-		auto frame = window._frame;
-		[ns_window setFrame: NSMakeRect(frame.origin.x(), frame.origin.y(), frame.size.x(), frame.size.y()) display: YES];
-	} catch (const out_of_range&) {
-	}
-}
+		void* pre_ref   = activeNativeHandles.at(window);
+		auto  ns_window = (__bridge NSWindow*) pre_ref;
 
-WindowSurface WindowBackend::PrepareSurface
-	(Window const &window) const {
-
-	try {
-
-		auto ns_window = getWindowFromHandle(activeNativeHandles, const_cast<Window&>(window));
-
-		auto surface = WindowSurface();
-
-		surface._handle = Core::makeHandle();
-		surface._native_surface_handle = (__bridge void*) ns_window.contentViewController.view.layer;
-
-		surface._window = &window;
-
-		return surface;
-	} catch (const out_of_range&) {
-		return WindowSurface();
-	}
+		auto  frame     = window->getFrame();
+		[ns_window.contentViewController.view setFrame: NSMakeRect(frame.origin.x(), frame.origin.y(), frame.size.x(), frame.size.y())];
+	});
 }
 
 
-void WindowBackend::Close
-	(Window const &window) {
-	try {
-		@autoreleasepool {
+void *WindowBackend::NativeSurface
+	(Window const *window) {
 
-			decltype(activeNativeHandles)::key_type windowKey { const_cast<Window&>(window) };
+	void* pre_ref   = activeNativeHandles.at(window);
+	auto  ns_window = (__bridge NSWindow*) pre_ref;
 
-			auto window_item = activeNativeHandles.at(windowKey);
-			auto ns_window = (__bridge_transfer NSWindow *) window_item;
+	return (__bridge void*) ns_window.contentViewController.view.layer;
+}
 
-			for(const auto &event : window._event_close_list) {
-				event(window);
-			}
 
-			(void) ns_window; // end scope of window here
+void WindowBackend::RemoveEntry
+	(Window const *window) {
 
-			activeNativeHandles.erase(windowKey);
+	void* pre_ref   = activeNativeHandles.at(window);
+	auto  ns_window = (__bridge_transfer NSWindow*) pre_ref;
 
-			auto &lis = application->_window_list;
-			auto iter = find(lis.begin(), lis.end(), window);
+	activeNativeHandles.erase(window);
 
-			if (iter != lis.end()) {
-				lis.erase(iter);
-			}
+	(void) ns_window; // swl scope for window ends here
 
-			if (activeNativeHandles.empty()) {
-				[[NSApplication sharedApplication] terminate: nil];
-			}
-		}
-	} catch(const out_of_range&) {
+	if (activeNativeHandles.empty()) {
+		delete WindowBackend::backend;
+
+		[[NSApplication sharedApplication] terminate:nil];
 	}
 }

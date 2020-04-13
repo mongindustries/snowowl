@@ -39,8 +39,8 @@ struct PartialImplementation {
 	}
 
 
-	Wrapped& operator()() const {
-		return *_implementation;
+	Wrapped* operator()() const {
+		return _implementation;
 	}
 
 	void invalidate() {

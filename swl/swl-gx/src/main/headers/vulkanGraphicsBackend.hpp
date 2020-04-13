@@ -25,16 +25,11 @@ struct VulkanGraphicsBackend {
 	static std::vector<const char*> vulkanLayers;
 
 
-	void makeSurface(vk::Instance const &instance, const ui::WindowSurface &surface);
+	vk::UniqueSurfaceKHR makeSurface
+		(vk::Instance const &vk_instance, const ui::WindowSurface &surface);
 
-	void destroySurfaces(const vk::Instance& device);
-	
 
-	friend struct gx::implem::VulkanGraphicsContext;
-
-private:
-
-	std::map<ui::WindowSurface, vk::SurfaceKHR> surfaces;
+	friend struct gx::VulkanGraphicsContext;
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -3,20 +3,17 @@
 //
 #pragma once
 
-#include "windowSurface.hpp"
 #include <headerconv.hpp>
+#include <windowSurface.hpp>
+
+#include "graphicsSwapChain.h"
 
 SNOW_OWL_NAMESPACE(gx)
 
+template<typename Context>
 struct GraphicsContext {
 
-	virtual ~GraphicsContext() { }
-
-
-	virtual void makeSurface(ui::WindowSurface &surface) const = 0;
-
-
-
+	virtual ~GraphicsContext() = default;
 };
 
 SNOW_OWL_NAMESPACE_END

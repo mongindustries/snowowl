@@ -1,12 +1,9 @@
 #include <application.hpp>
 
-#include <game_loop.h>
-#include <graphicsCanvas.hpp>
 #include <vulkanGraphicsContext.hpp>
+#include <game_loop.h>
 
 #include "renderer.hpp"
-
-#include <iostream>
 
 using namespace swl;
 using namespace cx;
@@ -14,52 +11,36 @@ using namespace ui;
 
 struct AppGameLoop: GameLoop {
 
-	gx::implem::VulkanGraphicsContext& context;
+	app::Renderer renderer;
 
-	Own<app::Renderer> renderer;
-
-
-	Window& window;
-
-	WindowSurface surface;
-
-	AppGameLoop(gx::implem::VulkanGraphicsContext& context, Window& window, const WindowSurface &surface): GameLoop(60, 4),
-		context  (context),
-		renderer (nullptr),
-
-		window   (window),
-		surface  (surface) {
+	AppGameLoop(const WindowSurface &surface): GameLoop(60, 4), renderer(surface) {
 	}
 
 	void create() override {
-		renderer = new app::Renderer(context, window, surface);
 	}
 
 	void update(std::chrono::milliseconds delta) override {
 	}
 
 	void render(float offset) override {
-		renderer->frame();
+		renderer.frame();
 	}
 };
 
 struct App: Application {
 
-	Own<AppGameLoop> gameLoop;
+	Own<Window>       window;
+	Own<AppGameLoop>  gameLoop;
 
-	gx::GraphicsCanvas<gx::implem::VulkanGraphicsContext> canvas{ gx::implem::VulkanGraphicsContext() };
-
-	App(void* instance): Application(instance), gameLoop(nullptr) {
+	App(void* instance): Application(instance), window(nullptr), gameLoop(nullptr) {
 	}
 
 	void applicationCreate  () override {
 
-		const auto window  = createWindow("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
-		auto       surface = window().getSurface();
+		window        = createWindow  ("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
+		auto surface  = WindowSurface (window);
 
-		canvas.context().makeSurface(surface);
-
-		gameLoop = new AppGameLoop(canvas.context(), window(), surface);
+		gameLoop = new AppGameLoop(surface);
 		gameLoop->open();
 	}
 

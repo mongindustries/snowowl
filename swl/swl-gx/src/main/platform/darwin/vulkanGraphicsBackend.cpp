@@ -18,15 +18,9 @@ vector<const char*> VulkanGraphicsBackend::vulkanLayers = {
 
 };
 
-void VulkanGraphicsBackend::makeSurface(vk::Instance const &instance, const ui::WindowSurface &surface) {
+vk::UniqueSurfaceKHR
+	VulkanGraphicsBackend::makeSurface(vk::Instance const &vk_instance, const ui::WindowSurface &surface) {
 
-	vk::MacOSSurfaceCreateInfoMVK createInfo({ }, surface.getNativeHandle());
-	surfaces.emplace(pair { surface, instance.createMacOSSurfaceMVK(createInfo) });
-}
-
-void VulkanGraphicsBackend::destroySurfaces(const vk::Instance &device) {
-
-	for (const auto& item : surfaces) {
-		device.destroySurfaceKHR(item.second);
-	}
+	vk::MacOSSurfaceCreateInfoMVK makeSurface({}, (void*) surface);
+	return vk_instance.createMacOSSurfaceMVKUnique(makeSurface);
 }

@@ -1,39 +1,34 @@
 #pragma once
 
 #include <headerconv.hpp>
+
 #include <vulkanGraphicsContext.hpp>
+#include <vulkanGraphicsSwapChain.hpp>
+#include <vulkanGraphicsQueue.hpp>
 
 #include <windowSurface.hpp>
 
 #include "ownership.hpp"
-#include "rendererBuffer.hpp"
-#include "rendererQueue.hpp"
-#include "rendererSwapchain.hpp"
 
 SNOW_OWL_NAMESPACE(app)
 
 struct Renderer {
 
-	vk::Instance&       instance;
-	vk::PhysicalDevice  physical_device;
+	gx::VulkanGraphicsContext             context;
 
-	vk::UniqueDevice    logical_device;
+	cx::Own<gx::VulkanGraphicsQueue>      graphicsQueue;
 
-	vk::SurfaceKHR      surface;
-
-	vk::UniqueSemaphore frameSemaphore;
+	cx::Own<gx::VulkanGraphicsSwapChain>  swapChain;
 
 
-	cx::Own<RendererQueue>       graphics_queue;
-	cx::Own<RendererQueue>       present_queue;
+	vk::UniqueCommandPool                 commandPool;
 
-	cx::Own<RendererSwapchain>   swapchain;
+	vk::UniqueSemaphore                   presentReadySemaphore;
 
 
-	cx::Own<RendererBuffer>      commands;
+	std::vector<vk::UniqueCommandBuffer>  clearBuffer;
 
-	Renderer(const gx::implem::VulkanGraphicsContext& context, const ui::Window& target_window, const ui::WindowSurface& surface);
-
+	Renderer(const ui::WindowSurface &surface);
 
 	void frame();
 };

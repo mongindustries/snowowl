@@ -9,21 +9,21 @@
 #include <headerconv.hpp>
 #include <rect.hpp>
 #include <core.hpp>
+#include <hidden_implem.hpp>
 
 #include "event.hpp"
-#include "windowSurface.hpp"
-
-SNOW_OWL_NAMESPACE(ui::backend)
-
-struct WindowBackend;
-
-SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(ui)
 
 struct SWL_EXPORT Application;
 
-struct SWL_EXPORT Window {
+
+struct SWL_EXPORT WindowSink;
+
+struct SWL_EXPORT WindowSurface;
+
+
+struct SWL_EXPORT Window final {
 
 	enum class State {
 		Active,
@@ -31,9 +31,9 @@ struct SWL_EXPORT Window {
 		Background
 	};
 
-	Window();
+	Window  ();
 
-	Window(std::string window_name, const cx::Rect &frame);
+	Window  (std::string window_name, const cx::Rect &frame);
 
 	// window properties
 
@@ -43,15 +43,17 @@ struct SWL_EXPORT Window {
 	void
 		setFrame      (const cx::Rect &new_frame);
 
-
-	[[nodiscard]] cx::DriverHandle
-		getHandle     () const { return _handle; }
-
-	[[nodiscard]] WindowSurface
-		getSurface    () const;
+	[[nodiscard]] std::string
+		getTitle      () const;
 
 	[[nodiscard]] cx::Size2D
 		getSize       () const;
+
+	[[nodiscard]] cx::Rect
+		getFrame      () const;
+
+	[[nodiscard]] WindowSink*
+		getSink       () const;
 
 	// window events
 
@@ -61,8 +63,6 @@ struct SWL_EXPORT Window {
 	bool
 		operator==    (const Window &rhs) const;
 
-	friend struct backend::WindowBackend;
-
 private:
 
 	typedef std::vector<Event<void, const Window&>> EventCloseList;
@@ -71,11 +71,16 @@ private:
 
 	typedef std::vector<Event<void, const Window&, const State&>> EventStateList;
 
-	
+
+	cx::DriverHandle _handle{0};
+
 	std::string      _title{};
 	cx::Rect         _frame{};
 
-	cx::DriverHandle _handle{0};
+	WindowSink*      _sink;
+
+	friend struct WindowSink;
+	friend struct WindowSurface;
 
 public:
 
