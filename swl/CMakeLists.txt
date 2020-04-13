@@ -45,14 +45,16 @@ endif (${CMAKE_BUILD_TYPE} MATCHES Debug)
 if (WIN32)
     message("Apply platform and macros for Windows...")
     set(SRC_OS "platform/windows")
+    
+    add_compile_options(/EHs)
     add_compile_definitions(SWL_WIN32=1)
 endif (WIN32)
 
 if (APPLE)
     message("Apply platform and macros for Darwin...")
     set(SRC_OS "platform/darwin")
-    add_compile_options(-fobjc-arc)
 
+    add_compile_options(-fobjc-arc)
     add_compile_definitions(SWL_DARWIN=1)
 endif (APPLE)
 

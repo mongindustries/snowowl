@@ -14,6 +14,8 @@ struct WindowSink {
 	cx::DriverHandle handle;
 
 
+	void Sizing(bool value);
+	
 	void Update(const cx::Rect &new_rect);
 
 	void Closed();

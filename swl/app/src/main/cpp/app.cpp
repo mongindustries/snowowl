@@ -1,3 +1,4 @@
+#include <iostream>
 #include <application.hpp>
 
 #include <vulkanGraphicsContext.hpp>
@@ -13,7 +14,9 @@ struct AppGameLoop: GameLoop {
 
 	app::Renderer renderer;
 
-	AppGameLoop(const WindowSurface &surface): GameLoop(60, 4), renderer(surface) {
+	WindowSurface surface;
+
+	AppGameLoop(const WindowSurface &surface): GameLoop(60, 4), renderer(surface), surface(surface) {
 	}
 
 	void create() override {
@@ -23,7 +26,18 @@ struct AppGameLoop: GameLoop {
 	}
 
 	void render(float offset) override {
-		renderer.frame();
+
+		auto& window = surface.getWindow().get();
+		
+		if (window.isSizing()) {
+
+			std::unique_lock<std::mutex> lock(window.resizeMutex);
+			window.resizeRender.wait(lock); // wait for window resize event to be finished
+
+			renderer.frame();
+		} else {
+			renderer.frame();
+		}
 	}
 };
 

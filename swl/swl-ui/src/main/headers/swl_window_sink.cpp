@@ -6,7 +6,18 @@
 
 using namespace swl::cx;
 using namespace swl::ui;
-using namespace swl::ui::backend;
+using namespace backend;
+
+void WindowSink::Sizing(bool value) {
+
+	for (const auto& item : WindowBackend::backend->activeNativeHandles) {
+		auto* window = const_cast<Window*>(std::get<0>(item));
+
+		if (window->_handle == handle) {
+			window->_resizing = value;
+		}
+	}
+}
 
 void WindowSink::Update(const Rect &new_rect) {
 

@@ -2,10 +2,9 @@
 // Created by Michael Ong on 12/4/20.
 //
 #include <algorithm>
+#include <path_ops.hpp>
 
 #include "vulkanGraphicsSwapChain.hpp"
-
-
 
 #include "application.hpp"
 #include "application.hpp"
@@ -46,7 +45,7 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 
 	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const Rect& rect) {
 
-		needsResize = true;
+		needsResize = currentSize.components != rect.size.components;
 		currentSize = rect.size;
 	});
 }

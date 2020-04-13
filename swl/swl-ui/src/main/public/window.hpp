@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <condition_variable>
 
 #include <headerconv.hpp>
 #include <rect.hpp>
@@ -31,6 +32,9 @@ struct SWL_EXPORT Window final {
 		Background
 	};
 
+	std::condition_variable resizeRender;
+	std::mutex              resizeMutex;
+
 	Window  ();
 
 	Window  (std::string window_name, const cx::Rect &frame);
@@ -55,6 +59,9 @@ struct SWL_EXPORT Window final {
 	[[nodiscard]] WindowSink*
 		getSink       () const;
 
+	[[nodiscard]] bool
+		isSizing      () const;
+
 	// window events
 
 	bool
@@ -78,6 +85,8 @@ private:
 	cx::Rect         _frame{};
 
 	WindowSink*      _sink;
+
+	bool             _resizing{ false };
 
 	friend struct WindowSink;
 	friend struct WindowSurface;

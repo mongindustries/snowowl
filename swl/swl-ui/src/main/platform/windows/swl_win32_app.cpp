@@ -36,12 +36,22 @@ Window* windowFromHWND(HWND hwnd) {
 LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	switch (message) {
+	case WM_ENTERSIZEMOVE: {
+		if (const auto window = windowFromHWND(hwnd)) {
+			window->getSink()->Sizing(true);
+		}
+		return 0;
+	}
+	case WM_EXITSIZEMOVE: {
+		if (const auto window = windowFromHWND(hwnd)) {
+			window->getSink()->Sizing(false);
+		}
+		return 0;
+	}
 	case WM_CLOSE: {
-
-		if (auto window = windowFromHWND(hwnd)) {
+		if (const auto window = windowFromHWND(hwnd)) {
 			window->getSink()->Closed();
 		}
-
 		return 0;
 	}
 	case WM_GETMINMAXINFO: {
@@ -56,7 +66,11 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		const WINDOWPOS* posInfo = reinterpret_cast<WINDOWPOS*>(lparam);
 
 		if (auto window = windowFromHWND(hwnd)) {
+
+			std::unique_lock<std::mutex> lock(window->resizeMutex);
 			window->getSink()->Update(Rect { { float(posInfo->x), float(posInfo->y) }, { posInfo->cx, posInfo->cy } });
+
+			window->resizeRender.notify_all();
 		}
 
 		return 0;

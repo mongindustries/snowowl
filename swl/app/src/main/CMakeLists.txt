@@ -14,15 +14,13 @@ set(APP_SOURCES
 
 if(WIN32)
 
-    set_property(SOURCE ${VERTEX_SOURCES}
-        PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\../dxc\\dxc.exe -T vs_6_0 -spirv")
-    set_property(SOURCE ${FRAGMENT_SOURCES}
-        PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\..\\dxc\\dxc.exe -T ps_6_0 -spirv")
+    #set_property(SOURCE ${VERTEX_SOURCES}
+        #PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\../dxc\\dxc.exe -T vs_6_0 -spirv")
+    #set_property(SOURCE ${FRAGMENT_SOURCES}
+        #PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\..\\dxc\\dxc.exe -T ps_6_0 -spirv")
 
     add_executable(app WIN32
             ${APP_SOURCES}
-            ${VERTEX_SOURCES}
-            ${FRAGMENT_SOURCES}
             platform/windows/app.rc
             platform/windows/resource.h)
 

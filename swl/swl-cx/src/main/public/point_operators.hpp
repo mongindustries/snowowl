@@ -8,6 +8,34 @@
 #include "point.hpp"
 
 template<typename ComponentType, uint16_t Components>
+bool operator==(
+	const swl::cx::Vector<ComponentType, Components>& lhs,
+	const swl::cx::Vector<ComponentType, Components>& rhs) {
+
+	for (uint16_t i = 0; i < Components; i += 1) {
+		if (lhs.components[i] != rhs.components[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template<typename ComponentType, uint16_t Components>
+bool operator!=(
+	const swl::cx::Vector<ComponentType, Components>& lhs,
+	const swl::cx::Vector<ComponentType, Components>& rhs) {
+
+	for (uint16_t i = 0; i < Components; i += 1) {
+		if (lhs.components[i] == rhs.components[i]) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template<typename ComponentType, uint16_t Components>
 swl::cx::Vector<ComponentType, Components> operator+(
 	const swl::cx::Vector<ComponentType, Components>& lhs,
 	const swl::cx::Vector<ComponentType, Components>& rhs) {

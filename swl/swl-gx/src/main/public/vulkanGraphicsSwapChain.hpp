@@ -37,7 +37,7 @@ struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 
 	VulkanGraphicsQueue const&  presentQueue;
 	VulkanGraphicsQueue const&  graphicsQueue;
-	
+
 	
 	std::vector<cx::Own<VulkanFrame>> activeFrames;
 

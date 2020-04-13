@@ -60,6 +60,11 @@ WindowSink*
 	return _sink;
 }
 
+bool
+	Window::isSizing() const {
+	return _resizing;
+}
+
 
 bool Window::operator<  (const Window &rhs) const {
 	return _handle < rhs._handle;
