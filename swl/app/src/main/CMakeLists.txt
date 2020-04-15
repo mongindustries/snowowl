@@ -7,18 +7,13 @@ set(FRAGMENT_SOURCES
     hlsl/simple.frag)
 
 set(APP_SOURCES
+    ${FRAGMENT_SOURCES}
+    ${VERTEX_SOURCES}
     cpp/app.cpp
     cpp/renderer.cpp
-    headers/renderer.hpp
-        )
+    headers/renderer.hpp)
 
 if(WIN32)
-
-    #set_property(SOURCE ${VERTEX_SOURCES}
-        #PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\../dxc\\dxc.exe -T vs_6_0 -spirv")
-    #set_property(SOURCE ${FRAGMENT_SOURCES}
-        #PROPERTY VS_TOOL_OVERRIDE "${CMAKE_SOURCE_DIR}\\..\\dxc\\dxc.exe -T ps_6_0 -spirv")
-
     add_executable(app WIN32
             ${APP_SOURCES}
             platform/windows/app.rc
@@ -44,9 +39,12 @@ if(APPLE)
             "-framework Foundation"
             "-framework QuartzCore"
             "-framework AppKit"
-            "-framework Metal")
-
+            "-framework Metal"
+            "-framework IOKit"
+            "-framework IOSurface")
 endif()
+
+get_shader_files(app)
 
 target_include_directories(app
     PUBLIC headers

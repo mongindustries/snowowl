@@ -1,8 +1,9 @@
 #include <iostream>
+
+#include <game_loop.hpp>
 #include <application.hpp>
 
 #include <vulkanGraphicsContext.hpp>
-#include <game_loop.h>
 
 #include "renderer.hpp"
 

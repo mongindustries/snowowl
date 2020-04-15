@@ -6,7 +6,8 @@ set(HEADER_LIST
     public/graphicsSwapChain.h
     public/vulkanImport.h
     public/vulkanGraphicsContext.hpp
-    public/vulkanGraphicsSwapChain.hpp public/vulkanGraphicsQueue.hpp)
+    public/vulkanGraphicsQueue.hpp
+    public/vulkanGraphicsSwapChain.hpp)
 
 set(PRIVATE_HEADER_LIST
     headers/vulkanGraphicsBackend.hpp)
@@ -14,7 +15,8 @@ set(PRIVATE_HEADER_LIST
 set(SOURCE_LIST
     cpp/graphics.cpp
     cpp/vulkanGraphicsContext.cpp
-    cpp/vulkanGraphicsSwapChain.cpp cpp/vulkanGraphicsQueue.cpp)
+    cpp/vulkanGraphicsQueue.cpp
+    cpp/vulkanGraphicsSwapChain.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST 

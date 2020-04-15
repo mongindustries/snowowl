@@ -4,7 +4,7 @@
 #pragma once
 
 #include <string>
-#include <path.hpp>
+#include <header.hpp>
 
 SNOW_OWL_NAMESPACE(gx)
 

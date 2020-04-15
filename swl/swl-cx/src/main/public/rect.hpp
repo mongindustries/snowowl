@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include "headerconv.hpp"
+#include "header.hpp"
 #include "point.hpp"
 
 SNOW_OWL_NAMESPACE(cx)

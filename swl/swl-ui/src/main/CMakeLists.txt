@@ -4,17 +4,20 @@ set(HEADER_LIST
         public/application.hpp
         public/event.hpp
         public/ui.hpp
-        public/window.hpp public/windowSurface.hpp)
+        public/window.hpp
+        public/windowSurface.hpp)
 
 set(PRIVATE_HEADER_LIST
-        headers/swl_window_backend.hpp headers/swl_window_sink.hpp)
+        headers/swl_window_backend.hpp
+        headers/swl_window_sink.hpp)
 
 set(SOURCE_LIST
-        cpp/ui.cpp
-
         cpp/application.cpp
+        cpp/ui.cpp
         cpp/window.cpp
-        cpp/windowSurface.cpp headers/swl_window_sink.cpp)
+        cpp/windowSurface.cpp
+
+        headers/swl_window_sink.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST

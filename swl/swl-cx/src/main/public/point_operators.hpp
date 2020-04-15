@@ -4,7 +4,7 @@
 #pragma once
 
 #include <complex>
-#include "headerconv.hpp"
+#include "header.hpp"
 #include "point.hpp"
 
 template<typename ComponentType, uint16_t Components>

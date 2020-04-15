@@ -5,7 +5,7 @@
 #include <thread>
 #include <chrono>
 
-#include "game_loop.h"
+#include "game_loop.hpp"
 
 using namespace std;
 using namespace chrono;

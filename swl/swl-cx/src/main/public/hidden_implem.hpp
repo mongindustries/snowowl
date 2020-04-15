@@ -5,7 +5,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdelete-incomplete"
 
-#include "headerconv.hpp"
+#include "header.hpp"
 
 SNOW_OWL_NAMESPACE(cx)
 

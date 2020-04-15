@@ -1,5 +1,10 @@
 #include <vector>
+#include <fstream>
 #include <iostream>
+#include <cmath>
+#include <cfloat>
+
+#include <file_manager.hpp>
 
 #include "renderer.hpp"
 
@@ -34,6 +39,9 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 }
 
 float __color__ = 0;
+float ceillllll = std::sin(M_PI_2);
+
+float xeillllll = std::cos(M_2_PI);
 
 void Renderer::frame() {
 
@@ -45,14 +53,13 @@ void Renderer::frame() {
 	const vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eOneTimeSubmit } };
 	buffer.begin(recordBegin);
 
+    float constcol = std::sin(__color__) / ceillllll;
+    float xonstcol = std::cos(__color__) / xeillllll;
+
 	auto subrange = vk::ImageSubresourceRange{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 };
-	auto color    = vk::ClearColorValue(array {__color__, 0.25f, 0.55f, 1.0f });
+    auto color    = vk::ClearColorValue(array<float, 4> { constcol, 1.0f - constcol, xonstcol, 1.0f });
 
 	__color__ += 0.01;
-
-	if (__color__ > 1) {
-		__color__ = 0;
-	}
 
 	vk::ImageMemoryBarrier barrier{};
 
@@ -87,8 +94,8 @@ void Renderer::frame() {
 	const auto sp = vector { swapChain->swapChainSemaphore.get() };
 	const auto rp = vector { presentReadySemaphore.get() };
 
-	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::idle());
+	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::semaphores({ }, rp));
 
 	const auto sc = vector { pair { Borrow(swapChain), frame } };
-	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(sp, { }));
+	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(rp, { }));
 }

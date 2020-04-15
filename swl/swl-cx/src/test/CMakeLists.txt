@@ -23,7 +23,6 @@ endmacro()
 
 package_add_test(cx-test
     cpp/ownership_test.cpp
-    cpp/path_test.cpp
     cpp/point_test.cpp
     cpp/main.cpp
 )

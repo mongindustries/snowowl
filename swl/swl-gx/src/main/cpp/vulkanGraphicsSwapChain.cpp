@@ -2,7 +2,6 @@
 // Created by Michael Ong on 12/4/20.
 //
 #include <algorithm>
-#include <path_ops.hpp>
 
 #include "vulkanGraphicsSwapChain.hpp"
 
