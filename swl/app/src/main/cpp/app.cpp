@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <game_loop.hpp>
+#include <file_manager.hpp>
 #include <application.hpp>
 
 #include <vulkanGraphicsContext.hpp>
@@ -51,6 +52,8 @@ struct App: Application {
 	}
 
 	void applicationCreate  () override {
+
+		const auto pp = cx::FileManager::resourcePath;
 
 		window        = createWindow  ("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
 		auto surface  = WindowSurface (window);

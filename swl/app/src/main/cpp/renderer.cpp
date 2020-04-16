@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+
 #include <vector>
 #include <cmath>
 
@@ -86,13 +88,12 @@ void Renderer::frame() {
 
 	buffer.end();
 
-	const auto sp = vector { swapChain->swapChainSemaphore.get() };
 	const auto rp = vector { presentReadySemaphore.get() };
-
 	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::semaphores({ }, rp));
-
-	const auto sc = vector { frame };
-	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(rp, { }));
-
 	graphicsQueue->queue.waitIdle();
+
+	const auto sc = vector { pair { Borrow(swapChain), frame } };
+
+	const auto sp = vector { presentReadySemaphore.get(), swapChain->swapChainSemaphore.get() };
+	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(sp, { }));
 }

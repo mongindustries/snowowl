@@ -39,10 +39,20 @@ function(compile_shader TARGET FILE TYPE)
         file(GLOB dxc ${CMAKE_SOURCE_DIR}/../dxc/*.exe)
         find_program(DXC dxc.exe HINTS ${dxc})
 
+        if(${TYPE} STREQUAL "frag")
+            set(type "ps_6_0")
+        endif(${TYPE} STREQUAL "frag")
+        
+        if(${TYPE} STREQUAL "vert")
+            set(type "vs_6_0")
+        endif(${TYPE} STREQUAL "vert")
+
+        file(TO_NATIVE_PATH "${input_dir}" input_dir_win)
+
         if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-            set(COMMAND ${DXC} -E main -Od -Zi)
+            set(COMMAND ${DXC} -I ${input_dir_win} -H -T ${type} -E main -Od -Zi -Fo ${output_path} ${input_path})
         else()
-            set(COMMAND ${DXC} -E main)
+            set(COMMAND ${DXC} -I ${input_dir_win} -T ${type} -E main -Fo ${output_path} ${input_path})
         endif()
 
         add_custom_command(
@@ -50,11 +60,12 @@ function(compile_shader TARGET FILE TYPE)
             COMMAND             ${COMMAND}
             DEPENDS             ${input_path}
             IMPLICIT_DEPENDS    CXX ${input_path}
-            COMMENT             ""
+            COMMENT             "dxc compile"
             VERBATIM)
 
-    endif(WIN32)
+        set_target_properties(${TARGET} PROPERTIES RESOURCE ${output_path})
 
+    endif(WIN32)
 
     set_source_files_properties(${output_path} PROPERTIES GENERATED TRUE)
     target_sources(${TARGET} PRIVATE ${output_path})
