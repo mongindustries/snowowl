@@ -21,7 +21,7 @@ set(SOURCE_LIST
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST
-            platform/darwin/file_manager.mm)
+            platform/windows/file_manager.cpp)
 endif()
 
 if(APPLE)

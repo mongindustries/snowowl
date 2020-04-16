@@ -1,4 +1,4 @@
-#include "common"
+#include "common.h"
 
 ConstantBuffer<test_buffer> buffer : register(b0);
 
