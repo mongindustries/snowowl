@@ -3,14 +3,13 @@
 //
 #include <algorithm>
 
-#include "vulkanGraphicsSwapChain.hpp"
+#include <window.hpp>
 
-#include "application.hpp"
-#include "application.hpp"
 #include "vulkanGraphicsContext.hpp"
-#include "vulkanGraphicsBackend.hpp"
+#include "vulkan_graphics_backend.hpp"
 
-#include "window.hpp"
+#include "vulkanGraphicsSwapChain.hpp"
+#include "vulkanGraphicsQueue.hpp"
 
 #undef min
 #undef max
@@ -19,7 +18,7 @@ using namespace swl::cx;
 using namespace swl::gx;
 using namespace swl::ui;
 
-vk::Extent2D getExtent(const Size2D &surface, const vk::SurfaceCapabilitiesKHR &capabilities);
+vk::Extent2D getExtent(const Size2D &size, const vk::SurfaceCapabilitiesKHR &capabilities);
 
 VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const VulkanGraphicsContext &context,
@@ -49,7 +48,7 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	});
 }
 
-Borrow<VulkanGraphicsSwapChain::VulkanFrame>
+Borrow<VulkanFrame>
 	VulkanGraphicsSwapChain::getFrame() {
 
 	if (needsResize) {
@@ -62,9 +61,9 @@ Borrow<VulkanGraphicsSwapChain::VulkanFrame>
 	try {
 		const auto result = device.acquireNextImageKHR(swapChain.get(), 32'000'000, swapChainSemaphore.get(), nullptr);
 
-		return Borrow { activeFrames[result.value] };
+		return Borrow{ activeFrames[result.value] };
 	} catch(const vk::OutOfDateKHRError&) {
-		return Borrow(activeFrames[0]);
+		return Borrow{activeFrames[0] };
 	}
 }
 
@@ -143,13 +142,17 @@ void
 		createImageView.viewType = vk::ImageViewType::e2D;
 
 		createImageView.components = vk::ComponentMapping();
-		createImageView.subresourceRange = vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
+		createImageView.subresourceRange = vk::ImageSubresourceRange {
+			vk::ImageAspectFlagBits::eColor,
+			0, 1,
+			0, 1 };
 
-		auto frame = new VulkanFrame();
-
-		frame->index = index;
-		frame->image = image;
-		frame->imageView = device.createImageViewUnique(createImageView);
+		auto frame = new VulkanFrame {
+			.index      = index,
+			.image      = image,
+			.imageView  = device.createImageViewUnique(createImageView),
+			.swapChain  = *this
+		};
 
 		activeFrames.emplace_back(frame);
 

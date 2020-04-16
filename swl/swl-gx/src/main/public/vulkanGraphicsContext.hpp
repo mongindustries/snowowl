@@ -4,15 +4,14 @@
 #pragma once
 
 #include <header.hpp>
+#include <windowSurface.hpp>
 
 #include "vulkanImport.h"
-#include "vulkanGraphicsQueue.hpp"
-
-#include "windowSurface.hpp"
-
-#include "graphicsContext.hpp"
+#include "graphics_context.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
+
+struct VulkanGraphicsQueue;
 
 struct VulkanGraphicsContext final: GraphicsContext<VulkanGraphicsContext> {
 

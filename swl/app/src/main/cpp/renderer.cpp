@@ -1,10 +1,5 @@
 #include <vector>
-#include <fstream>
-#include <iostream>
 #include <cmath>
-#include <cfloat>
-
-#include <file_manager.hpp>
 
 #include "renderer.hpp"
 
@@ -96,6 +91,8 @@ void Renderer::frame() {
 
 	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::semaphores({ }, rp));
 
-	const auto sc = vector { pair { Borrow(swapChain), frame } };
+	const auto sc = vector { frame };
 	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(rp, { }));
+
+	graphicsQueue->queue.waitIdle();
 }

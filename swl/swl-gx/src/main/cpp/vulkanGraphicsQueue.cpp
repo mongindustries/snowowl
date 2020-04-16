@@ -2,7 +2,6 @@
 // Created by Michael Ong on 13/4/20.
 //
 #include "vulkanGraphicsQueue.hpp"
-
 #include "vulkanGraphicsSwapChain.hpp"
 #include "vulkanGraphicsContext.hpp"
 
@@ -10,9 +9,10 @@ using namespace std;
 using namespace swl::cx;
 using namespace swl::gx;
 
-VulkanGraphicsQueue::VulkanGraphicsQueue(
-	const VulkanGraphicsContext &context,
-	vk::QueueFlagBits type): physicalDevice(context._active_device), familyIndex(0), ready(false) {
+VulkanGraphicsQueue::VulkanGraphicsQueue(const VulkanGraphicsContext &context, vk::QueueFlagBits type)
+: physicalDevice(context._active_device),
+	familyIndex(-1),
+	ready(false) {
 
 	uint32_t index = 0;
 	for (const auto& family : physicalDevice.getQueueFamilyProperties()) {
@@ -74,7 +74,7 @@ void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, Vulka
 	}
 }
 
-void VulkanGraphicsQueue::present(const vector<pair<Borrow<VulkanGraphicsSwapChain>, Borrow<VulkanGraphicsSwapChain::VulkanFrame>>> &swapChains, WaitType wait) const {
+void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapChains, WaitType wait) const {
 
 	vector<vk::SwapchainKHR> chains;
 	chains.reserve(swapChains.size());
@@ -84,21 +84,22 @@ void VulkanGraphicsQueue::present(const vector<pair<Borrow<VulkanGraphicsSwapCha
 
 	for (const auto &item : swapChains) {
 
-		auto &sc = get<0>(item).get();
+		auto &frame = item.get();
+		auto &sc    = frame.swapChain;
 
 		chains    .emplace_back(sc.swapChain.get());
-		indices   .emplace_back(get<1>(item).get().index);
+		indices   .emplace_back(frame.index);
 	}
 
 	vk::PresentInfoKHR presentInfo{};
 
-	presentInfo.swapchainCount = swapChains.size();
+	presentInfo.swapchainCount      = swapChains.size();
 
-	presentInfo.pSwapchains   = chains.data();
-	presentInfo.pImageIndices = indices.data();
+	presentInfo.pSwapchains         = chains.data();
+	presentInfo.pImageIndices       = indices.data();
 
-	presentInfo.waitSemaphoreCount = wait.wait.size();
-	presentInfo.pWaitSemaphores    = wait.wait.data();
+	presentInfo.waitSemaphoreCount  = wait.wait.size();
+	presentInfo.pWaitSemaphores     = wait.wait.data();
 
 	try {
 		(void) queue.presentKHR(presentInfo);

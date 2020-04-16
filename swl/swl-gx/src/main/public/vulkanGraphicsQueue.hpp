@@ -7,11 +7,14 @@
 #include <ownership.hpp>
 
 #include "vulkanImport.h"
-#include "vulkanGraphicsSwapChain.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
+struct VulkanFrame;
+
 struct VulkanGraphicsContext;
+
+struct VulkanGraphicsSwapChain;
 
 struct VulkanGraphicsQueue {
 
@@ -53,7 +56,9 @@ struct VulkanGraphicsQueue {
 
 	void submit(const std::vector<vk::CommandBuffer> &buffers, WaitType wait) const;
 
-	void present(const std::vector<std::pair<cx::Borrow<VulkanGraphicsSwapChain>, cx::Borrow<VulkanGraphicsSwapChain::VulkanFrame>>> &swapChains, WaitType wait) const;
+	void present(
+		const std::vector<cx::Borrow<VulkanFrame>> &swapChains,
+		WaitType wait) const;
 };
 
 SNOW_OWL_NAMESPACE_END

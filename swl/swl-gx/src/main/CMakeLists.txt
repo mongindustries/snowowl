@@ -2,32 +2,33 @@ cmake_minimum_required(VERSION 3.16.0)
 
 set(HEADER_LIST
     public/graphics.hpp
-    public/graphicsContext.hpp
-    public/graphicsSwapChain.h
+    public/graphics_context.hpp
+    public/graphics_swap_chain.h
     public/vulkanImport.h
     public/vulkanGraphicsContext.hpp
     public/vulkanGraphicsQueue.hpp
-    public/vulkanGraphicsSwapChain.hpp)
+    public/vulkanGraphicsSwapChain.hpp
+    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp)
 
 set(PRIVATE_HEADER_LIST
-    headers/vulkanGraphicsBackend.hpp)
+        headers/vulkan_graphics_backend.hpp)
 
 set(SOURCE_LIST
     cpp/graphics.cpp
     cpp/vulkanGraphicsContext.cpp
     cpp/vulkanGraphicsQueue.cpp
-    cpp/vulkanGraphicsSwapChain.cpp)
+    cpp/vulkanGraphicsSwapChain.cpp cpp/vulkan_shader.cpp cpp/vulkan_fence_lock.cpp)
 
 if(WIN32)
-    set(PLATFORM_SOURCE_LIST 
-        platform/windows/vulkanGraphicsBackend.cpp)
+    set(PLATFORM_SOURCE_LIST
+            platform/windows/vulkan_graphics_backend.cpp)
 
     set(PLATFORM_HEADER_LIST)
 endif()
 
 if(APPLE)
     set(PLATFORM_SOURCE_LIST
-        platform/darwin/vulkanGraphicsBackend.cpp)
+            platform/darwin/vulkan_graphics_backend.cpp)
 
     set(PLATFORM_HEADER_LIST)
 endif()

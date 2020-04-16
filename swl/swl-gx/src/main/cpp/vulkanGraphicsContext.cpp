@@ -2,8 +2,9 @@
 // Created by Michael Ong on 6/4/20.
 //
 #include "vulkanGraphicsContext.hpp"
-#include "vulkanGraphicsBackend.hpp"
+#include "vulkan_graphics_backend.hpp"
 #include "vulkanGraphicsSwapChain.hpp"
+#include "vulkanGraphicsQueue.hpp"
 
 #include <iostream>
 
@@ -18,7 +19,7 @@ VulkanGraphicsContext::VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexce
 	_instance      (move(mov._instance)),
 	_active_device (mov._active_device),
 	_device        (move(mov._device)),
-	loader         (move(mov.loader)) {
+	loader         (mov.loader) {
 }
 
 VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& mov) noexcept {
@@ -26,7 +27,7 @@ VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& 
 	_instance       = move(mov._instance);
 	_active_device  = mov._active_device;
 	_device         = move(mov._device);
-	loader          = move(mov.loader);
+	loader          = mov.loader;
 
 	return *this;
 }

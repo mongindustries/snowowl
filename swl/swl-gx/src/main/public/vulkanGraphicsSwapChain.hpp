@@ -6,7 +6,7 @@
 #include <vector>
 #include <ownership.hpp>
 
-#include "graphicsSwapChain.h"
+#include "graphics_swap_chain.h"
 #include "rect.hpp"
 #include "vulkanImport.h"
 
@@ -16,15 +16,19 @@ struct VulkanGraphicsContext;
 
 struct VulkanGraphicsQueue;
 
-struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
+struct VulkanGraphicsSwapChain;
 
-	struct VulkanFrame {
+struct VulkanFrame {
 
 		uint32_t index;
 
 		vk::Image image;
 		vk::UniqueImageView imageView;
-	};
+
+		VulkanGraphicsSwapChain const& swapChain;
+};
+
+struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 
 	vk::PhysicalDevice const&   physicalDevice;
 	vk::Device const&           device;

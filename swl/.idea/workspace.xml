@@ -43,60 +43,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/app/src/main/hlsl/common" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/spirv/simple-frag.spv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/spirv/simple-vert.spv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/buildDir/addTesting.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/buildDir/applyPlatformFlags.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/buildDir/compileShaders.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/buildDir/importVulkan.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-cx/src/main/platform/darwin/file_manager.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-cx/src/main/public/file_manager.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_shader.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_shader.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/renderer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/headers/renderer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/headers/renderer.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/hlsl/simple.frag" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/hlsl/simple.frag" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/hlsl/simple.vert" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/hlsl/simple.vert" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/game_loop.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/cpp/game_loop.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/path.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/path_ops.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/headers/path_ops.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/platform/darwin/PathImpl.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/platform/windows/PathImpl.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/core.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/data.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/data.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/game_loop.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/game_loop.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/headerconv.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/header.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/hidden_implem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/path.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/point.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/point.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/point_operators.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/point_operators.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/rect.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/rect.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/tell.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/tell.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/test/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/test/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/test/cpp/path_test.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buildDir/applyPlatformFlags.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/buildDir/applyPlatformFlags.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsContext.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsContext.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsQueue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsQueue.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsSwapChain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkanGraphicsSwapChain.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsSwapChain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsSwapChain.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkanGraphicsBackend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkan_graphics_backend.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkanGraphicsBackend.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkan_graphics_backend.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/vulkanGraphicsBackend.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/vulkan_graphics_backend.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsContext.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_context.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphicsSwapChain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsContext.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsContext.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsQueue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsQueue.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/windows/swl_win32_window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/ui.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/ui.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsSwapChain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/vulkanGraphicsSwapChain.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,7 +157,7 @@
     <option name="directoryName" value="raisj8uk" />
   </component>
   <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-Debug-cx" />
+    <option name="configuration" value="0-Debug-gx" />
   </component>
   <component name="ProjectId" id="1ZdAUJ2I3s0uKeIXM4jRjJpF1e7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -361,6 +324,7 @@
       <workItem from="1586779572159" duration="6848000" />
       <workItem from="1586795378598" duration="183000" />
       <workItem from="1586795812934" duration="4511000" />
+      <workItem from="1586968922132" duration="2610000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>

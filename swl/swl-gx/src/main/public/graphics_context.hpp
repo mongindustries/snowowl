@@ -6,7 +6,7 @@
 #include <header.hpp>
 #include <windowSurface.hpp>
 
-#include "graphicsSwapChain.h"
+#include "graphics_swap_chain.h"
 
 SNOW_OWL_NAMESPACE(gx)
 

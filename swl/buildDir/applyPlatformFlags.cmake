@@ -8,7 +8,7 @@ function(apply_platform_flags)
     endif (${CMAKE_BUILD_TYPE} MATCHES Debug)
 
     if (WIN32)
-        message("Apply platform macros and compile options for Windows:")
+        message("Apply platform macros and compile options for Windows")
         set(SRC_OS "platform/windows")
 
         add_compile_options(/EHs)
@@ -16,7 +16,7 @@ function(apply_platform_flags)
     endif (WIN32)
 
     if (APPLE)
-        message("Apply platform macros and compile options for Darwin:")
+        message("Apply platform macros and compile options for Darwin")
         set(SRC_OS "platform/darwin")
 
         add_compile_options(-fobjc-arc)
