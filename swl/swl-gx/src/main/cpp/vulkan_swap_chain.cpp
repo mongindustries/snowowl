@@ -11,6 +11,8 @@
 #include "vulkan_swap_chain.hpp"
 #include "vulkan_queue.hpp"
 
+#include "Windows.h"
+
 #undef min
 #undef max
 
@@ -26,44 +28,46 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const VulkanGraphicsQueue& presentQueue,
 	const swl::ui::WindowSurface &surface) : GraphicsSwapChain(context, surface),
 
-	physicalDevice (context._active_device),
+	physical_device(context._active_device),
 	device         (context._device.get()),
 
-	surface (backend::VulkanGraphicsBackend::instance->makeSurface(context._instance.get(), surface)),
+	surface        (backend::VulkanGraphicsBackend::instance->makeSurface(context._instance.get(), surface)),
 
-	presentQueue  (presentQueue),
-	graphicsQueue (graphicsQueue),
+	queue_graphics (presentQueue),
+	queue_present  (graphicsQueue),
 
-	currentSize(surface.getSize()) {
+	current_size   (surface.getSize()) {
 
-	const vk::SemaphoreCreateInfo createSemaphore;
-	swapChainSemaphore = device.createSemaphoreUnique(createSemaphore);
+	semaphore = device.createSemaphoreUnique({});
 
 	createSwapChain();
 
 	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const Rect& rect) {
 
-		needsResize = currentSize.components != rect.size.components;
-		currentSize = rect.size;
+		needs_resize = current_size.components != rect.size.components;
+		current_size = rect.size;
 	});
 }
 
 Borrow<VulkanFrame>
 	VulkanGraphicsSwapChain::getFrame() {
 
-	if (needsResize) {
+	if (needs_resize) {
+
+		OutputDebugString(L"Resizing swap chain\n");
+		
 		device.waitIdle();
 		createSwapChain();
 
-		needsResize = false;
+		needs_resize = false;
 	}
 
 	try {
-		const auto result = device.acquireNextImageKHR(swapChain.get(), 32'000'000, swapChainSemaphore.get(), nullptr);
+		const auto result = device.acquireNextImageKHR(swap_chain.get(), 32'000'000, semaphore.get(), nullptr);
 
-		return Borrow{ activeFrames[result.value] };
+		return Borrow{ active_frames[result.value] };
 	} catch(const vk::OutOfDateKHRError&) {
-		return Borrow{activeFrames[0] };
+		return Borrow{ active_frames[0] };
 	}
 }
 
@@ -72,9 +76,9 @@ void
 
 	auto& dev_surface = this->surface.get();
 
-	auto capabilities = physicalDevice.getSurfaceCapabilitiesKHR(dev_surface);
-	auto formats = physicalDevice.getSurfaceFormatsKHR(dev_surface);
-	auto presents = physicalDevice.getSurfacePresentModesKHR(dev_surface);
+	auto capabilities = physical_device.getSurfaceCapabilitiesKHR(dev_surface);
+	auto formats = physical_device.getSurfaceFormatsKHR(dev_surface);
+	auto presents = physical_device.getSurfacePresentModesKHR(dev_surface);
 
 	vk::SwapchainCreateInfoKHR createSwapChain;
 
@@ -82,7 +86,7 @@ void
 
 	createSwapChain.imageArrayLayers = 1;
 	createSwapChain.imageColorSpace = formats[0].colorSpace;
-	createSwapChain.imageExtent = getExtent(currentSize, capabilities);
+	createSwapChain.imageExtent = getExtent(current_size, capabilities);
 	createSwapChain.imageFormat = formats[0].format;
 	createSwapChain.imageUsage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eColorAttachment;
 
@@ -90,47 +94,48 @@ void
 
 	createSwapChain.minImageCount = std::min(capabilities.minImageCount + 1, capabilities.maxImageCount);
 
-	assert(presentQueue.supportsPresent(*this));
+	assert(queue_present.supportsPresent(*this));
 
-	if (presentQueue.familyIndex != graphicsQueue.familyIndex) {
+	if (queue_graphics.familyIndex != queue_graphics.familyIndex) {
 
 		createSwapChain.imageSharingMode = vk::SharingMode::eConcurrent;
 
-		createSwapChain.queueFamilyIndexCount = 2;
-		createSwapChain.pQueueFamilyIndices = std::array<uint32_t, 2> { presentQueue.familyIndex, graphicsQueue.familyIndex }.data();
+		std::array queues{ queue_present.familyIndex, queue_graphics.familyIndex };
+		createSwapChain.queueFamilyIndexCount = queues.size();
+		createSwapChain.pQueueFamilyIndices   = queues.data();
 	}
 	else {
 		createSwapChain.imageSharingMode = vk::SharingMode::eExclusive;
 	}
 
-	if (swapChain) {
+	if (swap_chain) {
 
-		const auto oldSwapChain = swapChain.release();
+		const auto oldSwapChain = swap_chain.release();
 		createSwapChain.oldSwapchain = oldSwapChain;
 
-		swapChain = device.createSwapchainKHRUnique(createSwapChain);
+		swap_chain = device.createSwapchainKHRUnique(createSwapChain);
 
-		for (const auto& item : activeFrames) {
+		for (const auto& item : active_frames) {
 
 			auto& frame = static_cast<VulkanFrame&>(item.get());
 
 			frame.image = vk::Image();
-			device.destroyImageView(frame.imageView.release());
+			device.destroyImageView(frame.image_view.release());
 		}
 
-		activeFrames.clear();
+		active_frames.clear();
 
 		device.destroySwapchainKHR(oldSwapChain);
 	}
 	else {
 
-		swapChain = device.createSwapchainKHRUnique(createSwapChain);
+		swap_chain = device.createSwapchainKHRUnique(createSwapChain);
 	}
 
 	format = formats[0].format;
 
-	auto images = device.getSwapchainImagesKHR(swapChain.get());
-	activeFrames.reserve(images.size());
+	auto images = device.getSwapchainImagesKHR(swap_chain.get());
+	active_frames.reserve(images.size());
 
 	uint32_t index{0};
 
@@ -152,14 +157,18 @@ void
 		auto frame = new VulkanFrame {
 			.index      = index,
 			.image      = image,
-			.imageView  = device.createImageViewUnique(createImageView),
+			.image_view = device.createImageViewUnique(createImageView),
 			.format     = formats[0].format,
-			.swapChain  = *this
+			.swap_chain = *this
 		};
 
-		activeFrames.emplace_back(frame);
+		active_frames.emplace_back(frame);
 
 		index += 1;
+	}
+
+	for (const auto& event : recreate_size_events) {
+		event.invoke();
 	}
 }
 

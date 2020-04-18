@@ -85,9 +85,9 @@ void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapCha
 	for (const auto &item : swapChains) {
 
 		auto &frame = item.get();
-		auto &sc    = frame.swapChain;
+		auto &sc    = frame.swap_chain;
 
-		chains    .emplace_back(sc.swapChain.get());
+		chains    .emplace_back(sc.swap_chain.get());
 		indices   .emplace_back(frame.index);
 	}
 

@@ -15,7 +15,10 @@ using namespace gx;
 
 VulkanShader::VulkanShader(const VulkanGraphicsContext &context, const std::filesystem::path &location) {
 
-	ifstream read { location, ios::binary | ios::end };
+	ifstream read{};
+
+	read.open(location, ifstream::binary | ifstream::ate);
+
 	auto size = read.tellg();
 
 	vector<char> data(size);
@@ -23,5 +26,5 @@ VulkanShader::VulkanShader(const VulkanGraphicsContext &context, const std::file
 	read.seekg(ios::beg);
 	read.read (data.data(), size);
 
-	shader = context._device->createShaderModuleUnique(vk::ShaderModuleCreateInfo({}, size, (uint32_t*) data.data()));
+	shader = context._device->createShaderModuleUnique(vk::ShaderModuleCreateInfo({}, size, reinterpret_cast<uint32_t*>(data.data())));
 }

@@ -9,7 +9,7 @@ using namespace std;
 using namespace swl::cx;
 
 using namespace swl::ui;
-using namespace swl::ui::backend;
+using namespace backend;
 
 WindowBackend* WindowBackend::backend = new WindowBackend();
 
@@ -53,9 +53,10 @@ void WindowBackend::UpdateFrame(Window const* window) {
 		HWND handle = static_cast<win32_window*>(activeNativeHandles.at(window))->hwnd;
 
 		auto frame = window->getFrame();
-		RECT windowRect = { 0, 0, int(frame.size.x()), int(frame.size.y()) };
-		AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
+		RECT windowRect{};
 
+		GetClientRect(handle, &windowRect);
+		
 		SetWindowPos(handle, nullptr, 
 			int(frame.origin.x()), int(frame.origin.y()),
 			int(windowRect.right - windowRect.left), int(windowRect.bottom - windowRect.top), SWP_FRAMECHANGED);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include <game_loop.hpp>
 #include <file_manager.hpp>
@@ -24,22 +25,22 @@ struct AppGameLoop: GameLoop {
 	void create() override {
 	}
 
+	void preFrame() override {
+
+		auto& window = surface.getWindow().get();
+
+		if (window.isSizing()) {
+			std::unique_lock<std::mutex> lock(window.lockForNoWindowResizing);
+			window.waitForNoWindowResizing.wait(lock);
+		}
+	}
+	
 	void update(std::chrono::milliseconds delta) override {
 	}
 
 	void render(float offset) override {
 
-		auto& window = surface.getWindow().get();
-		
-		if (window.isSizing()) {
-
-			std::unique_lock<std::mutex> lock(window.resizeMutex);
-			window.resizeRender.wait(lock); // wait for window resize event to be finished
-
-			renderer.frame();
-		} else {
-			renderer.frame();
-		}
+		renderer.frame();
 	}
 };
 
@@ -60,6 +61,12 @@ struct App: Application {
 
 		gameLoop = new AppGameLoop(surface);
 		gameLoop->open();
+
+		window->_event_size_list.emplace_back([&](const Window&, const Rect&) {
+			if (window->isSizing()) {
+				gameLoop->frame();
+			}
+		});
 
 		window->_event_close_list.emplace_back([&](const Window&) {
 			gameLoop->close();

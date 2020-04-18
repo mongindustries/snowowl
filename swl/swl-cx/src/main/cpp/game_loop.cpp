@@ -13,45 +13,52 @@ using namespace swl::cx;
 
 GameLoop::GameLoop(uint16_t targetFramerate, uint16_t bailAmount)
 : targetFrametime(1000 / targetFramerate),
-maxUpdateCount(bailAmount) {
+  maxUpdateCount(bailAmount) {
 
 
 }
 
 void GameLoop::open() {
 
-	auto func = [](GameLoop* game_loop, milliseconds frametime, uint16_t maxUpdateCount) {
+	auto func = [](GameLoop* game_loop) {
 
 		game_loop->create();
 
-		milliseconds t1 = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+		game_loop->t1 = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
 
-		milliseconds accumulate{};
 		while (game_loop->running) {
-
-			milliseconds current    = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
-			milliseconds offset     = current - t1;
-
-			accumulate += offset;
-
-			while (accumulate >= frametime) {
-				game_loop->update(frametime);
-				accumulate -= frametime;
-			}
-
-			t1 = current;
-
-			game_loop->render(accumulate / frametime);
+			game_loop->preFrame();
+			game_loop->frame();
 		}
 	};
 
 	running = true;
 
-	game_thread = thread(func, this, targetFrametime, maxUpdateCount);
+	game_thread = thread(func, this);
 	game_thread.detach();
 }
 
 void GameLoop::close() {
 
 	running = false;
+}
+
+void GameLoop::frame() {
+
+	const auto current = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
+	const auto offset = current - t1;
+
+	accumulate += offset;
+
+	uint16_t frameCount = 0;
+	while (accumulate >= targetFrametime && frameCount < maxUpdateCount) {
+		update(targetFrametime);
+
+		accumulate -= targetFrametime;
+		frameCount += 1;
+	}
+
+	t1 = current;
+
+	render(accumulate / targetFrametime);
 }

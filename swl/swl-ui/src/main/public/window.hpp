@@ -32,9 +32,9 @@ struct SWL_EXPORT Window final {
 		Background
 	};
 
-	std::condition_variable resizeRender;
-	std::mutex              resizeMutex;
-
+	std::condition_variable waitForNoWindowResizing;
+	std::mutex              lockForNoWindowResizing;
+	
 	Window  ();
 
 	Window  (std::string window_name, const cx::Rect &frame);

@@ -8,6 +8,8 @@
 
 #include <file_manager.hpp>
 
+#include <event.hpp>
+
 #include "renderer.hpp"
 
 namespace SWL {
@@ -21,8 +23,7 @@ using namespace std;
 using namespace SWL;
 using namespace swl::app;
 
-Renderer::Renderer(const ui::WindowSurface &surface):
-	context       (),
+Renderer::Renderer(const WindowSurface &surface):
 	graphicsQueue (new VulkanGraphicsQueue(context, vk::QueueFlagBits::eGraphics)),
 	swapChain     (nullptr),
 	shader_vert   (nullptr),
@@ -36,13 +37,22 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 	commandPool   = g_queue.commandPool();
 
 	clearBuffer = context._device->allocateCommandBuffersUnique({
-		commandPool.get(), vk::CommandBufferLevel::ePrimary, (uint32_t) swapChain->activeFrames.size() });
+		commandPool.get(), vk::CommandBufferLevel::ePrimary, (uint32_t) swapChain->active_frames.size() });
 
 	presentReadySemaphore = context._device->createSemaphoreUnique({ });
 	fence = context._device->createFenceUnique({ });
 
-	shader_vert = new VulkanShader(context, cx::FileManager::resourcePath / "simple-vert.spv");
-	shader_frag = new VulkanShader(context, cx::FileManager::resourcePath / "simple-frag.spv");
+	shader_vert = new VulkanShader(context, cx::FileManager::resourcePath / L"simple-vert.spv");
+	shader_frag = new VulkanShader(context, cx::FileManager::resourcePath / L"simple-frag.spv");
+
+	auto& swap_chain = swapChain.get();
+
+	swap_chain.recreate_size_events.push_back(Event{ std::function<void()>{ [&]() { create_framebuffers(); } } });
+
+	create_framebuffers();
+}
+
+void Renderer::create_framebuffers() {
 
 	// defines UAV that this render pass is going to use (on any sub-pass)
 	array attachmentDescription{
@@ -59,9 +69,10 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 	};
 	// a list of sub-passes for a render pass
 	array subpasses{
-		vk::SubpassDescription{ {}, vk::PipelineBindPoint::eGraphics,
-		                        0, nullptr,
-		                        attachmentReferences.size(), attachmentReferences.data() }
+		vk::SubpassDescription{ {},
+			vk::PipelineBindPoint::eGraphics,
+			0, nullptr,
+			attachmentReferences.size(), attachmentReferences.data() }
 	};
 
 	array dependencies{
@@ -97,43 +108,17 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 		dependencies.size(), dependencies.data()
 	});
 
-	framebuffers.resize(swapChain->activeFrames.size());
+	framebuffers.resize(swapChain->active_frames.size());
 
-	uint8_t index{0};
-	for (const auto &frame : swapChain->activeFrames) {
+	uint8_t index{ 0 };
+	for (const auto& frame : swapChain->active_frames) {
 
-		auto &imageview = frame.get().imageView.get();
-		auto size = swapChain->currentSize;
+		auto& imageview = frame.get().image_view.get();
+		auto size = swapChain->current_size;
 
-		vk::FramebufferCreateInfo framebuffer{ {}, renderPass.get(), 1, &imageview, (uint32_t) size.x(), (uint32_t) size.y(), 1 };
+		vk::FramebufferCreateInfo framebuffer{ {}, renderPass.get(), 1, &imageview, uint32_t(size.x()), uint32_t(size.y()), 1 };
 		framebuffers[index++] = context._device->createFramebufferUnique(framebuffer);
 	}
-
-	array shaders{
-		vk::PipelineShaderStageCreateInfo{ {}, vk::ShaderStageFlagBits::eVertex,  shader_vert->shader.get() },
-		vk::PipelineShaderStageCreateInfo{ {}, vk::ShaderStageFlagBits::eFragment, shader_frag->shader.get() }
-	};
-
-	vk::PipelineRasterizationStateCreateInfo rasterCreate{ {},
-		 false,
-		 false,
-		 vk::PolygonMode::eFill,
-		 vk::CullModeFlagBits::eBack,
-		 vk::FrontFace::eClockwise,
-		 false };
-
-	vk::PipelineDynamicStateCreateInfo dynamicStateCreate{ {},
-		2,
-		array{ vk::DynamicState::eViewport, vk::DynamicState::eScissor }.data() };
-
-	vk::GraphicsPipelineCreateInfo pipelineCreateInfo{};
-
-	pipelineCreateInfo.stageCount = shaders.size();
-	pipelineCreateInfo.pStages = shaders.data();
-
-	pipelineCreateInfo.pViewportState = nullptr;
-	pipelineCreateInfo.pRasterizationState = &rasterCreate;
-	pipelineCreateInfo.pDynamicState = &dynamicStateCreate;
 }
 
 float __color__ = 0;
@@ -155,7 +140,7 @@ void Renderer::frame() {
 			float constcol = std::sin(__color__) / ceillllll;
 			float xonstcol = std::cos(__color__) / xeillllll;
 
-			auto color    = vk::ClearColorValue(array{ constcol, 1.0f - constcol, xonstcol, 1.0f });
+			auto color     = vk::ClearColorValue(array{ constcol, 1.0f - constcol, xonstcol, 1.0f });
 
 			__color__ += 0.01;
 
@@ -163,7 +148,7 @@ void Renderer::frame() {
 
 			beginInfo.renderArea      = vk::Rect2D{
 				{},
-				{ (uint32_t) swapChain->currentSize.x(), (uint32_t) swapChain->currentSize.y() }};
+				{ (uint32_t) swapChain->current_size.x(), (uint32_t) swapChain->current_size.y() }};
 			beginInfo.clearValueCount = 1;
 			beginInfo.pClearValues    = array{ vk::ClearValue(color) }.data();
 
@@ -172,12 +157,12 @@ void Renderer::frame() {
 			record->endRenderPass   ();
 		}
 
-		const auto rp = vector { presentReadySemaphore.get() };
+		const auto rp = vector{ presentReadySemaphore.get() };
 		graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::GPUWaitType::semaphores({ }, rp), lock.fence);
 	}
 
-	const auto sc = vector { frame };
-	const auto sp = vector { presentReadySemaphore.get(), swapChain->swapChainSemaphore.get() };
+	const auto sc = vector{ frame };
+	const auto sp = vector{ presentReadySemaphore.get(), swapChain->semaphore.get() };
 
 	graphicsQueue->present(sc, VulkanGraphicsQueue::GPUWaitType::semaphores(sp, { }));
 }

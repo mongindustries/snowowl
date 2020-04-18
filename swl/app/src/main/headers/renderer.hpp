@@ -40,6 +40,9 @@ struct Renderer {
 
 	Renderer(const ui::WindowSurface &surface);
 
+	void create_framebuffers();
+
+	
 	void frame();
 };
 

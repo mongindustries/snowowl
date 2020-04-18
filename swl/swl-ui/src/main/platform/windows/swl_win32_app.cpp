@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <sstream>
+#include <string>
 
 #include "application.hpp"
 
@@ -33,19 +35,47 @@ Window* windowFromHWND(HWND hwnd) {
 	return nullptr;
 }
 
+void updateSizeLock(HWND hwnd, Window* window) {
+
+	RECT rect{};
+	GetClientRect(hwnd, &rect);
+
+	window->getSink()->Update(Rect{ { float(rect.left), float(rect.top) }, { rect.right - rect.left, rect.bottom - rect.top } });
+}
+
 LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
 	switch (message) {
 	case WM_ENTERSIZEMOVE: {
 		if (const auto window = windowFromHWND(hwnd)) {
 			window->getSink()->Sizing(true);
+
+			OutputDebugString(L"Resize start\n");
+			
+			updateSizeLock(hwnd, window);
 		}
 		return 0;
 	}
 	case WM_EXITSIZEMOVE: {
 		if (const auto window = windowFromHWND(hwnd)) {
+
+			OutputDebugString(L"Resize end\n");
+			
+			updateSizeLock(hwnd, window);
+
 			window->getSink()->Sizing(false);
+			window->waitForNoWindowResizing.notify_all();
 		}
+		return 0;
+	}
+	case WM_WINDOWPOSCHANGED: {
+
+		if (const auto window = windowFromHWND(hwnd)) {
+
+			OutputDebugString(L"Resizing...\n");
+			updateSizeLock(hwnd, window);
+		}
+
 		return 0;
 	}
 	case WM_CLOSE: {
@@ -59,20 +89,6 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		return 0;
 	}
 	case WM_ACTIVATE: {
-		return 0;
-	}
-	case WM_WINDOWPOSCHANGED: {
-
-		const WINDOWPOS* posInfo = reinterpret_cast<WINDOWPOS*>(lparam);
-
-		if (auto window = windowFromHWND(hwnd)) {
-
-			std::unique_lock<std::mutex> lock(window->resizeMutex);
-			window->getSink()->Update(Rect { { float(posInfo->x), float(posInfo->y) }, { posInfo->cx, posInfo->cy } });
-
-			window->resizeRender.notify_all();
-		}
-
 		return 0;
 	}
 	case WM_QUIT:
@@ -101,7 +117,7 @@ void Application::preHeat(Application &app) {
 	customClass.lpszClassName = className;
 	customClass.hIcon = LoadIcon(instance, MAKEINTRESOURCE(108));
 	customClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	customClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	customClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
 	customClass.hIconSm = LoadIcon(instance, MAKEINTRESOURCE(108));
 
 	RegisterClassEx(&customClass);

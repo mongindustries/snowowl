@@ -4,10 +4,13 @@
 #pragma once
 
 #include <vector>
+
 #include <ownership.hpp>
+#include <rect.hpp>
+
+#include <event.hpp>
 
 #include "graphics_swap_chain.h"
-#include "rect.hpp"
 #include "vulkan_import.h"
 
 SNOW_OWL_NAMESPACE(gx)
@@ -20,35 +23,37 @@ struct VulkanGraphicsSwapChain;
 
 struct VulkanFrame {
 
-		uint32_t index;
+	uint32_t                       index;
 
-		vk::Image image;
-		vk::UniqueImageView imageView;
+	vk::Image                      image;
+	vk::UniqueImageView            image_view;
 
-		vk::Format format;
+	vk::Format                     format;
 
-		VulkanGraphicsSwapChain const& swapChain;
+	VulkanGraphicsSwapChain const& swap_chain;
 };
 
 struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 
-	vk::PhysicalDevice const&   physicalDevice;
-	vk::Device const&           device;
-	
-	vk::UniqueSurfaceKHR        surface;
-	vk::UniqueSwapchainKHR      swapChain;
+	vk::PhysicalDevice const&           physical_device;
+	vk::Device const&                   device;
 
-	vk::UniqueSemaphore         swapChainSemaphore;
+	vk::UniqueSurfaceKHR                surface;
+	vk::UniqueSwapchainKHR              swap_chain;
 
-	VulkanGraphicsQueue const&  presentQueue;
-	VulkanGraphicsQueue const&  graphicsQueue;
+	vk::UniqueSemaphore                 semaphore;
 
-	bool                        needsResize{ false };
-	cx::Size2D                          currentSize;
+	VulkanGraphicsQueue const&          queue_present;
+	VulkanGraphicsQueue const&          queue_graphics;
+
+	bool                                needs_resize{ false };
+	cx::Size2D                          current_size;
 
 	vk::Format                          format;
 
-	std::vector<cx::Own<VulkanFrame>>   activeFrames;
+	std::vector<cx::Own<VulkanFrame>>   active_frames;
+
+	std::vector<ui::Event<void>>        recreate_size_events;
 
 	VulkanGraphicsSwapChain(
 		const VulkanGraphicsContext &context,

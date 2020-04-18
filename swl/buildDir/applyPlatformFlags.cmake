@@ -13,6 +13,7 @@ function(apply_platform_flags)
 
         add_compile_options(/EHs)
         add_compile_definitions(SWL_WIN32=1)
+        add_compile_definitions(UNICODE=1)
     endif (WIN32)
 
     if (APPLE)

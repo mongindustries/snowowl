@@ -21,6 +21,10 @@ struct GameLoop {
 
 	void close();
 
+	void frame();
+
+
+	virtual void preFrame() = 0;
 
 	virtual void create() = 0;
 
@@ -32,10 +36,13 @@ private:
 
 	std::thread game_thread;
 
-    bool running{false};
+	std::chrono::milliseconds t1{};
+	std::chrono::milliseconds accumulate{};
 
-    std::chrono::milliseconds targetFrametime{};
-    uint16_t maxUpdateCount{};
+	bool running{false};
+
+	std::chrono::milliseconds targetFrametime{};
+	uint16_t maxUpdateCount{};
 };
 
 SNOW_OWL_NAMESPACE_END
