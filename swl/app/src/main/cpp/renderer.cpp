@@ -3,12 +3,17 @@
 #include <vector>
 #include <cmath>
 
+#include <vulkan_fence_lock.hpp>
+#include <vulkan_bufer_record.hpp>
+
+#include <file_manager.hpp>
+
 #include "renderer.hpp"
 
 namespace SWL {
-	using namespace swl::cx;
-	using namespace swl::ui;
-	using namespace swl::gx;
+		using namespace swl::cx;
+		using namespace swl::ui;
+		using namespace swl::gx;
 }
 
 using namespace std;
@@ -19,7 +24,9 @@ using namespace swl::app;
 Renderer::Renderer(const ui::WindowSurface &surface):
 	context       (),
 	graphicsQueue (new VulkanGraphicsQueue(context, vk::QueueFlagBits::eGraphics)),
-	swapChain     (nullptr) {
+	swapChain     (nullptr),
+	shader_vert   (nullptr),
+	shader_frag   (nullptr) {
 
 	context.createDevice({ MutableBorrow(graphicsQueue) });
 
@@ -28,11 +35,105 @@ Renderer::Renderer(const ui::WindowSurface &surface):
 	swapChain     = new VulkanGraphicsSwapChain(context, g_queue, g_queue, surface);
 	commandPool   = g_queue.commandPool();
 
-	vk::CommandBufferAllocateInfo allocate(commandPool.get(), vk::CommandBufferLevel::ePrimary, swapChain->activeFrames.size());
-	clearBuffer = context._device->allocateCommandBuffersUnique(allocate);
+	clearBuffer = context._device->allocateCommandBuffersUnique({
+		commandPool.get(), vk::CommandBufferLevel::ePrimary, (uint32_t) swapChain->activeFrames.size() });
 
-	vk::SemaphoreCreateInfo sema_create{};
-	presentReadySemaphore = context._device->createSemaphoreUnique(sema_create);
+	presentReadySemaphore = context._device->createSemaphoreUnique({ });
+	fence = context._device->createFenceUnique({ });
+
+	shader_vert = new VulkanShader(context, cx::FileManager::resourcePath / "simple-vert.spv");
+	shader_frag = new VulkanShader(context, cx::FileManager::resourcePath / "simple-frag.spv");
+
+	// defines UAV that this render pass is going to use (on any sub-pass)
+	array attachmentDescription{
+		vk::AttachmentDescription{ {},
+			 swapChain->format, vk::SampleCountFlagBits::e1,
+			 vk::AttachmentLoadOp::eClear, vk::AttachmentStoreOp::eStore,
+			 vk::AttachmentLoadOp::eDontCare, vk::AttachmentStoreOp::eDontCare,
+			 vk::ImageLayout::eUndefined, vk::ImageLayout::ePresentSrcKHR }
+	};
+
+	// defines a sub-pass attachment, attachment index is referred from attachmentDescription.
+	array attachmentReferences{
+		vk::AttachmentReference {0, vk::ImageLayout::eColorAttachmentOptimal }
+	};
+	// a list of sub-passes for a render pass
+	array subpasses{
+		vk::SubpassDescription{ {}, vk::PipelineBindPoint::eGraphics,
+		                        0, nullptr,
+		                        attachmentReferences.size(), attachmentReferences.data() }
+	};
+
+	array dependencies{
+		vk::SubpassDependency{
+			VK_SUBPASS_EXTERNAL,
+			{},
+
+			vk::PipelineStageFlagBits::eColorAttachmentOutput,
+			vk::PipelineStageFlagBits::eColorAttachmentOutput,
+
+			{},
+			vk::AccessFlagBits::eColorAttachmentWrite,
+
+			vk::DependencyFlagBits::eByRegion
+		},
+		vk::SubpassDependency{
+			{},
+			VK_SUBPASS_EXTERNAL,
+
+			vk::PipelineStageFlagBits::eColorAttachmentOutput,
+			vk::PipelineStageFlagBits::eBottomOfPipe,
+
+			vk::AccessFlagBits::eColorAttachmentWrite,
+			{},
+
+			vk::DependencyFlagBits::eByRegion
+		}
+	};
+
+	renderPass = context._device->createRenderPassUnique({ {},
+		attachmentDescription.size(), attachmentDescription.data(),
+		subpasses.size(), subpasses.data(),
+		dependencies.size(), dependencies.data()
+	});
+
+	framebuffers.resize(swapChain->activeFrames.size());
+
+	uint8_t index{0};
+	for (const auto &frame : swapChain->activeFrames) {
+
+		auto &imageview = frame.get().imageView.get();
+		auto size = swapChain->currentSize;
+
+		vk::FramebufferCreateInfo framebuffer{ {}, renderPass.get(), 1, &imageview, (uint32_t) size.x(), (uint32_t) size.y(), 1 };
+		framebuffers[index++] = context._device->createFramebufferUnique(framebuffer);
+	}
+
+	array shaders{
+		vk::PipelineShaderStageCreateInfo{ {}, vk::ShaderStageFlagBits::eVertex,  shader_vert->shader.get() },
+		vk::PipelineShaderStageCreateInfo{ {}, vk::ShaderStageFlagBits::eFragment, shader_frag->shader.get() }
+	};
+
+	vk::PipelineRasterizationStateCreateInfo rasterCreate{ {},
+		 false,
+		 false,
+		 vk::PolygonMode::eFill,
+		 vk::CullModeFlagBits::eBack,
+		 vk::FrontFace::eClockwise,
+		 false };
+
+	vk::PipelineDynamicStateCreateInfo dynamicStateCreate{ {},
+		2,
+		array{ vk::DynamicState::eViewport, vk::DynamicState::eScissor }.data() };
+
+	vk::GraphicsPipelineCreateInfo pipelineCreateInfo{};
+
+	pipelineCreateInfo.stageCount = shaders.size();
+	pipelineCreateInfo.pStages = shaders.data();
+
+	pipelineCreateInfo.pViewportState = nullptr;
+	pipelineCreateInfo.pRasterizationState = &rasterCreate;
+	pipelineCreateInfo.pDynamicState = &dynamicStateCreate;
 }
 
 float __color__ = 0;
@@ -42,58 +143,41 @@ float xeillllll = std::cos(M_2_PI);
 
 void Renderer::frame() {
 
-	auto frame  = swapChain->getFrame();
-	auto& image = frame.get().image;
+	auto frame = swapChain->getFrame();
 
-	auto& buffer = clearBuffer[frame.get().index].get();
+	{ VulkanFenceLock lock(context._device.get(), fence.get());
 
-	const vk::CommandBufferBeginInfo recordBegin{ { vk::CommandBufferUsageFlagBits::eOneTimeSubmit } };
-	buffer.begin(recordBegin);
+		auto& image   = frame.get().image;
+		auto& buffer  = clearBuffer[frame.get().index].get();
 
-    float constcol = std::sin(__color__) / ceillllll;
-    float xonstcol = std::cos(__color__) / xeillllll;
+		{ VulkanBufferRecord record { buffer, vk::CommandBufferUsageFlagBits::eOneTimeSubmit };
 
-	auto subrange = vk::ImageSubresourceRange{ vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1 };
-    auto color    = vk::ClearColorValue(array<float, 4> { constcol, 1.0f - constcol, xonstcol, 1.0f });
+			float constcol = std::sin(__color__) / ceillllll;
+			float xonstcol = std::cos(__color__) / xeillllll;
 
-	__color__ += 0.01;
+			auto color    = vk::ClearColorValue(array{ constcol, 1.0f - constcol, xonstcol, 1.0f });
 
-	vk::ImageMemoryBarrier barrier{};
+			__color__ += 0.01;
 
-	barrier.srcAccessMask = vk::AccessFlagBits::eMemoryRead;
-	barrier.dstAccessMask = vk::AccessFlagBits::eTransferWrite;
+			vk::RenderPassBeginInfo beginInfo{ renderPass.get(), framebuffers[frame.get().index].get()};
 
-	barrier.oldLayout = vk::ImageLayout::eUndefined;
-	barrier.newLayout = vk::ImageLayout::eTransferDstOptimal;
+			beginInfo.renderArea      = vk::Rect2D{
+				{},
+				{ (uint32_t) swapChain->currentSize.x(), (uint32_t) swapChain->currentSize.y() }};
+			beginInfo.clearValueCount = 1;
+			beginInfo.pClearValues    = array{ vk::ClearValue(color) }.data();
 
-	barrier.srcQueueFamilyIndex = graphicsQueue.get().familyIndex;
-	barrier.dstQueueFamilyIndex = graphicsQueue.get().familyIndex;
+			record->beginRenderPass (beginInfo, vk::SubpassContents::eInline);
 
-	barrier.image = image;
-	barrier.subresourceRange = subrange;
+			record->endRenderPass   ();
+		}
 
-	array from { barrier };
-	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eTransfer, { }, { }, { }, from);
+		const auto rp = vector { presentReadySemaphore.get() };
+		graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::GPUWaitType::semaphores({ }, rp), lock.fence);
+	}
 
-	buffer.clearColorImage(image, vk::ImageLayout::eTransferDstOptimal, &color, 1, &subrange);
-
-	barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
-	barrier.dstAccessMask = vk::AccessFlagBits::eMemoryRead;
-
-	barrier.oldLayout = vk::ImageLayout::eTransferDstOptimal;
-	barrier.newLayout = vk::ImageLayout::ePresentSrcKHR;
-
-	array to { barrier };
-	buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eBottomOfPipe, { }, { }, { }, to);
-
-	buffer.end();
-
-	const auto rp = vector { presentReadySemaphore.get() };
-	graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::WaitType::semaphores({ }, rp));
-	graphicsQueue->queue.waitIdle();
-
-	const auto sc = vector { pair { Borrow(swapChain), frame } };
-
+	const auto sc = vector { frame };
 	const auto sp = vector { presentReadySemaphore.get(), swapChain->swapChainSemaphore.get() };
-	graphicsQueue->present(sc, VulkanGraphicsQueue::WaitType::semaphores(sp, { }));
+
+	graphicsQueue->present(sc, VulkanGraphicsQueue::GPUWaitType::semaphores(sp, { }));
 }

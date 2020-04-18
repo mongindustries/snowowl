@@ -5,11 +5,11 @@
 
 #include <window.hpp>
 
-#include "vulkanGraphicsContext.hpp"
+#include "vulkan_context.hpp"
 #include "vulkan_graphics_backend.hpp"
 
-#include "vulkanGraphicsSwapChain.hpp"
-#include "vulkanGraphicsQueue.hpp"
+#include "vulkan_swap_chain.hpp"
+#include "vulkan_queue.hpp"
 
 #undef min
 #undef max
@@ -127,6 +127,8 @@ void
 		swapChain = device.createSwapchainKHRUnique(createSwapChain);
 	}
 
+	format = formats[0].format;
+
 	auto images = device.getSwapchainImagesKHR(swapChain.get());
 	activeFrames.reserve(images.size());
 
@@ -151,6 +153,7 @@ void
 			.index      = index,
 			.image      = image,
 			.imageView  = device.createImageViewUnique(createImageView),
+			.format     = formats[0].format,
 			.swapChain  = *this
 		};
 

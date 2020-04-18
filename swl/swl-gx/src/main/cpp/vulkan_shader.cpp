@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "vulkan_shader.hpp"
-#include "vulkanGraphicsContext.hpp"
+#include "vulkan_context.hpp"
 
 using namespace std;
 using namespace filesystem;

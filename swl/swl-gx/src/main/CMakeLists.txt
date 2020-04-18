@@ -4,20 +4,20 @@ set(HEADER_LIST
     public/graphics.hpp
     public/graphics_context.hpp
     public/graphics_swap_chain.h
-    public/vulkanImport.h
-    public/vulkanGraphicsContext.hpp
-    public/vulkanGraphicsQueue.hpp
-    public/vulkanGraphicsSwapChain.hpp
-    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp)
+        public/vulkan_import.h
+        public/vulkan_context.hpp
+        public/vulkan_queue.hpp
+        public/vulkan_swap_chain.hpp
+    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp public/vulkan_bufer_record.hpp)
 
 set(PRIVATE_HEADER_LIST
         headers/vulkan_graphics_backend.hpp)
 
 set(SOURCE_LIST
     cpp/graphics.cpp
-    cpp/vulkanGraphicsContext.cpp
-    cpp/vulkanGraphicsQueue.cpp
-    cpp/vulkanGraphicsSwapChain.cpp cpp/vulkan_shader.cpp cpp/vulkan_fence_lock.cpp)
+        cpp/vulkan_context.cpp
+        cpp/vulkan_queue.cpp
+        cpp/vulkan_swap_chain.cpp cpp/vulkan_shader.cpp cpp/vulkan_fence_lock.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST

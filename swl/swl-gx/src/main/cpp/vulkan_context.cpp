@@ -1,10 +1,10 @@
 //
 // Created by Michael Ong on 6/4/20.
 //
-#include "vulkanGraphicsContext.hpp"
+#include "vulkan_context.hpp"
 #include "vulkan_graphics_backend.hpp"
-#include "vulkanGraphicsSwapChain.hpp"
-#include "vulkanGraphicsQueue.hpp"
+#include "vulkan_swap_chain.hpp"
+#include "vulkan_queue.hpp"
 
 #include <iostream>
 

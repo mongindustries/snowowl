@@ -4,7 +4,7 @@
 #include <file_manager.hpp>
 #include <application.hpp>
 
-#include <vulkanGraphicsContext.hpp>
+#include <vulkan_context.hpp>
 
 #include "renderer.hpp"
 

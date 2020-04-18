@@ -6,13 +6,13 @@
 #define SNOW_OWL_COMMON_H
 
 struct vertex_input {
-		float4 pos : POSITION;
-		float4 col : COLOR;
+		[[vk::location(0)]] float4 pos : POSITION;
+		[[vk::location(1)]] float4 col : COLOR;
 };
 
 struct vertex_output {
-		float4 pos : SV_POSITION;
-		float4 col : COLOR;
+		[[vk::location(0)]] float4 pos : SV_POSITION;
+		[[vk::location(1)]] float4 col : COLOR;
 };
 
 struct test_buffer {

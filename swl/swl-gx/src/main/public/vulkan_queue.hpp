@@ -6,7 +6,7 @@
 #include <header.hpp>
 #include <ownership.hpp>
 
-#include "vulkanImport.h"
+#include "vulkan_import.h"
 
 SNOW_OWL_NAMESPACE(gx)
 
@@ -18,9 +18,13 @@ struct VulkanGraphicsSwapChain;
 
 struct VulkanGraphicsQueue {
 
-	struct WaitType {
-		static WaitType semaphores(const std::vector<vk::Semaphore> &wait, const std::vector<vk::Semaphore> &signal);
-		static WaitType idle();
+	struct GPUWaitType {
+
+		static GPUWaitType semaphores
+			(const std::vector<vk::Semaphore> &wait, const std::vector<vk::Semaphore> &signal);
+
+		static GPUWaitType idle
+			();
 
 		bool shouldIdle{false};
 
@@ -54,11 +58,11 @@ struct VulkanGraphicsQueue {
 	[[nodiscard]] vk::UniqueCommandPool commandPool() const;
 
 
-	void submit(const std::vector<vk::CommandBuffer> &buffers, WaitType wait) const;
+	void submit(const std::vector<vk::CommandBuffer> &buffers, GPUWaitType wait, const vk::Fence &fence) const;
 
 	void present(
 		const std::vector<cx::Borrow<VulkanFrame>> &swapChains,
-		WaitType wait) const;
+		GPUWaitType wait) const;
 };
 
 SNOW_OWL_NAMESPACE_END

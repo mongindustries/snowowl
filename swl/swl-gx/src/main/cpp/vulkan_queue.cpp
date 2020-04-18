@@ -1,9 +1,9 @@
 //
 // Created by Michael Ong on 13/4/20.
 //
-#include "vulkanGraphicsQueue.hpp"
-#include "vulkanGraphicsSwapChain.hpp"
-#include "vulkanGraphicsContext.hpp"
+#include "vulkan_queue.hpp"
+#include "vulkan_swap_chain.hpp"
+#include "vulkan_context.hpp"
 
 using namespace std;
 using namespace swl::cx;
@@ -48,7 +48,7 @@ vk::UniqueCommandPool VulkanGraphicsQueue::commandPool() const {
 	return device->createCommandPoolUnique(commandPoolCreate);
 }
 
-void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, VulkanGraphicsQueue::WaitType wait) const {
+void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, VulkanGraphicsQueue::GPUWaitType wait, const vk::Fence &fence) const {
 
 	auto waitFlags = vector<vk::PipelineStageFlags> {
 		vk::PipelineStageFlagBits::eTransfer,
@@ -65,7 +65,7 @@ void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, Vulka
 	};
 
 	try {
-		queue.submit(submitInfo, nullptr);
+		queue.submit(submitInfo, fence);
 
 		if (wait.shouldIdle) {
 			queue.waitIdle();
@@ -74,7 +74,7 @@ void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, Vulka
 	}
 }
 
-void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapChains, WaitType wait) const {
+void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapChains, GPUWaitType wait) const {
 
 	vector<vk::SwapchainKHR> chains;
 	chains.reserve(swapChains.size());
@@ -112,10 +112,10 @@ void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapCha
 }
 
 
-VulkanGraphicsQueue::WaitType VulkanGraphicsQueue::WaitType::semaphores(const vector<vk::Semaphore> &wait, const vector<vk::Semaphore> &signal) {
-	return VulkanGraphicsQueue::WaitType { false, wait, signal };
+VulkanGraphicsQueue::GPUWaitType VulkanGraphicsQueue::GPUWaitType::semaphores(const vector<vk::Semaphore> &wait, const vector<vk::Semaphore> &signal) {
+	return VulkanGraphicsQueue::GPUWaitType {false, wait, signal };
 }
 
-VulkanGraphicsQueue::WaitType VulkanGraphicsQueue::WaitType::idle() {
-	return VulkanGraphicsQueue::WaitType { true };
+VulkanGraphicsQueue::GPUWaitType VulkanGraphicsQueue::GPUWaitType::idle() {
+	return VulkanGraphicsQueue::GPUWaitType { true };
 }

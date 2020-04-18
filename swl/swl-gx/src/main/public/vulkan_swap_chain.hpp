@@ -8,7 +8,7 @@
 
 #include "graphics_swap_chain.h"
 #include "rect.hpp"
-#include "vulkanImport.h"
+#include "vulkan_import.h"
 
 SNOW_OWL_NAMESPACE(gx)
 
@@ -25,6 +25,8 @@ struct VulkanFrame {
 		vk::Image image;
 		vk::UniqueImageView imageView;
 
+		vk::Format format;
+
 		VulkanGraphicsSwapChain const& swapChain;
 };
 
@@ -38,15 +40,15 @@ struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 
 	vk::UniqueSemaphore         swapChainSemaphore;
 
-
 	VulkanGraphicsQueue const&  presentQueue;
 	VulkanGraphicsQueue const&  graphicsQueue;
 
-	
-	std::vector<cx::Own<VulkanFrame>> activeFrames;
+	bool                        needsResize{ false };
+	cx::Size2D                          currentSize;
 
-	bool needsResize{ false };
-	cx::Size2D currentSize;
+	vk::Format                          format;
+
+	std::vector<cx::Own<VulkanFrame>>   activeFrames;
 
 	VulkanGraphicsSwapChain(
 		const VulkanGraphicsContext &context,

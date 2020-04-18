@@ -8,8 +8,8 @@
 
 #include <header.hpp>
 
-#include "vulkanImport.h"
-#include "vulkanGraphicsContext.hpp"
+#include "vulkan_import.h"
+#include "vulkan_context.hpp"
 
 #include "windowSurface.hpp"
 

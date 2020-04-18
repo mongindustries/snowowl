@@ -5,7 +5,7 @@
 
 #include <header.hpp>
 
-#include "vulkanImport.h"
+#include "vulkan_import.h"
 
 SNOW_OWL_NAMESPACE(gx)
 

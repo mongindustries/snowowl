@@ -17,7 +17,7 @@ function(compile_shader TARGET FILE TYPE)
         find_program(GV glslc HINTS ${vulkan-tools})
 
         if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-            set(COMMAND ${GV} --target-spv=spv1.0 -fentry-point=main -o ${output_path} -x hlsl ${input_path} -O0 -g)
+            set(COMMAND ${GV} --target-spv=spv1.0 -fentry-point=main -o ${output_path} -x hlsl -O0 -g ${input_path})
         else()
             set(COMMAND ${GV} --target-spv=spv1.0 -fentry-point=main -o ${output_path} -x hlsl ${input_path})
         endif()
@@ -27,7 +27,7 @@ function(compile_shader TARGET FILE TYPE)
             COMMAND             ${COMMAND}
             DEPENDS             ${input_path}
             IMPLICIT_DEPENDS    CXX ${input_path}
-            COMMENT             "glslangValidator -e main -o ${output_path} -V -D ${input_path}"
+            COMMENT             ${COMMAND}
             VERBATIM)
 
         set_source_files_properties(${output_path} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

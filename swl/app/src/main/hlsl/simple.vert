@@ -1,8 +1,6 @@
 #include "common.h"
 
-ConstantBuffer<test_buffer> buffer : register(b0);
-
-vertex_output main(vertex_input input) {
+[[vk::location(0)]] vertex_output main(vertex_input input) {
 
     vertex_output output;
 
