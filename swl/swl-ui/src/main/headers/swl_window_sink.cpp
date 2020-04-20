@@ -15,6 +15,10 @@ void WindowSink::Sizing(bool value) {
 
 		if (window->_handle == handle) {
 			window->_resizing = value;
+
+			if (!window->isSizing()) {
+				window->waitForNoWindowResizing.notify_all();
+			}
 		}
 	}
 }

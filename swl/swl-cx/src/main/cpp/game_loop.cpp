@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 #include "game_loop.hpp"
 
@@ -14,8 +15,6 @@ using namespace swl::cx;
 GameLoop::GameLoop(uint16_t targetFramerate, uint16_t bailAmount)
 : targetFrametime(1000 / targetFramerate),
   maxUpdateCount(bailAmount) {
-
-
 }
 
 void GameLoop::open() {

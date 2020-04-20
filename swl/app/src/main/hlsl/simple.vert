@@ -1,11 +1,17 @@
 #include "common.h"
 
-[[vk::location(0)]] vertex_output main(vertex_input input) {
+static vertex_input vertex[3] = {
+    { {  0, -1, 1, 1 }, { 1, 1, 1, 1 } },
+    { {  1,  1, 1, 1 }, { 1, 1, 1, 1 } },
+    { { -1,  1, 1, 1 }, { 1, 1, 1, 1 } }
+};
+
+vertex_output main(int index : SV_VertexID) {
 
     vertex_output output;
 
-    output.pos = input.pos;
-    output.col = input.col;
+    output.pos = vertex[index].pos;
+    output.col = vertex[index].col;
 
     return output;
 }

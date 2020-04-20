@@ -20,7 +20,9 @@ function(apply_platform_flags)
         message("Apply platform macros and compile options for Darwin")
         set(SRC_OS "platform/darwin")
 
-        add_compile_options(-fobjc-arc)
+        add_compile_options(-fobjc-arc -fobjc-abi-version=2)
+        add_compile_options(-stdlib=libc++)
+
         add_compile_definitions(SWL_DARWIN=1)
     endif (APPLE)
 

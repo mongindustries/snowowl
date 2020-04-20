@@ -9,15 +9,15 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct VulkanBufferRecord {
+struct VulkanBufferRecorder {
 
 	vk::CommandBuffer buffer;
 
-	VulkanBufferRecord(const vk::CommandBuffer &buffer, const vk::CommandBufferUsageFlags& usageFlags): buffer(buffer) {
+	VulkanBufferRecorder(const vk::CommandBuffer &buffer, const vk::CommandBufferUsageFlags& usageFlags): buffer(buffer) {
 		buffer.begin(vk::CommandBufferBeginInfo(usageFlags));
 	}
 
-	~VulkanBufferRecord() {
+	~VulkanBufferRecorder() {
 		buffer.end();
 	}
 

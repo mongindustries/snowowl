@@ -34,8 +34,9 @@ struct AppGameLoop: GameLoop {
 			window.waitForNoWindowResizing.wait(lock);
 		}
 	}
-	
+
 	void update(std::chrono::milliseconds delta) override {
+		renderer.update();
 	}
 
 	void render(float offset) override {

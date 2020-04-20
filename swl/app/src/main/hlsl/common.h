@@ -5,19 +5,23 @@
 #ifndef SNOW_OWL_COMMON_H
 #define SNOW_OWL_COMMON_H
 
+#if defined(CPP_SHADER)
+
+#include <point.hpp>
+typedef swl::cx::Vector<float, 4> float4;
+#define SV_POSITION
+#else
+#define SV_POSITION : SV_Position
+#endif
+
 struct vertex_input {
-		[[vk::location(0)]] float4 pos : POSITION;
-		[[vk::location(1)]] float4 col : COLOR;
+		float4 pos;
+		float4 col;
 };
 
 struct vertex_output {
-		[[vk::location(0)]] float4 pos : SV_POSITION;
-		[[vk::location(1)]] float4 col : COLOR;
-};
-
-struct test_buffer {
-		float4  desc;
-		int2    something;
+		float4 pos SV_POSITION;
+		float4 col;
 };
 
 #endif //SNOW_OWL_COMMON_H

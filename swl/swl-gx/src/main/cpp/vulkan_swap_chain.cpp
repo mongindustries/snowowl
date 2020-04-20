@@ -11,8 +11,6 @@
 #include "vulkan_swap_chain.hpp"
 #include "vulkan_queue.hpp"
 
-#include "Windows.h"
-
 #undef min
 #undef max
 
@@ -54,8 +52,6 @@ Borrow<VulkanFrame>
 
 	if (needs_resize) {
 
-		OutputDebugString(L"Resizing swap chain\n");
-		
 		device.waitIdle();
 		createSwapChain();
 
@@ -96,7 +92,7 @@ void
 
 	assert(queue_present.supportsPresent(*this));
 
-	if (queue_graphics.familyIndex != queue_graphics.familyIndex) {
+	if (queue_graphics.familyIndex != queue_present.familyIndex) {
 
 		createSwapChain.imageSharingMode = vk::SharingMode::eConcurrent;
 

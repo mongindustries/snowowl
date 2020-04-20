@@ -33,6 +33,8 @@ void WindowBackend::Spawn
 
 	auto ns_window = [swlWindow createWindow:controller engineWindow:window];
 
+	[ns_window center];
+
 	[ns_window makeKeyAndOrderFront: [NSApplication sharedApplication]];
 	[ns_window makeMainWindow];
 

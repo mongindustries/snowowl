@@ -64,7 +64,6 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			updateSizeLock(hwnd, window);
 
 			window->getSink()->Sizing(false);
-			window->waitForNoWindowResizing.notify_all();
 		}
 		return 0;
 	}

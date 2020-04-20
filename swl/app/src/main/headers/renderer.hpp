@@ -21,9 +21,6 @@ struct Renderer {
 
 	cx::Own<gx::VulkanGraphicsSwapChain>  swapChain;
 
-	cx::Own<gx::VulkanShader>             shader_vert;
-	cx::Own<gx::VulkanShader>             shader_frag;
-
 
 	vk::UniqueCommandPool                 commandPool;
 
@@ -31,7 +28,15 @@ struct Renderer {
 
 	vk::UniqueFence                       fence;
 
+
+	vk::UniquePipeline                    graphicsPipeline;
+
+
 	vk::UniqueRenderPass                  renderPass;
+
+	vk::UniqueDescriptorSetLayout         descriptorSetLayout;
+
+	vk::UniquePipelineLayout              pipelineLayout;
 
 
 	std::vector<vk::UniqueCommandBuffer>  clearBuffer;
@@ -40,8 +45,19 @@ struct Renderer {
 
 	Renderer(const ui::WindowSurface &surface);
 
-	void create_framebuffers();
 
+	void create_uniform_buffers   ();
+
+	void create_render_pass       ();
+
+	void create_framebuffers      ();
+
+	void create_graphics_pipeline ();
+
+	void create_pipeline_bindings ();
+
+
+	void update();
 	
 	void frame();
 };

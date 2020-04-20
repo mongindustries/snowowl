@@ -8,7 +8,7 @@ set(HEADER_LIST
         public/vulkan_context.hpp
         public/vulkan_queue.hpp
         public/vulkan_swap_chain.hpp
-    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp public/vulkan_bufer_record.hpp)
+    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp public/vulkan_buffer_recorder.hpp)
 
 set(PRIVATE_HEADER_LIST
         headers/vulkan_graphics_backend.hpp)

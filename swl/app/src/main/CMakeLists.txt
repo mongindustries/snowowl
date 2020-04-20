@@ -36,6 +36,7 @@ if(APPLE)
         PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     target_link_libraries(app
+            "c++"
             "-framework Foundation"
             "-framework QuartzCore"
             "-framework AppKit"

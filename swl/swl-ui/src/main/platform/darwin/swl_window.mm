@@ -4,6 +4,8 @@
 #import <tell.hpp>
 #import <rect.hpp>
 
+#import <iostream>
+
 #import "swl_window.hxx"
 #import "swl_window_backend.hpp"
 
@@ -19,8 +21,7 @@ using namespace swl::ui::backend;
 @implementation swlWindow
 
 - (void)windowDidBecomeKey: (NSNotification*) notification {
-	if (_window != nullptr) {
-	}
+
 }
 
 - (void)windowDidResignKey: (NSNotification*) notification {
@@ -31,6 +32,19 @@ using namespace swl::ui::backend;
 - (void)windowWillClose: (NSNotification*) notification {
 	if (_window != nullptr) {
 		_window->Closed();
+	}
+}
+
+
+- (void)windowWillStartLiveResize: (NSNotification*) notification {
+	if (_window != nullptr) {
+		_window->Sizing(true);
+	}
+}
+
+- (void)windowDidEndLiveResize: (NSNotification*) notification {
+	if (_window != nullptr) {
+		_window->Sizing(false);
 	}
 }
 
