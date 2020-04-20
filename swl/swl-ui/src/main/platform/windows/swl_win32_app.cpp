@@ -117,7 +117,7 @@ void Application::preHeat(Application &app) {
 	customClass.hIcon = LoadIcon(instance, MAKEINTRESOURCE(108));
 	customClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	customClass.hbrBackground = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-	customClass.hIconSm = LoadIcon(instance, MAKEINTRESOURCE(108));
+	customClass.hIconSm = LoadIcon(instance, MAKEINTRESOURCE(109));
 
 	RegisterClassEx(&customClass);
 }

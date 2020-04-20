@@ -1,7 +1,7 @@
 function(compile_shader TARGET FILE TYPE)
 
     set(input_path  ${CMAKE_CURRENT_SOURCE_DIR}/hlsl/${FILE}.${TYPE})
-    set(output_path ${CMAKE_CURRENT_SOURCE_DIR}/spirv/${FILE}-${TYPE}.spv)
+    set(output_path ${CMAKE_BINARY_DIR}/${TARGET}/src/main/${FILE}-${TYPE}.spv)
 
     get_filename_component(output_dir ${output_path} DIRECTORY)
     file(MAKE_DIRECTORY ${output_dir})

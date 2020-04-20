@@ -55,6 +55,10 @@ void GameLoop::frame() {
 
 		accumulate -= targetFrametime;
 		frameCount += 1;
+
+		if (frameCount == maxUpdateCount) {
+			accumulate = 0ms;
+		}
 	}
 
 	t1 = current;

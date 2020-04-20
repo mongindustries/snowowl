@@ -16,12 +16,12 @@
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct SWL_EXPORT Application;
+struct Application;
 
 
-struct SWL_EXPORT WindowSink;
+struct WindowSink;
 
-struct SWL_EXPORT WindowSurface;
+struct WindowSurface;
 
 
 struct SWL_EXPORT Window final {

@@ -178,17 +178,19 @@ void Renderer::create_graphics_pipeline () {
 
 	vk::PipelineRasterizationStateCreateInfo rasterizationState{ {},
 		false, false,
-		vk::PolygonMode::eFill, vk::CullModeFlagBits::eNone, vk::FrontFace::eCounterClockwise,
-		false, 0, 0, 0 };
+		vk::PolygonMode::eFill, vk::CullModeFlagBits::eBack, vk::FrontFace::eClockwise,
+		false, 0, 0, 0, 1.0f };
 
 	array attachments{
-		vk::PipelineColorBlendAttachmentState{ false,
-			 {}, {}, {},
-			 {}, {}, {} } };
+		vk::PipelineColorBlendAttachmentState{
+			false,
+			vk::BlendFactor::eOne, vk::BlendFactor::eZero, vk::BlendOp::eAdd,
+			vk::BlendFactor::eOne, vk::BlendFactor::eZero, vk::BlendOp::eAdd,
+			vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG | vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA } };
 
-	vk::PipelineColorBlendStateCreateInfo blendState{ {}, false, {},
+	vk::PipelineColorBlendStateCreateInfo blendState{ {}, false, vk::LogicOp::eCopy,
 		 attachments.size(), attachments.data(),
-		 { 1.0f, 1.0f, 1.0f, 1.0f } };
+		 { 0, 0, 0, 0 } };
 
 	array dynamic_states{
 		vk::DynamicState::eViewport,
@@ -200,8 +202,30 @@ void Renderer::create_graphics_pipeline () {
 
 	vk::GraphicsPipelineCreateInfo graphicsPipelineCreate{};
 
+	array viewports{
+		vk::Viewport{0, 0, 100, 100, 0.1, 100} };
+
+	array scissorRects{
+		vk::Rect2D{ {}, { 100, 100 } } };
+	
+	vk::PipelineViewportStateCreateInfo viewportState{ {},
+		viewports.size(), viewports.data(),
+		scissorRects.size(), scissorRects.data() };
+
+	vk::PipelineMultisampleStateCreateInfo multisampleState{};
+
+	multisampleState.sampleShadingEnable = false;
+	multisampleState.rasterizationSamples = vk::SampleCountFlagBits::e1;
+	multisampleState.minSampleShading = 1.0f;
+	multisampleState.pSampleMask = nullptr;
+	multisampleState.alphaToCoverageEnable = false;
+	multisampleState.alphaToOneEnable = false;
+
 	graphicsPipelineCreate.stageCount           = shaders.size();
 	graphicsPipelineCreate.pStages              = shaders.data();
+
+	graphicsPipelineCreate.pViewportState       = &viewportState;
+	graphicsPipelineCreate.pMultisampleState    = &multisampleState;
 
 	graphicsPipelineCreate.pVertexInputState    = &vertexInputState;
 	graphicsPipelineCreate.pInputAssemblyState  = &inputAssemblyState;
@@ -254,7 +278,7 @@ void Renderer::frame() {
 
 			record->bindPipeline      (vk::PipelineBindPoint::eGraphics, graphicsPipeline.get());
 
-			record->setViewport       (0, array{ vk::Viewport{ 0, 0, float(frameSize.x()), float(frameSize.y()), 0.1, 100 } });
+			record->setViewport       (0, array{ vk::Viewport{ 0, 0, float(frameSize.x()), float(frameSize.y()), 0.1, 1 } });
 			record->setScissor        (0, array{ beginInfo.renderArea });
 
 			record->draw              (3, 1, 0, 0);
