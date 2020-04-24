@@ -1,4 +1,4 @@
-## SnowOwl: Core
+## SnowOwl: core
 
 Defines the core components used by all snowOwl: modules.
 
@@ -8,8 +8,8 @@ Defines the core components used by all snowOwl: modules.
 
 #### Common Data Structures
 
-- `Point2D`\*, `Point3D`\*
-- `Rect`\*, `Edge`\*
+- `point_2d`\*, `point_3d`\*
+- `rect`\*, `edge`\*
 - `Path`
 
 #### Math Data Structures / Operations

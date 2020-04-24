@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include <ownership.hpp>
+#include <ownership_exp.hpp>
 #include <rect.hpp>
 
 #include <event.hpp>
@@ -47,11 +47,11 @@ struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 	VulkanGraphicsQueue const&          queue_graphics;
 
 	bool                                needs_resize{ false };
-	cx::Size2D                          current_size;
+	cx::size_2d                          current_size;
 
 	vk::Format                          format;
 
-	std::vector<cx::Own<VulkanFrame>>   active_frames;
+	std::vector<cx::exp::ptr<VulkanFrame>> active_frames;
 
 	std::vector<ui::Event<void>>        recreate_size_events;
 
@@ -62,7 +62,7 @@ struct VulkanGraphicsSwapChain: GraphicsSwapChain<VulkanGraphicsContext> {
 		const ui::WindowSurface &surface);
 
 
-	[[nodiscard]] cx::Borrow<VulkanFrame>
+	[[nodiscard]] cx::exp::ptr_ref<VulkanFrame>
 		getFrame  ();
 
 	void

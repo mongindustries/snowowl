@@ -10,8 +10,8 @@ set(APP_SOURCES
     ${FRAGMENT_SOURCES}
     ${VERTEX_SOURCES}
     cpp/app.cpp
-    cpp/renderer.cpp
-    headers/renderer.hpp)
+        cpp/world.cpp
+        headers/world.hpp)
 
 if(WIN32)
     add_executable(app WIN32
@@ -45,7 +45,9 @@ if(APPLE)
             "-framework IOSurface")
 endif()
 
-get_shader_files(app)
+if(DEFINED ${VULKAN_SDK})
+    get_shader_files(app)
+endif()
 
 target_include_directories(app
     PUBLIC headers

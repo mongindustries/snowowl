@@ -9,8 +9,8 @@
 
 template<typename ComponentType, uint16_t Components>
 bool operator==(
-	const swl::cx::Vector<ComponentType, Components>& lhs,
-	const swl::cx::Vector<ComponentType, Components>& rhs) {
+	const swl::cx::vector<ComponentType, Components>& lhs,
+	const swl::cx::vector<ComponentType, Components>& rhs) {
 
 	for (uint16_t i = 0; i < Components; i += 1) {
 		if (lhs.components[i] != rhs.components[i]) {
@@ -23,8 +23,8 @@ bool operator==(
 
 template<typename ComponentType, uint16_t Components>
 bool operator!=(
-	const swl::cx::Vector<ComponentType, Components>& lhs,
-	const swl::cx::Vector<ComponentType, Components>& rhs) {
+	const swl::cx::vector<ComponentType, Components>& lhs,
+	const swl::cx::vector<ComponentType, Components>& rhs) {
 
 	for (uint16_t i = 0; i < Components; i += 1) {
 		if (lhs.components[i] == rhs.components[i]) {
@@ -36,9 +36,9 @@ bool operator!=(
 }
 
 template<typename ComponentType, uint16_t Components>
-swl::cx::Vector<ComponentType, Components> operator+(
-	const swl::cx::Vector<ComponentType, Components>& lhs,
-	const swl::cx::Vector<ComponentType, Components>& rhs) {
+swl::cx::vector<ComponentType, Components> operator+(
+	const swl::cx::vector<ComponentType, Components>& lhs,
+	const swl::cx::vector<ComponentType, Components>& rhs) {
 
 	std::array<ComponentType, Components> sum{};
 
@@ -46,13 +46,13 @@ swl::cx::Vector<ComponentType, Components> operator+(
 		sum[i] = lhs.components[i] + rhs.components[i];
 	}
 
-	return swl::cx::Vector<ComponentType, Components> { sum };
+	return swl::cx::vector<ComponentType, Components> {sum };
 }
 
 template<typename ComponentType, uint16_t Components>
-swl::cx::Vector<ComponentType, Components> operator-(
-	const swl::cx::Vector<ComponentType, Components>& lhs,
-	const swl::cx::Vector<ComponentType, Components>& rhs) {
+swl::cx::vector<ComponentType, Components> operator-(
+	const swl::cx::vector<ComponentType, Components>& lhs,
+	const swl::cx::vector<ComponentType, Components>& rhs) {
 
 	std::array<ComponentType, Components> diff{};
 
@@ -60,12 +60,12 @@ swl::cx::Vector<ComponentType, Components> operator-(
 		diff[i] = lhs.components[i] - rhs.components[i];
 	}
 
-	return swl::cx::Vector<ComponentType, Components> { diff };
+	return swl::cx::vector<ComponentType, Components> {diff };
 }
 
 template<typename ComponentType, uint16_t Components>
 ComponentType norm(
-	const swl::cx::Vector<ComponentType, Components>&rhs) {
+	const swl::cx::vector<ComponentType, Components>&rhs) {
 
 	ComponentType accumulate{};
 
@@ -78,8 +78,8 @@ ComponentType norm(
 
 template<typename ComponentType, uint16_t Components>
 ComponentType product_dot(
-	const swl::cx::Vector<ComponentType, Components>& lhs,
-	const swl::cx::Vector<ComponentType, Components>& rhs) {
+	const swl::cx::vector<ComponentType, Components>& lhs,
+	const swl::cx::vector<ComponentType, Components>& rhs) {
 
 	ComponentType accumulate{};
 
@@ -91,8 +91,8 @@ ComponentType product_dot(
 }
 
 template<typename ComponentType, uint16_t Components>
-swl::cx::Vector<ComponentType, Components> negate(
-	const swl::cx::Vector<ComponentType, Components>&rhs) {
+swl::cx::vector<ComponentType, Components> negate(
+	const swl::cx::vector<ComponentType, Components>&rhs) {
 
 	std::array<ComponentType, Components> negate{};
 
@@ -100,12 +100,12 @@ swl::cx::Vector<ComponentType, Components> negate(
 		negate[i] = -1 * rhs.components[i];
 	}
 
-	return swl::cx::Vector<ComponentType, Components> { negate };
+	return swl::cx::vector<ComponentType, Components> {negate };
 }
 
 template<typename ComponentType, uint16_t Components>
-swl::cx::Vector<ComponentType, Components> unit(
-	const swl::cx::Vector<ComponentType, Components>&rhs) {
+swl::cx::vector<ComponentType, Components> unit(
+	const swl::cx::vector<ComponentType, Components>&rhs) {
 
 	std::array<ComponentType, Components> result{};
 	ComponentType divisor = norm(rhs);
@@ -114,12 +114,12 @@ swl::cx::Vector<ComponentType, Components> unit(
 		rhs.components[i];
 	}
 
-	return swl::cx::Vector<ComponentType, Components> { result };
+	return swl::cx::vector<ComponentType, Components> {result };
 }
 
 template<typename ComponentType>
-swl::cx::Vector<ComponentType, 3> product_cross(
-	const swl::cx::Vector<ComponentType, 3>& lhs,
-	const swl::cx::Vector<ComponentType, 3>& rhs) {
+swl::cx::vector<ComponentType, 3> product_cross(
+	const swl::cx::vector<ComponentType, 3>& lhs,
+	const swl::cx::vector<ComponentType, 3>& rhs) {
 	return {};
 }

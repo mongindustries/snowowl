@@ -19,5 +19,6 @@ if (PACKAGE_TESTS)
     add_subdirectory(swl-cx/src/test)
     add_subdirectory(swl-gx/src/test)
     add_subdirectory(swl-ui/src/test)
+    add_subdirectory(swl-rd/src/test)
 
 endif ()

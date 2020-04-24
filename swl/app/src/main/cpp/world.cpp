@@ -13,7 +13,9 @@
 
 #include <event.hpp>
 
-#include "renderer.hpp"
+#include "world.hpp"
+#include "../../../../swl-rd/src/main/public/world.hpp"
+
 
 namespace SWL {
 		using namespace swl::cx;
@@ -27,14 +29,14 @@ using namespace SWL;
 using namespace swl::app;
 
 Renderer::Renderer(const WindowSurface &surface):
-	graphicsQueue (new VulkanGraphicsQueue(context, vk::QueueFlagBits::eGraphics)),
+	graphicsQueue (exp::make_ptr<VulkanGraphicsQueue>(context, vk::QueueFlagBits::eGraphics)),
 	swapChain     (nullptr) {
 
-	context.createDevice({ MutableBorrow(graphicsQueue) });
+	context.create_device({exp::ptr_ref{graphicsQueue}});
 
 	auto& g_queue = graphicsQueue.get();
 
-	swapChain     = new VulkanGraphicsSwapChain(context, g_queue, g_queue, surface);
+	swapChain     = exp::make_ptr<VulkanGraphicsSwapChain>(context, g_queue, g_queue, surface);
 	commandPool   = g_queue.commandPool();
 
 	clearBuffer = context._device->allocateCommandBuffersUnique({
@@ -120,10 +122,10 @@ void Renderer::create_framebuffers      () {
 	framebuffers.resize(swapChain->active_frames.size());
 
 	uint8_t index{ 0 };
-	for (const auto& frame : swapChain->active_frames) {
+	for (const VulkanFrame& frame : swapChain->active_frames) {
 
-		auto& imageview = frame.get().image_view.get();
-		auto size = swapChain->current_size;
+		auto& imageview = frame.image_view.get();
+		auto size       = swapChain->current_size;
 
 		vk::FramebufferCreateInfo framebuffer{ {},
 			 renderPass.get(),
@@ -155,8 +157,8 @@ void Renderer::create_graphics_pipeline () {
 	pipelineLayout = context._device->createPipelineLayoutUnique({
 		{}, setLayouts.size(), setLayouts.data(), 0, nullptr });
 
-	auto shader_vert = VulkanShader(context, cx::FileManager::resourcePath / L"simple-vert.spv");
-	auto shader_frag = VulkanShader(context, cx::FileManager::resourcePath / L"simple-frag.spv");
+	auto shader_vert = VulkanShader(context, cx::file_manager::resourcePath / L"simple-vert.spv");
+	auto shader_frag = VulkanShader(context, cx::file_manager::resourcePath / L"simple-frag.spv");
 
 	array shaders{
 		vk::PipelineShaderStageCreateInfo{ {}, vk::ShaderStageFlagBits::eVertex,    shader_vert.shader.get(), "main" },

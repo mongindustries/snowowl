@@ -29,8 +29,8 @@
 }
 
 - (CALayer *)makeBackingLayer {
-	return swl::cx::Tell<CAMetalLayer>([[CAMetalLayer alloc] init], [](CAMetalLayer *layer) {
-			layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+	return swl::cx::tell<CAMetalLayer>([[CAMetalLayer alloc] init], [](CAMetalLayer *layer) {
+		layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
 	});
 }
 

@@ -4,6 +4,8 @@
 #pragma once
 
 #include <header.hpp>
+#include <ownership_exp.hpp>
+
 #include <windowSurface.hpp>
 
 #include "vulkan_import.h"
@@ -26,7 +28,7 @@ struct VulkanGraphicsContext final: GraphicsContext<VulkanGraphicsContext> {
 	VulkanGraphicsContext();
 
 	void
-		createDevice  (const std::vector<cx::MutableBorrow<VulkanGraphicsQueue>> &queues);
+		create_device  (const std::vector<cx::exp::ptr_ref<VulkanGraphicsQueue>> &queues);
 
 
 	vk::UniqueInstance  _instance;

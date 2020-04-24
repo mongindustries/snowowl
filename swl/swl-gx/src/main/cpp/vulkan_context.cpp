@@ -8,33 +8,21 @@
 
 #include <iostream>
 
-using namespace swl::cx;
-using namespace swl::gx;
-
 using namespace std;
+using namespace swl;
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE;
 
-VulkanGraphicsContext::VulkanGraphicsContext(VulkanGraphicsContext&& mov) noexcept:
+gx::VulkanGraphicsContext::VulkanGraphicsContext  (VulkanGraphicsContext&& mov) noexcept:
 	_instance      (move(mov._instance)),
 	_active_device (mov._active_device),
 	_device        (move(mov._device)),
 	loader         (mov.loader) {
 }
 
-VulkanGraphicsContext& VulkanGraphicsContext::operator=(VulkanGraphicsContext&& mov) noexcept {
-
-	_instance       = move(mov._instance);
-	_active_device  = mov._active_device;
-	_device         = move(mov._device);
-	loader          = mov.loader;
-
-	return *this;
-}
-
 // implem
 
-VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) {
+gx::VulkanGraphicsContext::VulkanGraphicsContext  (): loader(new vk::DynamicLoader()) {
 
 	const auto getInstanceProcAddr = loader->getProcAddress<PFN_vkGetInstanceProcAddr>(
 		"vkGetInstanceProcAddr");
@@ -69,16 +57,15 @@ VulkanGraphicsContext::VulkanGraphicsContext(): loader(new vk::DynamicLoader()) 
 	cout << "VulkanGraphicsContext: Device created!" << endl;
 }
 
-void
-	VulkanGraphicsContext::createDevice(const vector<MutableBorrow<VulkanGraphicsQueue>> &queues) {
+void    gx::VulkanGraphicsContext::create_device  (const std::vector<cx::exp::ptr_ref<VulkanGraphicsQueue>> &queues) {
 
 	vector<vk::DeviceQueueCreateInfo> queueInfo(queues.size());
 
 	uint32_t index = 0;
 	float priorities = 1.0f;
 
-	for (const auto &queue: queues) {
-		queueInfo[index].queueFamilyIndex = queue.get().familyIndex;
+	for (const VulkanGraphicsQueue &queue: queues) {
+		queueInfo[index].queueFamilyIndex = queue.family_index;
 		queueInfo[index].queueCount = 1;
 		queueInfo[index].pQueuePriorities = &priorities;
 	}
@@ -98,9 +85,20 @@ void
 	_device = _active_device.createDeviceUnique(createDevice);
 	VULKAN_HPP_DEFAULT_DISPATCHER.init(_device.get());
 
-	for (auto &queue: queues) {
+	for (VulkanGraphicsQueue &item: queues) {
 
-		queue.get().prepare(_device.get());
-		assert(queue.get().isReady());
+		item.prepare(_device.get());
+		assert(item.is_ready());
 	}
+}
+
+gx::VulkanGraphicsContext&
+				gx::VulkanGraphicsContext::operator=      (VulkanGraphicsContext&& mov) noexcept {
+
+	_instance       = move(mov._instance);
+	_active_device  = mov._active_device;
+	_device         = move(mov._device);
+	loader          = mov.loader;
+
+	return *this;
 }

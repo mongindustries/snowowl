@@ -5,7 +5,7 @@
 #pragma once
 
 #include <header.hpp>
-#include <ownership.hpp>
+#include <ownership_exp.hpp>
 
 #include <point.hpp>
 #include <core.hpp>
@@ -16,7 +16,7 @@ struct SWL_EXPORT Window;
 
 struct SWL_EXPORT WindowSurface {
 
-	explicit WindowSurface(cx::Own<Window>& window);
+	explicit WindowSurface(cx::exp::ptr<Window>& window);
 
 
 	bool
@@ -30,15 +30,15 @@ struct SWL_EXPORT WindowSurface {
 		return _native_surface_handle;
 	}
 
-	[[nodiscard]] cx::Size2D getSize() const;
+	[[nodiscard]] cx::size_2d getSize() const;
 
-	[[nodiscard]] cx::MutableBorrow<Window> getWindow() const;
+	[[nodiscard]] cx::exp::ptr_ref<Window> getWindow() const;
 
 private:
 
-	cx::MutableBorrow<Window> _window;
+	cx::exp::ptr_ref<Window> _window;
 
-	void*              _native_surface_handle{};
+	void* _native_surface_handle{};
 };
 
 SNOW_OWL_NAMESPACE_END

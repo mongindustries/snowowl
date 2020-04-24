@@ -18,7 +18,7 @@ using namespace swl::cx;
 using namespace swl::gx;
 using namespace swl::ui;
 
-vk::Extent2D getExtent(const Size2D &size, const vk::SurfaceCapabilitiesKHR &capabilities);
+vk::Extent2D getExtent(const size_2d &size, const vk::SurfaceCapabilitiesKHR &capabilities);
 
 VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 	const VulkanGraphicsContext &context,
@@ -40,14 +40,14 @@ VulkanGraphicsSwapChain::VulkanGraphicsSwapChain(
 
 	createSwapChain();
 
-	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const Rect& rect) {
+	surface.getWindow().get()._event_size_list.emplace_back([&](const Window&, const rect& rect) {
 
 		needs_resize = current_size.components != rect.size.components;
 		current_size = rect.size;
 	});
 }
 
-Borrow<VulkanFrame>
+exp::ptr_ref<VulkanFrame>
 	VulkanGraphicsSwapChain::getFrame() {
 
 	if (needs_resize) {
@@ -61,9 +61,9 @@ Borrow<VulkanFrame>
 	try {
 		const auto result = device.acquireNextImageKHR(swap_chain.get(), 32'000'000, semaphore.get(), nullptr);
 
-		return Borrow{ active_frames[result.value] };
+		return exp::ptr_ref{active_frames[result.value] };
 	} catch(const vk::OutOfDateKHRError&) {
-		return Borrow{ active_frames[0] };
+		return exp::ptr_ref{active_frames[0] };
 	}
 }
 
@@ -90,13 +90,13 @@ void
 
 	createSwapChain.minImageCount = std::min(capabilities.minImageCount + 1, capabilities.maxImageCount);
 
-	assert(queue_present.supportsPresent(*this));
+	assert(queue_present.present_support(*this));
 
-	if (queue_graphics.familyIndex != queue_present.familyIndex) {
+	if (queue_graphics.family_index != queue_present.family_index) {
 
 		createSwapChain.imageSharingMode = vk::SharingMode::eConcurrent;
 
-		std::array queues{ queue_present.familyIndex, queue_graphics.familyIndex };
+		std::array queues{queue_present.family_index, queue_graphics.family_index };
 		createSwapChain.queueFamilyIndexCount = queues.size();
 		createSwapChain.pQueueFamilyIndices   = queues.data();
 	}
@@ -150,15 +150,13 @@ void
 			0, 1,
 			0, 1 };
 
-		auto frame = new VulkanFrame {
-			.index      = index,
-			.image      = image,
-			.image_view = device.createImageViewUnique(createImageView),
-			.format     = formats[0].format,
-			.swap_chain = *this
-		};
-
-		active_frames.emplace_back(frame);
+		active_frames.emplace_back(new VulkanFrame {
+			.index        = index,
+			.image        = image,
+			.image_view   = device.createImageViewUnique(createImageView),
+			.format       = formats[0].format,
+			.swap_chain   = *this
+		});
 
 		index += 1;
 	}
@@ -170,7 +168,7 @@ void
 
 
 vk::Extent2D
-	getExtent(const Size2D &size, const vk::SurfaceCapabilitiesKHR &capabilities) {
+	getExtent(const size_2d &size, const vk::SurfaceCapabilitiesKHR &capabilities) {
 
 	if (capabilities.currentExtent.width == UINT_MAX) {
 

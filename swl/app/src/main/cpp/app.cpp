@@ -7,19 +7,19 @@
 
 #include <vulkan_context.hpp>
 
-#include "renderer.hpp"
+#include "world.hpp"
 
 using namespace swl;
 using namespace cx;
 using namespace ui;
 
-struct AppGameLoop: GameLoop {
+struct AppGameLoop: game_loop {
 
 	app::Renderer renderer;
 
 	WindowSurface surface;
 
-	AppGameLoop(const WindowSurface &surface): GameLoop(60, 4), renderer(surface), surface(surface) {
+	AppGameLoop(const WindowSurface &surface): game_loop(60, 4), renderer(surface), surface(surface) {
 	}
 
 	void create() override {
@@ -47,23 +47,23 @@ struct AppGameLoop: GameLoop {
 
 struct App: Application {
 
-	Own<Window>       window;
-	Own<AppGameLoop>  gameLoop;
+	exp::ptr<Window>       window;
+	exp::ptr<AppGameLoop>  gameLoop;
 
 	App(void* instance): Application(instance), window(nullptr), gameLoop(nullptr) {
 	}
 
 	void applicationCreate  () override {
 
-		const auto pp = cx::FileManager::resourcePath;
+		const auto pp = cx::file_manager::resourcePath;
 
-		window        = createWindow  ("[SnowOwl:] App", Rect{ { 100, 100 }, { 800, 480 } });
+		window        = createWindow  ("[SnowOwl:] App", rect{{100, 100 }, {800, 480 } });
 		auto surface  = WindowSurface (window);
 
-		gameLoop = new AppGameLoop(surface);
+		gameLoop = exp::make_ptr<AppGameLoop>(surface);
 		gameLoop->open();
 
-		window->_event_size_list.emplace_back([&](const Window&, const Rect&) {
+		window->_event_size_list.emplace_back([&](const Window&, const rect&) {
 			if (window->isSizing()) {
 				gameLoop->frame();
 			}

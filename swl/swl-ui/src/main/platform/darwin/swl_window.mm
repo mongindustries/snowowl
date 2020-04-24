@@ -53,7 +53,7 @@ using namespace swl::ui::backend;
 
 		auto frame = self.frame;
 
-		_window->Update(swl::cx::Rect{
+		_window->Update(swl::cx::rect{
 			.origin = { (float)frame.origin.x, (float)frame.origin.y },
 			.size   = {   (int)frame.size.width, (int)frame.size.height } });
 	}
@@ -71,16 +71,19 @@ using namespace swl::ui::backend;
 	auto screen   = [NSScreen mainScreen];
 	auto instance = [[swlWindow alloc] initWithContentRect:CGRectZero styleMask:masks backing:NSBackingStoreBuffered defer:NO screen:screen];
 
-	return Tell<swlWindow>(instance, [&window, &controller](swlWindow *ctx) {
+	return tell<swlWindow>(instance, [&window, &controller](swlWindow *ctx) {
 
-		ctx.title                 = [NSString stringWithCString:window->getTitle().c_str() encoding:NSUTF8StringEncoding];
+		ctx.title = [NSString stringWithCString:window->getTitle().c_str() encoding:NSUTF8StringEncoding];
 
-		ctx.delegate              = ctx;
+		ctx.delegate = ctx;
 		ctx.contentViewController = controller;
 
-		ctx.window                = window->getSink();
+		ctx.titlebarAppearsTransparent = YES;
+		ctx.titleVisibility = NSWindowTitleHidden;
 
-		ctx.minSize               = NSMakeSize(400, 400);
+		ctx.window = window->getSink();
+
+		ctx.minSize = NSMakeSize(400, 400);
 	});
 }
 

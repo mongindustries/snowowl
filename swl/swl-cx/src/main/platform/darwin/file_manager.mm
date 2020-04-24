@@ -19,4 +19,4 @@ string resourcePathFromBundle() {
 	return string(cstr);
 }
 
-path FileManager::resourcePath = resourcePathFromBundle();
+path file_manager::resourcePath = resourcePathFromBundle();

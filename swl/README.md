@@ -6,7 +6,7 @@ This directory contains the code for the core engine.
 
 Each module is defined as a Gradle Native component.
 
-- `swl-cx` Core components
+- `swl-cx` core components
 - `swl-gx` Graphics components
 - `swl-io` Input/Output components (from keyboard/gamepad to file streaming)
 - `swl-sx` Sound components

@@ -10,7 +10,6 @@
 #include <header.hpp>
 #include <rect.hpp>
 #include <core.hpp>
-#include <hidden_implem.hpp>
 
 #include "event.hpp"
 
@@ -37,7 +36,7 @@ struct SWL_EXPORT Window final {
 	
 	Window  ();
 
-	Window  (std::string window_name, const cx::Rect &frame);
+	Window  (std::string window_name, const cx::rect &frame);
 
 	// window properties
 
@@ -45,15 +44,15 @@ struct SWL_EXPORT Window final {
 		setTitle      (const std::string &new_title);
 
 	void
-		setFrame      (const cx::Rect &new_frame);
+		setFrame      (const cx::rect &new_frame);
 
 	[[nodiscard]] std::string
 		getTitle      () const;
 
-	[[nodiscard]] cx::Size2D
+	[[nodiscard]] cx::size_2d
 		getSize       () const;
 
-	[[nodiscard]] cx::Rect
+	[[nodiscard]] cx::rect
 		getFrame      () const;
 
 	[[nodiscard]] WindowSink*
@@ -74,15 +73,15 @@ private:
 
 	typedef std::vector<Event<void, const Window&>> EventCloseList;
 
-	typedef std::vector<Event<void, const Window&, const cx::Rect&>> EventSizeList;
+	typedef std::vector<Event<void, const Window&, const cx::rect&>> EventSizeList;
 
 	typedef std::vector<Event<void, const Window&, const State&>> EventStateList;
 
 
-	cx::DriverHandle _handle{0};
+	cx::driver_handle _handle{0};
 
 	std::string      _title{};
-	cx::Rect         _frame{};
+	cx::rect         _frame{};
 
 	WindowSink*      _sink;
 

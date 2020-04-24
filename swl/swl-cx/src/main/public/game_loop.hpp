@@ -10,39 +10,41 @@
 
 SNOW_OWL_NAMESPACE(cx)
 
-struct GameLoop {
+struct game_loop {
 
-	GameLoop(uint16_t targetFramerate, uint16_t bailAmount);
+	game_loop           (
+		uint16_t targetFramerate,
+		uint16_t bailAmount);
 
-	virtual ~GameLoop() = default;
-
-
-	void open();
-
-	void close();
-
-	void frame();
+	virtual ~game_loop  () = default;
 
 
-	virtual void preFrame() = 0;
+	void          open      ();
 
-	virtual void create() = 0;
+	void          close     ();
 
-	virtual void update(std::chrono::milliseconds delta) = 0;
+	void          frame     ();
 
-	virtual void render(float offset) = 0;
+
+	virtual void  preFrame  () = 0;
+
+	virtual void  create    () = 0;
+
+	virtual void  update    (std::chrono::milliseconds delta) = 0;
+
+	virtual void  render    (float offset) = 0;
 
 private:
 
-	std::thread game_thread;
+	std::thread               game_thread;
 
 	std::chrono::milliseconds t1{};
 	std::chrono::milliseconds accumulate{};
 
-	bool running{false};
+	bool                      running{false};
 
-	std::chrono::milliseconds targetFrametime{};
-	uint16_t maxUpdateCount{};
+	std::chrono::milliseconds target_frame_time{};
+	uint16_t                  target_update_count{};
 };
 
 SNOW_OWL_NAMESPACE_END

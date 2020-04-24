@@ -23,7 +23,7 @@ void WindowSink::Sizing(bool value) {
 	}
 }
 
-void WindowSink::Update(const Rect &new_rect) {
+void WindowSink::Update(const rect &new_rect) {
 
 	for (const auto &item : WindowBackend::backend->activeNativeHandles) {
 		auto* window = const_cast<Window*>(std::get<0>(item));

@@ -11,12 +11,12 @@ SNOW_OWL_NAMESPACE(ui)
 
 struct WindowSink {
 
-	cx::DriverHandle handle;
+	cx::driver_handle handle;
 
 
 	void Sizing(bool value);
 	
-	void Update(const cx::Rect &new_rect);
+	void Update(const cx::rect &new_rect);
 
 	void Closed();
 };

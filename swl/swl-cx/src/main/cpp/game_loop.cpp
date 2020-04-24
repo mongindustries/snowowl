@@ -12,14 +12,14 @@ using namespace std;
 using namespace chrono;
 using namespace swl::cx;
 
-GameLoop::GameLoop(uint16_t targetFramerate, uint16_t bailAmount)
-: targetFrametime(1000 / targetFramerate),
-  maxUpdateCount(bailAmount) {
+game_loop::game_loop(uint16_t targetFramerate, uint16_t bailAmount)
+: target_frame_time(1000 / targetFramerate),
+  target_update_count(bailAmount) {
 }
 
-void GameLoop::open() {
+void game_loop::open() {
 
-	auto func = [](GameLoop* game_loop) {
+	auto func = [](game_loop* game_loop) {
 
 		game_loop->create();
 
@@ -37,12 +37,12 @@ void GameLoop::open() {
 	game_thread.detach();
 }
 
-void GameLoop::close() {
+void game_loop::close() {
 
 	running = false;
 }
 
-void GameLoop::frame() {
+void game_loop::frame() {
 
 	const auto current = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
 	const auto offset = current - t1;
@@ -50,18 +50,18 @@ void GameLoop::frame() {
 	accumulate += offset;
 
 	uint16_t frameCount = 0;
-	while (accumulate >= targetFrametime && frameCount < maxUpdateCount) {
-		update(targetFrametime);
+	while (accumulate >= target_frame_time && frameCount < target_update_count) {
+		update(target_frame_time);
 
-		accumulate -= targetFrametime;
+		accumulate -= target_frame_time;
 		frameCount += 1;
 
-		if (frameCount == maxUpdateCount) {
+		if (frameCount == target_update_count) {
 			accumulate = 0ms;
 		}
 	}
 
 	t1 = current;
 
-	render(accumulate / targetFrametime);
+	render(accumulate / target_frame_time);
 }

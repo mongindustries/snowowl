@@ -38,6 +38,7 @@ option(PACKAGE_TESTS "Build tests" ON)
 add_subdirectory(swl-cx/src/main)
 add_subdirectory(swl-ui/src/main)
 add_subdirectory(swl-gx/src/main)
+add_subdirectory(swl-rd/src/main)
 add_subdirectory(app/src/main)
 
 include(buildDir/addTesting.cmake)

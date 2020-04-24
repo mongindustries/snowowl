@@ -17,6 +17,6 @@ Application::Application(void *native_instance):
 	WindowBackend::backend->application = this;
 }
 
-Own<Window> Application::createWindow(const std::string& caption, const Rect& frame) {
-	return Own<Window>(caption, frame);
+exp::ptr<Window> Application::createWindow(const std::string& caption, const rect& frame) {
+	return exp::ptr<Window>{ new Window(caption, frame) };
 }

@@ -4,7 +4,7 @@
 #pragma once
 
 #include <header.hpp>
-#include <ownership.hpp>
+#include <ownership_exp.hpp>
 
 #include "vulkan_import.h"
 
@@ -33,14 +33,14 @@ struct VulkanGraphicsQueue {
 	};
 
 
-	vk::PhysicalDevice const& physicalDevice;
+	vk::PhysicalDevice const& p_device;
 
 	vk::Device const* device{};
 
 
 	vk::Queue queue;
 
-	uint32_t familyIndex;
+	uint32_t family_index;
 
 	bool ready;
 
@@ -50,9 +50,9 @@ struct VulkanGraphicsQueue {
 	void prepare(const vk::Device& d);
 
 
-	[[nodiscard]] bool supportsPresent(const VulkanGraphicsSwapChain& swapChain) const;
+	[[nodiscard]] bool present_support(const VulkanGraphicsSwapChain& swapChain) const;
 
-	[[nodiscard]] bool isReady() const;
+	[[nodiscard]] bool is_ready() const;
 
 
 	[[nodiscard]] vk::UniqueCommandPool commandPool() const;
@@ -61,7 +61,7 @@ struct VulkanGraphicsQueue {
 	void submit(const std::vector<vk::CommandBuffer> &buffers, GPUWaitType wait, const vk::Fence &fence) const;
 
 	void present(
-		const std::vector<cx::Borrow<VulkanFrame>> &swapChains,
+		const std::vector<cx::exp::ptr_ref<VulkanFrame>> &swapChains,
 		GPUWaitType wait) const;
 };
 

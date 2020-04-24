@@ -6,19 +6,17 @@
 #include "vulkan_context.hpp"
 
 using namespace std;
-using namespace swl::cx;
-using namespace swl::gx;
+using namespace swl;
 
-VulkanGraphicsQueue::VulkanGraphicsQueue(const VulkanGraphicsContext &context, vk::QueueFlagBits type)
-: physicalDevice(context._active_device),
-	familyIndex(-1),
-	ready(false) {
+gx::VulkanGraphicsQueue::VulkanGraphicsQueue(
+	const VulkanGraphicsContext&  context,
+	vk::QueueFlagBits             type): p_device(context._active_device), family_index(-1), ready(false) {
 
 	uint32_t index = 0;
-	for (const auto& family : physicalDevice.getQueueFamilyProperties()) {
+	for (const auto& family : p_device.getQueueFamilyProperties()) {
 
 		if (family.queueFlags & type) {
-			familyIndex = index;
+			family_index = index;
 			break;
 		}
 
@@ -26,29 +24,33 @@ VulkanGraphicsQueue::VulkanGraphicsQueue(const VulkanGraphicsContext &context, v
 	}
 }
 
-bool VulkanGraphicsQueue::supportsPresent(const VulkanGraphicsSwapChain& swapChain) const {
-	return physicalDevice.getSurfaceSupportKHR(familyIndex, swapChain.surface.get());
+bool    gx::VulkanGraphicsQueue::present_support  (const VulkanGraphicsSwapChain& swapChain) const {
+	return p_device.getSurfaceSupportKHR(family_index, swapChain.surface.get());
 }
 
-bool VulkanGraphicsQueue::isReady() const {
+bool    gx::VulkanGraphicsQueue::is_ready         () const {
 	return ready;
 }
 
-void VulkanGraphicsQueue::prepare(const vk::Device &d) {
-	queue = d.getQueue(familyIndex, 0);
+void    gx::VulkanGraphicsQueue::prepare          (const vk::Device &d) {
+	queue = d.getQueue(family_index, 0);
 	ready = true;
 
 	device = &d;
 }
 
 
-vk::UniqueCommandPool VulkanGraphicsQueue::commandPool() const {
+vk::UniqueCommandPool
+				gx::VulkanGraphicsQueue::commandPool      () const {
 
-	vk::CommandPoolCreateInfo commandPoolCreate({ vk::CommandPoolCreateFlagBits::eResetCommandBuffer }, familyIndex);
+	vk::CommandPoolCreateInfo commandPoolCreate({ vk::CommandPoolCreateFlagBits::eResetCommandBuffer }, family_index);
 	return device->createCommandPoolUnique(commandPoolCreate);
 }
 
-void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, VulkanGraphicsQueue::GPUWaitType wait, const vk::Fence &fence) const {
+void    gx::VulkanGraphicsQueue::submit           (
+	const std::vector<vk::CommandBuffer>& buffers,
+	VulkanGraphicsQueue::GPUWaitType      wait,
+	const vk::Fence&                      fence) const {
 
 	auto waitFlags = vector<vk::PipelineStageFlags> {
 		vk::PipelineStageFlagBits::eTransfer,
@@ -74,21 +76,20 @@ void VulkanGraphicsQueue::submit(const vector<vk::CommandBuffer> &buffers, Vulka
 	}
 }
 
-void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapChains, GPUWaitType wait) const {
+void    gx::VulkanGraphicsQueue::present          (
+	const std::vector<cx::exp::ptr_ref<VulkanFrame>>& swapChains,
+	GPUWaitType                                       wait) const {
 
-	vector<vk::SwapchainKHR> chains;
+	std::vector<vk::SwapchainKHR> chains;
 	chains.reserve(swapChains.size());
 
-	vector<uint32_t> indices;
+	std::vector<uint32_t> indices;
 	indices.reserve(swapChains.size());
 
-	for (const auto &item : swapChains) {
+	for (const VulkanFrame &item : swapChains) {
 
-		auto &frame = item.get();
-		auto &sc    = frame.swap_chain;
-
-		chains    .emplace_back(sc.swap_chain.get());
-		indices   .emplace_back(frame.index);
+		chains    .emplace_back(item.swap_chain.swap_chain.get());
+		indices   .emplace_back(item.index);
 	}
 
 	vk::PresentInfoKHR presentInfo{};
@@ -112,10 +113,14 @@ void VulkanGraphicsQueue::present(const vector<cx::Borrow<VulkanFrame>> &swapCha
 }
 
 
-VulkanGraphicsQueue::GPUWaitType VulkanGraphicsQueue::GPUWaitType::semaphores(const vector<vk::Semaphore> &wait, const vector<vk::Semaphore> &signal) {
+gx::VulkanGraphicsQueue::GPUWaitType
+	gx::VulkanGraphicsQueue::GPUWaitType::semaphores(
+		const vector<vk::Semaphore> &wait,
+		const vector<vk::Semaphore> &signal) {
 	return VulkanGraphicsQueue::GPUWaitType {false, wait, signal };
 }
 
-VulkanGraphicsQueue::GPUWaitType VulkanGraphicsQueue::GPUWaitType::idle() {
+gx::VulkanGraphicsQueue::GPUWaitType
+	gx::VulkanGraphicsQueue::GPUWaitType::idle      () {
 	return VulkanGraphicsQueue::GPUWaitType { true };
 }

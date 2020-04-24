@@ -28,19 +28,19 @@ struct TestStruct {
 
 TEST(Ownership, ShouldDestruct) {
 
-	auto pointer = Own<TestStruct>(100);
+	auto pointer = ptr<TestStruct>(100);
 	ASSERT_EQ(pointer.is_valid(), true);
 }
 
 TEST(Ownership, ImplicitCastBool) {
 
-	auto pointer = Own<TestStruct>(100);
+	auto pointer = ptr<TestStruct>(100);
 	ASSERT_EQ(bool(pointer), true);
 }
 
 TEST(Ownership, OutsideShouldNotBeValidUponGoingInside) {
 
-	auto pointer = Own<TestStruct>(100);
+	auto pointer = ptr<TestStruct>(100);
 	ASSERT_EQ(pointer.is_valid(), true);
 
 	{

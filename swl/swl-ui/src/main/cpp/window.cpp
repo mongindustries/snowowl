@@ -16,8 +16,8 @@ using namespace swl::ui::backend;
 
 Window::Window() = default;
 
-Window::Window(string window_name, const Rect &frame):
-	_handle (cx::Core::makeHandle()),
+Window::Window(string window_name, const rect &frame):
+	_handle (cx::core::make_handle()),
 	_title  (std::move(window_name)),
 	_frame  (frame),
 	_sink   (new WindowSink{ .handle = _handle }) {
@@ -33,19 +33,19 @@ void
 }
 
 void
-	Window::setFrame(const cx::Rect &new_frame) {
+	Window::setFrame(const cx::rect &new_frame) {
 
 	_frame = new_frame;
 	WindowBackend::backend->UpdateFrame(this);
 }
 
 
-Size2D
+size_2d
 	Window::getSize() const {
 	return _frame.size;
 }
 
-Rect
+rect
 	Window::getFrame() const {
 	return _frame;
 }

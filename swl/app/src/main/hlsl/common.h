@@ -8,7 +8,7 @@
 #if defined(CPP_SHADER)
 
 #include <point.hpp>
-typedef swl::cx::Vector<float, 4> float4;
+typedef swl::cx::vector<float, 4> float4;
 #define SV_POSITION
 #else
 #define SV_POSITION : SV_Position

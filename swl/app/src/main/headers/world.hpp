@@ -9,7 +9,7 @@
 
 #include <windowSurface.hpp>
 
-#include "ownership.hpp"
+#include "ownership_exp.hpp"
 
 SNOW_OWL_NAMESPACE(app)
 
@@ -17,9 +17,9 @@ struct Renderer {
 
 	gx::VulkanGraphicsContext             context;
 
-	cx::Own<gx::VulkanGraphicsQueue>      graphicsQueue;
+	cx::exp::ptr<gx::VulkanGraphicsQueue>      graphicsQueue;
 
-	cx::Own<gx::VulkanGraphicsSwapChain>  swapChain;
+	cx::exp::ptr<gx::VulkanGraphicsSwapChain>  swapChain;
 
 
 	vk::UniqueCommandPool                 commandPool;

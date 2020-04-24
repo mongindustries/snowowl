@@ -9,7 +9,7 @@
 
 SNOW_OWL_NAMESPACE(cx)
 
-struct FileManager {
+struct file_manager {
     static std::filesystem::path resourcePath;
 };
 

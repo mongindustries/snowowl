@@ -14,7 +14,7 @@ struct SampleApplication: public Application {
 
 	void applicationCreate() override {
 
-		auto &window = createWindow("Window", Rect { 100, 100, 800, 480 });
+		auto &window = createWindow("Window", rect {100, 100, 800, 480 });
 	}
 
 	void applicationDestroy() override {

@@ -8,12 +8,12 @@
 
 SNOW_OWL_NAMESPACE(cx)
 
-struct SWL_EXPORT Rect {
-	Point2D origin;
-	Size2D  size;
+struct SWL_EXPORT rect {
+	point_2d origin;
+	size_2d  size;
 };
 
-struct SWL_EXPORT Edge {
+struct SWL_EXPORT edge {
 	float left, top, right, bottom;
 };
 

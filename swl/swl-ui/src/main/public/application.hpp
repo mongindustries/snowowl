@@ -8,7 +8,7 @@
 #include <type_traits>
 
 #include <header.hpp>
-#include <ownership.hpp>
+#include <ownership_exp.hpp>
 
 #include "window.hpp"
 
@@ -39,7 +39,7 @@ struct SWL_EXPORT Application {
 
 	// methods
 
-	cx::Own<Window> createWindow(const std::string& caption, const cx::Rect& frame);
+	cx::exp::ptr<Window> createWindow(const std::string& caption, const cx::rect& frame);
 
 	// hooks
 
