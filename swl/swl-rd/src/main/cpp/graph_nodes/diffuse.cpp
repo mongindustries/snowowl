@@ -15,10 +15,11 @@ rd::graph::nodes::diffuse_effect_texture::diffuse_effect_texture(
 	filesystem::path path,
 	const cx::rect &frameRect,
 	std::array<cx::point_2d, 4> texCoords):
-	node_effect(0x30'00'01),
-	texturePath(std::move(path)),
-	frameRect(frameRect),
-	texCoords(texCoords) {
+
+	node_effect (0x30'00'01),
+	texturePath (std::move(path)),
+	frameRect   (frameRect),
+	texCoords   (texCoords) {
 
 }
 
@@ -28,11 +29,11 @@ bool  rd::graph::nodes::diffuse_effect_texture::is_required() const {
 
 
 const rd::graph::node_argument
-			rd::graph::nodes::diffuse::IA_VertexBuffer = rd::graph::node_argument{
+			rd::graph::nodes::diffuse::IA_VertexBuffer = node_argument{
 	0x20'00'10, true, false, ArgumentType::typeDataBuffer, ArgumentScope::scopePerLayer };
 
 const rd::graph::node_argument
-			rd::graph::nodes::diffuse::OA_DiffuseBuffer = rd::graph::node_argument{
+			rd::graph::nodes::diffuse::OA_DiffuseBuffer = node_argument{
 	0x20'00'20, true, true, ArgumentType::typeTexture2D, ArgumentScope::scopePerLayer };
 
 

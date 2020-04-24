@@ -29,14 +29,15 @@ using namespace SWL;
 using namespace swl::app;
 
 Renderer::Renderer(const WindowSurface &surface):
-	graphicsQueue (exp::make_ptr<VulkanGraphicsQueue>(context, vk::QueueFlagBits::eGraphics)),
+	graphicsQueue (new VulkanGraphicsQueue(context, vk::QueueFlagBits::eGraphics)),
 	swapChain     (nullptr) {
 
 	context.create_device({exp::ptr_ref{graphicsQueue}});
 
 	auto& g_queue = graphicsQueue.get();
 
-	swapChain     = exp::make_ptr<VulkanGraphicsSwapChain>(context, g_queue, g_queue, surface);
+	swapChain     = exp::ptr<VulkanGraphicsSwapChain>{
+		new VulkanGraphicsSwapChain(context, g_queue, g_queue, surface) };
 	commandPool   = g_queue.commandPool();
 
 	clearBuffer = context._device->allocateCommandBuffersUnique({
@@ -288,11 +289,11 @@ void Renderer::frame() {
 			record->endRenderPass     ();
 		}
 
-		const auto rp = vector{ presentReadySemaphore.get() };
+		const auto rp = std::vector{ presentReadySemaphore.get() };
 		graphicsQueue->submit({ buffer }, VulkanGraphicsQueue::GPUWaitType::semaphores({ }, rp), lock.fence);
 
-		const auto sc = vector{ frame };
-		const auto sp = vector{ presentReadySemaphore.get(), swapChain->semaphore.get() };
+		const auto sc = std::vector{ frame };
+		const auto sp = std::vector{ presentReadySemaphore.get(), swapChain->semaphore.get() };
 
 		graphicsQueue->present(sc, VulkanGraphicsQueue::GPUWaitType::semaphores(sp, { }));
 

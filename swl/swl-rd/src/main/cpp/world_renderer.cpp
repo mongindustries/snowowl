@@ -8,17 +8,12 @@ using namespace swl;
 using namespace std;
 
 
-rd::world_renderer::world_renderer(string name): name(std::move(name)) {
-
-}
+rd::world_renderer::world_renderer(string name): name(std::move(name)) { }
 
 rd::world_renderer::world_renderer(world_renderer &&mov) noexcept:
 	name  (std::move(mov.name )),
 	nodes (std::move(mov.nodes)),
-	tree  (std::move(mov.tree )) {
-
-
-}
+	tree  (std::move(mov.tree )) { }
 
 
 rd::world_renderer::_node_graph::_node_graph(
@@ -32,7 +27,7 @@ rd::world_renderer::_node_graph::_node_graph(world_renderer::_node_graph &&mov) 
 
 void  rd::world_renderer::compile           () {
 
-
+	
 }
 
 std::vector<cx::exp::ptr_ref<rd::world_renderer::_node_graph>>
@@ -59,8 +54,8 @@ cx::exp::ptr_ref<rd::world_renderer::_node_graph>
 		return cx::exp::ptr_ref<_node_graph>{this };
 	}
 
-	for(_node_graph &item : children) {
-		auto result = item.find(handle);
+	for(auto& item : children) {
+		auto result = item->find(handle);
 
 		if(result) {
 			return result;

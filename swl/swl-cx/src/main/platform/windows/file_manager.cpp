@@ -21,4 +21,4 @@ path resourcePathFromModule() {
 	return path(result).remove_filename();
 }
 
-path FileManager::resourcePath = resourcePathFromModule();
+path file_manager::resourcePath = resourcePathFromModule();

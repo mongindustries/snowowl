@@ -49,18 +49,15 @@ vector<rd::graph::node_argument>
 std::vector<cx::exp::ptr_ref<rd::graph::node_argument_input>>
 			rd::graph::nodes::vertex::build_output_arguments  (const std::vector<cx::exp::ptr_ref<rd::entity>>& entities) const {
 
-	cx::exp::ptr<rd::graph::node_argument_input, vertex_argument_input> output;
+	cx::exp::ptr<node_argument_input, vertex_argument_input> output;
 
 	unsigned long last_index{ 0 };
-
 	output->entity_position.reserve(entities.size());
 
-	for (const entity &entity: entities) {
-		for(const graph::node_effect &effect : entity.effects) {
-			if (effect.id == 0x20'00'01) {
-				auto &vertex_effect = static_cast<const vertex_effect_buffer&>(effect);
+	for (const auto& entity: entities) {
+		for(const auto& effect : entity->effects) {
+			if (effect->id == 0x20'00'01) {
 				last_index += output->entity_position.emplace_back(last_index);
-
 				break;
 			}
 		}

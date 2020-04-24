@@ -60,7 +60,7 @@ struct App: Application {
 		window        = createWindow  ("[SnowOwl:] App", rect{{100, 100 }, {800, 480 } });
 		auto surface  = WindowSurface (window);
 
-		gameLoop = exp::make_ptr<AppGameLoop>(surface);
+		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(surface) };
 		gameLoop->open();
 
 		window->_event_size_list.emplace_back([&](const Window&, const rect&) {

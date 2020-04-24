@@ -8,15 +8,16 @@ using namespace std;
 using namespace swl;
 
 rd::entity::entity(std::string name):
-	name(std::move(name)),
-	transform({ 1, 1, 1, 1 }) {
+	name      (std::move(name)),
+	transform ({ 1, 1, 1, 1 }) {
 
 }
 
 rd::entity::entity(rd::entity &&mov) noexcept:
-	name(std::move(mov.name)),
-	transform(mov.transform),
-	effects(std::move(mov.effects)) {
+	name      (std::move(mov.name)),
+	transform (mov.transform),
+	effects   (std::move(mov.effects)) {
+
 	mov.effects.clear();
 }
 

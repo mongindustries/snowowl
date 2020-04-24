@@ -18,13 +18,13 @@
 
 SNOW_OWL_NAMESPACE(rd)
 
-struct invalid_linkage: public std::exception {
+struct invalid_linkage: std::exception {
 };
 
 struct world_renderer final {
 
 	struct _node_graph {
-		cx::driver_handle                        node;
+		cx::driver_handle                       node;
 		std::vector<cx::exp::ptr<_node_graph>>  children;
 
 		_node_graph(_node_graph &&mov) noexcept;
@@ -116,9 +116,9 @@ void world_renderer::add_link   (
 	PNodeType& pref = parent.reference;
 	CNodeType& cref = child.reference;
 
-	for (auto& param : linkages) {
-		auto& from  = get<0>(param);
-		auto& to    = get<1>(param);
+	for (const auto& param : linkages) {
+		const auto& from  = get<0>(param);
+		const auto& to    = get<1>(param);
 
 		std::vector<graph::node_argument> output  = pref.output_arguments();
 		std::vector<graph::node_argument> input   = cref.input_arguments();

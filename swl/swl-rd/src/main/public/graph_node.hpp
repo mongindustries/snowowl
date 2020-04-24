@@ -47,7 +47,7 @@ struct node {
 				output_arguments        () const { return { }; }
 
 
-	virtual std::vector<cx::exp::ptr_ref<node_argument_input>>
+	[[nodiscard]] virtual std::vector<cx::exp::ptr_ref<node_argument_input>>
 				build_output_arguments  (const std::vector<cx::exp::ptr_ref<entity>>& entities) const { return { }; }
 
 

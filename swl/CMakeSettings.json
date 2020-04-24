@@ -29,10 +29,10 @@
       "configurationType": "Release",
       "buildRoot": "${projectDir}\\..\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "-GNinja",
+      "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "inheritEnvironments": [ "clang_cl_x64_x64" ],
       "variables": [
         {
           "name": "PACKAGE_TESTS",

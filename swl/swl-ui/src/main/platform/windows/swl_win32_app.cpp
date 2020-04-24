@@ -40,7 +40,10 @@ void updateSizeLock(HWND hwnd, Window* window) {
 	RECT rect{};
 	GetClientRect(hwnd, &rect);
 
-	window->getSink()->Update(Rect{ { float(rect.left), float(rect.top) }, { rect.right - rect.left, rect.bottom - rect.top } });
+	window->getSink()->Update(::rect {
+		{ static_cast<float>(rect.left), static_cast<float>(rect.top) },
+		{ rect.right - rect.left, rect.bottom - rect.top }
+	});
 }
 
 LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
