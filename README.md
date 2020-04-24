@@ -19,9 +19,7 @@ Coming soon!
 
 ## Building
 
-This part is still hazy but:
-
-For `swl`, cd into the directory and run `./gradlew` (on unix/linux) or `./gradlew.bat` (on Windows).
+Its a cmake project!
 
 ## Author
 
