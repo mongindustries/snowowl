@@ -11,6 +11,7 @@
 #include <graph_nodes/vertex.hpp>
 
 #include <utility>
+#include <filesystem>
 
 #include <gtest/gtest.h>
 
@@ -32,9 +33,8 @@ TEST(renderer, ShouldConstruct) {
 	auto nodeid_vertex  = graph.add_node(rd::graph::nodes::vertex ());
 	auto nodeid_diffuse = graph.add_node(rd::graph::nodes::diffuse());
 
-	std::vector linkages {
-		pair { nodes::vertex  ::OA_VertexBuffer,
-		       nodes::diffuse ::IA_VertexBuffer }
+	std::vector<pair<rd::graph::node_argument, rd::graph::node_argument>> linkages {
+		{ nodes::vertex  ::OA_VertexBuffer, nodes::diffuse ::IA_VertexBuffer }
 	};
 
 	graph.set_root(nodeid_vertex);
@@ -62,13 +62,13 @@ TEST(renderer, ShouldConstruct) {
 				{} });
 		} layer.add_entity(testEntity);
 
-		layer.add_entity_static(x_entity("asdf"));
+		layer.add_entity_static(x_entity("another test"));
 	}
 
 	rd::world world; {
-		auto handle     = world.add_renderer(::move(graph));
 		auto layer_ref  = world.add_layer(layer);
 
+		auto handle = world.add_renderer(::move(graph));
 		if (layer_ref.reference) {
 			layer_ref.reference->bind_renderer(handle);
 		}

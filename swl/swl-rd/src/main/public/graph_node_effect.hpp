@@ -14,10 +14,11 @@ SNOW_OWL_NAMESPACE(rd::graph)
  * used to mark entities for inclusion on a node's render-pass.
  */
 struct node_effect {
+	virtual ~node_effect() = default;
 
 	unsigned int id;
 
-	node_effect(unsigned int id): id(id) { }
+	node_effect(const unsigned int id): id(id) { }
 
 	[[nodiscard]] virtual bool
 				is_required() const { return true; }
@@ -26,11 +27,13 @@ struct node_effect {
 template<typename NodeEffectType>
 concept is_node_effect = std::is_base_of_v<node_effect, std::remove_reference_t<node_effect>>;
 
-template<typename NodeEffectType> requires is_node_effect<NodeEffectType>
+template<typename NodeEffectType>
 struct node_effect_reference {
 
-	swl::cx::driver_handle                                           unique_id;
-	swl::cx::exp::ptr_ref<std::remove_reference_t<NodeEffectType>>  reference;
+	typedef std::enable_if<is_node_effect<NodeEffectType>, cx::exp::ptr_ref<std::decay_t<NodeEffectType>>> Reference;
+
+	swl::cx::driver_handle  unique_id;
+	Reference               reference;
 };
 
 SNOW_OWL_NAMESPACE_END

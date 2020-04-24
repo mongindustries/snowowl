@@ -8,41 +8,39 @@
 using namespace std;
 using namespace swl;
 
-using ArgumentType  = rd::graph::node_argument_type;
-using ArgumentScope = rd::graph::node_argument_scope;
+SNOW_OWL_NAMESPACE(rd::graph)
 
-rd::graph::nodes::diffuse_effect_texture::diffuse_effect_texture(
-	filesystem::path path,
-	const cx::rect &frameRect,
-	std::array<cx::point_2d, 4> texCoords):
+using ArgumentType  = node_argument_type;
+using ArgumentScope = node_argument_scope;
 
-	node_effect (0x30'00'01),
-	texturePath (std::move(path)),
-	frameRect   (frameRect),
-	texCoords   (texCoords) {
+nodes::diffuse_effect_texture::diffuse_effect_texture
+	(filesystem::path path, const cx::rect &frame_rect, std::array<cx::point_2d, 4> tex_coord):
+	node_effect(0x30'00'01), texture_path(std::move(path)), frame_rect(frame_rect), tex_coord(tex_coord) {
 
 }
 
-bool  rd::graph::nodes::diffuse_effect_texture::is_required() const {
+bool  nodes::diffuse_effect_texture::is_required() const {
 	return true;
 }
 
 
-const rd::graph::node_argument
-			rd::graph::nodes::diffuse::IA_VertexBuffer = node_argument{
+const node_argument
+			nodes::diffuse::IA_VertexBuffer   = node_argument{
 	0x20'00'10, true, false, ArgumentType::typeDataBuffer, ArgumentScope::scopePerLayer };
 
-const rd::graph::node_argument
-			rd::graph::nodes::diffuse::OA_DiffuseBuffer = node_argument{
+const node_argument
+			nodes::diffuse::OA_DiffuseBuffer  = node_argument{
 	0x20'00'20, true, true, ArgumentType::typeTexture2D, ArgumentScope::scopePerLayer };
 
 
-vector<rd::graph::node_argument>
-			rd::graph::nodes::diffuse::input_arguments() const {
+vector<node_argument>
+			nodes::diffuse::input_arguments   () const {
 	return { IA_VertexBuffer };
 }
 
-vector<rd::graph::node_argument>
-			rd::graph::nodes::diffuse::output_arguments() const {
+vector<node_argument>
+			nodes::diffuse::output_arguments  () const {
 	return { OA_DiffuseBuffer };
 }
+
+SNOW_OWL_NAMESPACE_END

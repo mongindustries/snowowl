@@ -13,9 +13,6 @@
 #include "entity.hpp"
 #include "layer_camera.hpp"
 
-#include "graph_node_effect.hpp"
-#include "world_renderer.hpp"
-
 SNOW_OWL_NAMESPACE(rd)
 
 enum class layer_type {
@@ -23,48 +20,53 @@ enum class layer_type {
 	typeOffScene
 };
 
-struct entity_not_found: public std::exception {
-
+struct entity_not_found: std::exception {
 };
 
 struct layer {
 
-	template<typename EntityType> requires is_entity<EntityType>
+	template<typename EntityType>
 	struct entity_reference {
-		cx::driver_handle                                     unique_id;
-		cx::exp::ptr_ref<std::remove_reference_t<EntityType>> entity_reference;
+
+		typedef std::enable_if_t<is_entity<EntityType>, cx::exp::ptr_ref<std::decay_t<EntityType>>> Reference;
+
+		cx::driver_handle  unique_id;
+		Reference          reference;
 	};
 
 
-	layer           (const layer& cpy) = delete;
+	layer             (const layer&) = delete;
 
-	layer           (layer&& mov) noexcept;
+	layer& operator=  (const layer&) = delete;
 
+	
+	layer             (layer&& mov) noexcept;
 
-	layer           (
-		const std::string&  name,
-		layer_type           layerType);
-
-
-	virtual ~layer  () = default;
+	layer& operator=  (layer&& mov) noexcept;
 
 
-	template<typename EntityType> requires is_entity<EntityType>
-	entity_reference<EntityType>
-				add_entity          (EntityType&& entity);
+	layer             (const std::string& name, layer_type layer_type);
 
-	template<typename EntityType> requires is_entity<EntityType>
-	void  add_entity_static   (EntityType&& entity);
+	virtual ~layer    ();
+
 
 	template<typename EntityType> requires is_entity<EntityType>
 	entity_reference<EntityType>
-				find_entity_by_name (std::string name);
+				add_entity           (EntityType&& entity);
 
-	void  bind_renderer       (const cx::driver_handle& reference);
+	template<typename EntityType> requires is_entity<EntityType>
+	void  add_entity_static    (EntityType&& entity);
+
+	template<typename EntityType> requires is_entity<EntityType>
+	entity_reference<EntityType>
+				find_entity_by_name  (const std::string& name);
+
+	void  bind_renderer        (const cx::driver_handle& reference);
+
 
 	layer_camera                      camera{};
 
-	cx::driver_handle                 bound_renderer;
+	cx::driver_handle                 bound_renderer{};
 
 	std::vector<cx::exp::ptr<entity>> entities;
 };
@@ -74,31 +76,32 @@ template<typename EntityType> requires is_entity<EntityType>
 layer::entity_reference<EntityType>
 			layer::add_entity         (EntityType &&entity) {
 
-	using TypeNoRef = std::remove_reference_t<EntityType>;
+	using TypeNoRef = std::decay_t <EntityType>;
 
 	cx::exp::ptr<rd::entity, TypeNoRef> obj { std::forward<TypeNoRef>(entity) };
 	cx::exp::ptr_ref<TypeNoRef>         ref { obj };
 
 	entities.emplace_back(obj.abstract_and_release());
 
-	return layer::entity_reference<EntityType>{cx::core::make_handle(), ref };
+	return entity_reference<EntityType>{cx::core::make_handle(), ref };
 }
 
 
 template<typename EntityType> requires is_entity<EntityType>
 void  layer::add_entity_static  (EntityType &&entity) {
 
-	using TypeNoRef = std::remove_reference_t<EntityType>;
+	using TypeNoRef = std::decay_t <EntityType>;
+
 	entities.emplace_back(cx::exp::ptr<rd::entity, TypeNoRef>{ std::forward<TypeNoRef>(entity) }.abstract_and_release());
 }
 
 template<typename EntityType> requires is_entity<EntityType>
 layer::entity_reference<EntityType>
-			layer::find_entity_by_name(std::string name) {
+			layer::find_entity_by_name(const std::string& name) {
 
-	for (const cx::exp::ptr<entity>& entity : entities) {
+	for (const auto& entity : entities) {
 		if (entity->name == name) {
-			return layer::entity_reference<EntityType> {
+			return entity_reference<EntityType> {
 				cx::core::make_handle(),
 				cx::exp::ptr_ref{ entity.reify_pointer<EntityType>() } };
 		}

@@ -10,8 +10,8 @@ set(APP_SOURCES
     ${FRAGMENT_SOURCES}
     ${VERTEX_SOURCES}
     cpp/app.cpp
-        cpp/world.cpp
-        headers/world.hpp)
+    cpp/world.cpp
+    headers/world.hpp)
 
 if(WIN32)
     add_executable(app WIN32

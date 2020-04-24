@@ -7,13 +7,21 @@
 using namespace swl;
 using namespace std;
 
+SNOW_OWL_NAMESPACE(rd)
+
 cx::driver_handle
-			rd::world::add_renderer  (world_renderer &&graph) {
+			world::add_renderer  (world_renderer &&graph) {
 	auto result = renderers.emplace(cx::core::make_handle(), std::forward<rd::world_renderer>(graph));
 
 	if (get<1>(result)) {
 		const auto& item = *get<0>(result);
-		get<1>(item)->compile();
+
+		vector<cx::exp::ptr_ref<layer>> layers{ active_layers.size(), cx::exp::ptr_ref<layer>{ nullptr } };
+		std::transform(active_layers.begin(), active_layers.end(), layers.begin(), [](auto& item) {
+			return cx::exp::ptr_ref<layer>{ item };
+		});
+
+		get<1>(item)->compile(layers);
 
 		return get<0>(item);
 	}
@@ -21,10 +29,38 @@ cx::driver_handle
 	return {};
 }
 
-void  swl::rd::world::update   (const chrono::milliseconds &delta) {
+void  world::update   (const chrono::milliseconds &delta) {
 
+	for (const auto& layer : active_layers) {
+		for (const auto& entity : layer->entities) {
+			entity->update(delta);
+		}
+	}
+
+	std::vector<cx::exp::ptr_ref<layer>> layers;
+	layers.reserve(active_layers.size());
+
+	std::transform(active_layers.begin(), active_layers.end(), layers.begin(), [](auto& item) {
+		return cx::exp::ptr_ref<layer>{ item };
+	});
+	
+	for (const auto& renderer : renderers) {
+		renderer.second->step(layers);
+	}
 }
 
-void  swl::rd::world::render   (float frame_offset) {
+void  world::render   (float frame_offset) {
 
+	std::vector<cx::exp::ptr_ref<layer>> layers;
+	layers.reserve(active_layers.size());
+
+	std::transform(active_layers.begin(), active_layers.end(), layers.begin(), [](auto& item) {
+		return cx::exp::ptr_ref<layer>{ item };
+		});
+
+	for (const auto& renderer : renderers) {
+		renderer.second->render(layers);
+	}
 }
+
+SNOW_OWL_NAMESPACE_END

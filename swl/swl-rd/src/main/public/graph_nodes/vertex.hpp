@@ -1,28 +1,27 @@
 //
 // Created by Michael Ong on 21/4/20.
 //
+#pragma once
 
 #include <vector>
-#include <filesystem>
 
 #include <header.hpp>
 #include <point.hpp>
+
+#include <vulkan_import.h>
 
 #include "graph_node.hpp"
 #include "graph_node_effect.hpp"
 
 SNOW_OWL_NAMESPACE(rd::graph::nodes)
 
-struct vertex_effect_buffer: public node_effect {
+struct vertex_effect_buffer final : node_effect {
 
-	vertex_effect_buffer  (
-		std::vector<cx::point_3d> vtx,
-		std::vector<cx::point_3d> off,
-		std::vector<unsigned int> idx
-	);
+	vertex_effect_buffer
+				(std::vector<cx::point_3d> vtx, std::vector<cx::point_3d> off, std::vector<unsigned int> idx);
 
-	[[nodiscard]]
-	bool  is_required   () const override;
+	[[nodiscard]] bool
+				is_required() const override;
 
 	std::vector<cx::point_3d> vertices;
 	std::vector<cx::point_3d> vertex_offsets;
@@ -30,48 +29,53 @@ struct vertex_effect_buffer: public node_effect {
 	std::vector<unsigned int> indices;
 };
 
-struct vertex_argument_input: public node_argument_input {
+struct vertex_argument_input: node_argument_input {
+		
+	vertex_argument_input             (const vertex_argument_input&) = delete;
 
-	// vk::UniqueBuffer vertex_buffer;
-	// vk::UniqueBuffer index_buffer;
+	vertex_argument_input& operator=  (const vertex_argument_input&) = delete;
 
-	std::vector<unsigned long> entity_position;
+	
+	vertex_argument_input             (vertex_argument_input&& mov) noexcept;
+
+	vertex_argument_input& operator=  (vertex_argument_input&& mov) noexcept;
+
+
+	vertex_argument_input   ();
+
+	~vertex_argument_input  ();
+
+
+	vk::UniqueBuffer vertex_buffer;
+	vk::UniqueBuffer index_buffer;
 };
 
-struct vertex: public node {
+struct vertex final : node {
 
 	static const node_argument OA_VertexBuffer;
 
 	static const node_argument OA_VelocityBuffer;
 
 
-	explicit vertex               () = default;
+	explicit vertex         () = default;
 
 
-	[[nodiscard]]
-	std::vector<node_argument>
-				input_arguments         () const override;
+	[[nodiscard]] std::vector<node_argument>
+				input_arguments   () const override;
 
-	[[nodiscard]]
-	std::vector<node_argument>
-				output_arguments        () const override;
+	[[nodiscard]] std::vector<node_argument>
+				output_arguments  () const override;
 
 
-	[[nodiscard]]
-	std::vector<cx::exp::ptr_ref<node_argument_input>>
-				build_output_arguments  (const std::vector<cx::exp::ptr_ref<entity>>& entities) const override;
+	[[nodiscard]] std::vector<cx::driver_handle>
+				effects           () const override;
 
 
-	[[nodiscard]]
-	bool  shall_upload_resources  (const std::vector<cx::exp::ptr_ref<node_argument_input>> &inputs) const override;
 
-	void  upload_resources        (const std::vector<cx::exp::ptr_ref<node_argument_input>> &inputs) override;
+	[[nodiscard]] std::vector<cx::exp::ptr<node_argument_input>>
+				create_resource   () const override;
 
-
-	[[nodiscard]]
-	bool  shall_record_commands   (const std::vector<cx::exp::ptr_ref<node_argument_input>> &inputs) const override;
-
-	void  record_commands         (const std::vector<cx::exp::ptr_ref<node_argument_input>> &inputs) override;
+	void  ingest_data       (const node_context &context) override;
 };
 
 SNOW_OWL_NAMESPACE_END

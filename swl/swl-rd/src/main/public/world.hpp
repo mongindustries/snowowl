@@ -17,15 +17,19 @@ SNOW_OWL_NAMESPACE(rd)
 
 struct world {
 
-	template<typename LayerType,
-	  std::enable_if_t<std::is_base_of_v<layer, std::decay_t<LayerType>>, int> = 0>
-	struct LayerReference {
-		cx::driver_handle                                      unique_id;
-		cx::exp::ptr_ref<std::remove_reference_t<LayerType>>  reference;
+	template<typename LayerType>
+	struct layer_reference {
+
+		typedef std::enable_if_t<std::is_base_of_v<layer, std::decay_t<LayerType>>, cx::exp::ptr_ref<std::decay_t<LayerType>>> Reference;
+
+		cx::driver_handle  unique_id;
+		Reference          reference;
 	};
 
+	typedef std::map<cx::driver_handle, cx::exp::ptr<world_renderer>> RendererMap;
+	
 	template<typename LayerType>
-	LayerReference<LayerType>
+	layer_reference<LayerType>
 				add_layer     (LayerType &&layer);
 
 	cx::driver_handle
@@ -37,12 +41,12 @@ struct world {
 	void  render        (float frame_offset);
 
 
-	std::map<cx::driver_handle, cx::exp::ptr<world_renderer>> renderers;
-	std::vector<cx::exp::ptr<layer>>                          active_layers;
+	RendererMap                       renderers;
+	std::vector<cx::exp::ptr<layer>>  active_layers;
 };
 
 template<typename LayerType>
-rd::world::LayerReference<LayerType>
+rd::world::layer_reference<LayerType>
 	rd::world::add_layer(LayerType &&layer) {
 
 	using TypeNoRef = std::remove_reference_t<LayerType>;
@@ -52,7 +56,7 @@ rd::world::LayerReference<LayerType>
 
 	active_layers.emplace_back(obj.abstract_and_release());
 
-	return LayerReference<LayerType> {cx::core::make_handle(), ref };
+	return layer_reference<LayerType> { cx::core::make_handle(), ref };
 }
 
 SNOW_OWL_NAMESPACE_END

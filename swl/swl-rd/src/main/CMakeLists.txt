@@ -6,7 +6,14 @@ set(HEADER_LIST
 set(PRIVATE_HEADER_LIST )
 
 set(SOURCE_LIST
-        cpp/world.cpp cpp/entity.cpp cpp/world_renderer.cpp cpp/graph_nodes/vertex.cpp cpp/graph_nodes/diffuse.cpp cpp/layer.cpp cpp/graph_node_argument.cpp)
+        cpp/world.cpp
+        cpp/entity.cpp 
+        cpp/world_renderer.cpp 
+        cpp/graph_nodes/vertex.cpp
+        cpp/graph_nodes/diffuse.cpp 
+        cpp/layer.cpp
+        cpp/graph_node_argument.cpp
+        cpp/graph_node.cpp)
 
 add_library(rd
         ${SOURCE_LIST}

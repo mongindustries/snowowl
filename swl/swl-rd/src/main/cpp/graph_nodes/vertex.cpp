@@ -8,81 +8,91 @@
 using namespace swl;
 using namespace std;
 
-using ArgumentType  = rd::graph::node_argument_type;
-using ArgumentScope = rd::graph::node_argument_scope;
+SNOW_OWL_NAMESPACE(rd::graph)
 
-rd::graph::nodes::vertex_effect_buffer::vertex_effect_buffer(
-	vector<cx::point_3d> vtx,
-	vector<cx::point_3d> off,
-	vector<unsigned int> idx):
+using ArgumentType  = node_argument_type;
+using ArgumentScope = node_argument_scope;
+
+nodes::vertex_effect_buffer::vertex_effect_buffer
+	(vector<cx::point_3d> vtx, vector<cx::point_3d> off, vector<unsigned int> idx):
 	node_effect   (0x20'00'01),
+
 	vertices      (std::move(vtx)),
 	vertex_offsets(std::move(off)),
 	indices       (std::move(idx)) {
 }
 
-bool  rd::graph::nodes::vertex_effect_buffer::is_required() const {
+bool  nodes::vertex_effect_buffer::is_required() const {
 	return true;
 }
 
 
-const rd::graph::node_argument
-			rd::graph::nodes::vertex::OA_VertexBuffer   = rd::graph::node_argument{
+const node_argument
+			nodes::vertex::OA_VertexBuffer   = node_argument{
 	0x10'00'20, true, false, ArgumentType::typeDataBuffer, ArgumentScope::scopePerLayer };
 
-const rd::graph::node_argument
-			rd::graph::nodes::vertex::OA_VelocityBuffer = rd::graph::node_argument{
+const node_argument
+			nodes::vertex::OA_VelocityBuffer = node_argument{
 	0x10'00'21, false, false, ArgumentType::typeDataBuffer, ArgumentScope::scopePerLayer };
 
 
-vector<rd::graph::node_argument>
-			rd::graph::nodes::vertex::input_arguments         () const {
+nodes::vertex_argument_input::vertex_argument_input
+	() {}
+
+nodes::vertex_argument_input::vertex_argument_input
+	(vertex_argument_input&& mov) noexcept:
+	vertex_buffer  (::move(mov.vertex_buffer)),
+	index_buffer   (::move(mov.index_buffer)) {
+	
+}
+
+nodes::vertex_argument_input::~vertex_argument_input
+	() {}
+
+nodes::vertex_argument_input&
+			nodes::vertex_argument_input::operator=(vertex_argument_input&& mov) noexcept {
+
+	vertex_buffer = std::move(mov.vertex_buffer);
+	index_buffer  = std::move(mov.index_buffer);
+
+	return *this;
+}
+
+vector<node_argument>
+			nodes::vertex::input_arguments   () const {
 	return { };
 }
 
-vector<rd::graph::node_argument>
-			rd::graph::nodes::vertex::output_arguments        () const {
+vector<node_argument>
+			nodes::vertex::output_arguments  () const {
 	return { OA_VertexBuffer, OA_VelocityBuffer };
 }
 
 
-std::vector<cx::exp::ptr_ref<rd::graph::node_argument_input>>
-			rd::graph::nodes::vertex::build_output_arguments  (const std::vector<cx::exp::ptr_ref<rd::entity>>& entities) const {
+std::vector<cx::driver_handle>
+			nodes::vertex::effects           () const {
 
-	cx::exp::ptr<node_argument_input, vertex_argument_input> output;
+	return { 0x20'00'01 };
+}
 
-	unsigned long last_index{ 0 };
-	output->entity_position.reserve(entities.size());
 
-	for (const auto& entity: entities) {
-		for(const auto& effect : entity->effects) {
-			if (effect->id == 0x20'00'01) {
-				last_index += output->entity_position.emplace_back(last_index);
-				break;
-			}
-		}
-	}
+std::vector<cx::exp::ptr<node_argument_input>>
+			nodes::vertex::create_resource   () const {
+
+	cx::exp::ptr<node_argument_input, vertex_argument_input> vertex_data{ nullptr };
 
 	// create vertex buffer
 	// create index buffer
 
-	return vector {
-		cx::exp::ptr_ref<rd::graph::node_argument_input>{ output.abstract_pointer() },  /* arg_1: vertex buffer */
-		cx::exp::ptr_ref<rd::graph::node_argument_input>{ nullptr }                     /* arg_2: velocity buffer */
-	};
+	vector<cx::exp::ptr<node_argument_input>> resources;
+
+	resources.emplace_back(vertex_data.abstract()); /* arg_1: vertex buffer */
+	resources.emplace_back(nullptr);
+	
+	return resources;
 }
 
-bool  rd::graph::nodes::vertex::shall_upload_resources  (const vector<cx::exp::ptr_ref<node_argument_input>>& inputs) const {
-	return false;
+void  nodes::vertex::ingest_data       (const node_context& context) {
 }
 
-void  rd::graph::nodes::vertex::upload_resources        (const vector<cx::exp::ptr_ref<node_argument_input>>& inputs) {
-}
-
-
-bool  rd::graph::nodes::vertex::shall_record_commands   (const vector<cx::exp::ptr_ref<node_argument_input>>& inputs) const {
-	return false;
-}
-
-void  rd::graph::nodes::vertex::record_commands         (const vector<cx::exp::ptr_ref<node_argument_input>>& inputs) {
-}
+SNOW_OWL_NAMESPACE_END

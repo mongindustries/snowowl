@@ -15,14 +15,21 @@
 SNOW_OWL_NAMESPACE(rd)
 
 /**
- * An entity serves as the base class a <code>layer</code> would get buffer information from.
+ * An entity serves as the base class a\code layer\endcode would get buffer information from.
  */
 struct entity {
 
 	entity            (const entity&) = delete;
 
-	entity            (entity&&) noexcept ;
+	entity& operator= (const entity&) = delete;
+	
 
+	entity            (entity&&) noexcept;
+
+	entity& operator= (entity&&) noexcept;
+
+
+	entity            ();
 
 	explicit entity   (std::string name);
 
@@ -31,12 +38,12 @@ struct entity {
 	 /**
 	  * Binds a particular Node effect to this entity.
 	  * @tparam NodeEffectType The target effect type.
-	  * @param effectId The Node Effect instance to add.
-	  * @return A <code>node_effect_reference</code> instance containing the newly created node effect.
+	  * @param effect_id The Node Effect instance to add.
+	  * @return A\code node_effect_reference\endcode instance containing the newly created node effect.
 	  */
 	template<typename NodeEffectType> requires rd::graph::is_node_effect<NodeEffectType>
 	graph::node_effect_reference<NodeEffectType>
-				mark_effect (NodeEffectType &&effectId);
+				mark_effect (NodeEffectType &&effect_id);
 
 	/**
 	 * Updates function for the entity.
@@ -55,11 +62,11 @@ struct entity {
 
 template<typename NodeEffectType> requires rd::graph::is_node_effect<NodeEffectType>
 graph::node_effect_reference<NodeEffectType>
-	entity::mark_effect(NodeEffectType &&effectId) {
+	entity::mark_effect(NodeEffectType &&effect_id) {
 
 	using TypeNoReference = std::remove_reference_t<NodeEffectType>;
 
-	cx::exp::ptr<graph::node_effect, TypeNoReference> obj { std::forward<TypeNoReference>(effectId) };
+	cx::exp::ptr<graph::node_effect, TypeNoReference> obj { std::forward<TypeNoReference>(effect_id) };
 	cx::exp::ptr_ref<TypeNoReference>                 ref { obj };
 
 	effects.emplace_back(obj.abstract_and_release());
@@ -68,6 +75,6 @@ graph::node_effect_reference<NodeEffectType>
 }
 
 template<typename EntityType>
-concept is_entity = std::is_base_of_v<entity, std::remove_reference_t<EntityType>>;
+concept is_entity = std::is_base_of_v<entity, std::decay_t<EntityType>>;
 
 SNOW_OWL_NAMESPACE_END
