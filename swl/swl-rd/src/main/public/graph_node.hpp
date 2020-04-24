@@ -27,6 +27,10 @@ struct node_reference {
 struct node_argument_input {
 };
 
+struct node_context {
+	
+};
+
 /**
  * A rendering Node.
  */

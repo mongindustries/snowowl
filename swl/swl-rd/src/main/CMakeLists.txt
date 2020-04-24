@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 set(HEADER_LIST
-        public/world.hpp public/layer.hpp public/entity.hpp public/world_renderer.hpp public/graph_node.hpp public/graph_nodes/diffuse.hpp public/graph_node_argument.hpp public/graph_node_effect.hpp public/graph_nodes/vertex.hpp public/layer_camera.hpp public/world_renderer_context.hpp)
+        public/world.hpp public/layer.hpp public/entity.hpp public/world_renderer.hpp public/graph_node.hpp public/graph_nodes/diffuse.hpp public/graph_node_argument.hpp public/graph_node_effect.hpp public/graph_nodes/vertex.hpp public/layer_camera.hpp)
 
 set(PRIVATE_HEADER_LIST )
 

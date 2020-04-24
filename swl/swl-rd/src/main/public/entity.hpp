@@ -42,7 +42,8 @@ struct entity {
 	 * Updates function for the entity.
 	 * @param offset Frame time of the game.
 	 */
-	void  update      (std::chrono::milliseconds offset);
+	virtual void
+				update      (std::chrono::milliseconds offset);
 
 
 	std::string                                   name;
