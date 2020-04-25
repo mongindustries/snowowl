@@ -11,65 +11,74 @@
 
 using namespace std;
 using namespace swl::cx;
-using namespace swl::ui;
-using namespace swl::ui::backend;
 
-Window::Window() = default;
+SNOW_OWL_NAMESPACE(ui)
 
-Window::Window(string window_name, const rect &frame):
-	_handle (cx::core::make_handle()),
-	_title  (std::move(window_name)),
-	_frame  (frame),
-	_sink   (new WindowSink{ .handle = _handle }) {
+using namespace backend;
 
-	WindowBackend::backend->Spawn(this);
+window::window            () = default;
+
+window::window            (string window_name, const rect &frame):
+	handle(cx::core::make_handle()), title(std::move(window_name)), frame(frame), sink(window_sink{ handle }) {
+	window_backend::instance->create(this);
 }
 
-void
-	Window::setTitle(const std::string &new_title) {
+window::~window           () { }
 
-	_title = new_title;
-	WindowBackend::backend->UpdateTitle(this);
+
+window::window            (window &&mov) noexcept:
+	handle(mov.handle), title(std::move(mov.title)), frame(mov.frame), sink(std::move(mov.sink)) {
 }
 
-void
-	Window::setFrame(const cx::rect &new_frame) {
+window
+			&window::operator=  (window &&) noexcept {
+	return *this;
+}
 
-	_frame = new_frame;
-	WindowBackend::backend->UpdateFrame(this);
+
+void  window::set_title   (const std::string &new_title) {
+
+	title = new_title;
+	window_backend::instance->update_title(this);
+}
+
+void  window::set_frame   (const cx::rect &new_frame) {
+
+	frame = new_frame;
+	window_backend::instance->update_frame(this);
 }
 
 
 size_2d
-	Window::getSize() const {
-	return _frame.size;
+			window::get_size    () const {
+	return frame.size;
 }
 
-rect
-	Window::getFrame() const {
-	return _frame;
+rect  window::get_frame   () const {
+	return frame;
 }
 
 string
-	Window::getTitle() const {
-	return _title;
+			window::get_title   () const {
+	return title;
 }
 
-WindowSink*
-	Window::getSink() const {
-	return _sink;
+exp::ptr_ref<window_sink>
+			window::get_sink    () const {
+	return exp::ptr_ref<window_sink>{ sink };
 }
 
-bool
-	Window::isSizing() const {
-	return _resizing;
+bool  window::is_sizing   () const {
+	return resizing;
 }
 
 
-bool Window::operator<  (const Window &rhs) const {
-	return _handle < rhs._handle;
+bool  window::operator<   (const window &rhs) const {
+	return handle < rhs.handle;
 }
 
-bool Window::operator== (const Window &rhs) const {
-	return _handle == rhs._handle;
+bool  window::operator==  (const window &rhs) const {
+	return handle == rhs.handle;
 }
+
+SNOW_OWL_NAMESPACE_END

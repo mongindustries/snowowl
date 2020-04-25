@@ -9,20 +9,21 @@
 SNOW_OWL_NAMESPACE(ui)
 
 template<typename Return, typename... Parameters>
-struct Event {
+struct event {
 
-	Event() = default;
+	event             () = default;
 
-	explicit Event(std::function<Return(Parameters...)> functor): _fn(functor) {
+	explicit event    (std::function<Return(Parameters...)> functor):
+				_fn(functor) { }
 
-	}
 
-
-	Return invoke(Parameters... params) const {
+	Return
+				invoke      (Parameters... params) const {
 		return _fn(params...);
 	}
 
-	Return operator() (Parameters... params) const {
+	Return
+				operator()  (Parameters... params) const {
 		return invoke(params...);
 	}
 
@@ -32,19 +33,21 @@ private:
 };
 
 template<typename... Parameters>
-struct Event<void, Parameters...> {
+struct event<void, Parameters...> {
 
-	explicit Event(std::function<void(Parameters...)> functor) : _fn(functor) {
+	event             () = default;
+
+	explicit event    (std::function<void(Parameters...)> functor) : _fn(functor) {
 
 	}
 
-	
-	void invoke(Parameters... params) const {
-		return _fn(params...);
+
+	void  invoke      (Parameters... params) const {
+		_fn(params...);
 	}
 
-	void operator() (Parameters... params) const {
-		return invoke(params...);
+	void  operator()  (Parameters... params) const {
+		invoke(params...);
 	}
 
 private:

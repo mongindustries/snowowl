@@ -5,21 +5,13 @@
 #include <file_manager.hpp>
 #include <application.hpp>
 
-#include <vulkan_context.hpp>
-
-#include "world.hpp"
-
 using namespace swl;
 using namespace cx;
 using namespace ui;
 
 struct AppGameLoop: game_loop {
 
-	app::Renderer renderer;
-
-	WindowSurface surface;
-
-	AppGameLoop(const WindowSurface &surface): game_loop(60, 4), renderer(surface), surface(surface) {
+	AppGameLoop(): game_loop(60, 4) {
 	}
 
 	void create() override {
@@ -27,54 +19,49 @@ struct AppGameLoop: game_loop {
 
 	void preFrame() override {
 
-		auto& window = surface.getWindow().get();
-
-		if (window.isSizing()) {
-			std::unique_lock<std::mutex> lock(window.lockForNoWindowResizing);
-			window.waitForNoWindowResizing.wait(lock);
-		}
+//		if (window.is_sizing()) {
+//			std::unique_lock<std::mutex> lock(window.loop_lock);
+//			window.loop_wait.wait(lock);
+//		}
 	}
 
 	void update(std::chrono::milliseconds delta) override {
-		renderer.update();
 	}
 
 	void render(float offset) override {
-
-		renderer.frame();
 	}
 };
 
-struct App: Application {
+struct App: application {
 
-	exp::ptr<Window>       window;
+	exp::ptr<window>       window;
 	exp::ptr<AppGameLoop>  gameLoop;
 
-	App(void* instance): Application(instance), window(nullptr), gameLoop(nullptr) {
+	App(void* instance): application(instance), window(nullptr), gameLoop(nullptr) {
 	}
 
-	void applicationCreate  () override {
+	void on_create  () override {
 
 		const auto pp = cx::file_manager::resourcePath;
 
-		window        = createWindow  ("[SnowOwl:] App", rect{{100, 100 }, {800, 480 } });
-		auto surface  = WindowSurface (window);
+		window = create_window("[SnowOwl:] App", rect{{100, 100},
+		                                              {800, 480}});
 
-		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(surface) };
+		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop() };
 		gameLoop->open();
 
-		window->_event_size_list.emplace_back([&](const Window&, const rect&) {
+		window->_event_size_list.emplace_back([&](const window&, const rect&) {
 			if (window->isSizing()) {
 				gameLoop->frame();
 			}
 		});
 
-		window->_event_close_list.emplace_back([&](const Window&) {
+		window->_event_close_list.emplace_back([&](const window&) {
 			gameLoop->close();
 		});
 	}
 
-	void applicationDestroy () override {
+	void on_destroy () override {
 	}
 };
 
@@ -88,5 +75,5 @@ int main () {
 	std::nullptr_t instance = nullptr; // implied [NSApplication sharedApplication];
 #endif
 
-	return Application::runApplication(App(instance));
+	return application::runApplication(App(instance));
 }

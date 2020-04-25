@@ -1,5 +1,5 @@
 //
-// Created by micha on 4/3/2020.
+// Created by Michael Ong on 4/3/2020.
 //
 #include "application.hpp"
 
@@ -7,16 +7,19 @@
 #include "window.hpp"
 
 using namespace std;
+using namespace swl;
 
-using namespace swl::cx;
-using namespace swl::ui;
-using namespace swl::ui::backend;
+SNOW_OWL_NAMESPACE(ui)
 
-Application::Application(void *native_instance):
-	_native_instance(native_instance) {
-	WindowBackend::backend->application = this;
+using namespace backend;
+
+application::application(void *native_instance):
+	native_instance(native_instance) {
+	window_backend::instance->application = this;
 }
 
-exp::ptr<Window> Application::createWindow(const std::string& caption, const rect& frame) {
-	return exp::ptr<Window>{ new Window(caption, frame) };
+cx::exp::ptr<window> application::create_window(const std::string& caption, const cx::rect& frame) {
+	return cx::exp::ptr<window>{new window(caption, frame) };
 }
+
+SNOW_OWL_NAMESPACE_END

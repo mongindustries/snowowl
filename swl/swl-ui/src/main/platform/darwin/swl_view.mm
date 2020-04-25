@@ -8,7 +8,7 @@
 #import <Metal/Metal.h>
 #import <QuartzCore/QuartzCore.h>
 
-@implementation swlView
+@implementation ui_view
 
 - (instancetype)initWithFrame:(NSRect)frame {
 

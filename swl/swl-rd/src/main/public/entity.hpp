@@ -71,7 +71,7 @@ graph::node_effect_reference<NodeEffectType>
 
 	effects.emplace_back(obj.abstract_and_release());
 
-	return {cx::core::make_handle(), ref };
+	return { cx::core::make_handle(), ref };
 }
 
 template<typename EntityType>

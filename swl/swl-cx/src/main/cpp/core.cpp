@@ -16,7 +16,7 @@ driver_handle core::make_handle() {
 	random_device rd_device;
 	default_random_engine engine(rd_device());
 
-	uniform_int_distribution<> distribution(0, 0xff'ff);
+	uniform_int_distribution<> distribution(0x1, 0xff'ff);
 
 	const auto one = static_cast<driver_handle>(distribution(engine)) << 0;
 	const auto two = static_cast<driver_handle>(distribution(engine)) << 8;

@@ -30,7 +30,7 @@ concept is_node_effect = std::is_base_of_v<node_effect, std::remove_reference_t<
 template<typename NodeEffectType>
 struct node_effect_reference {
 
-	typedef std::enable_if<is_node_effect<NodeEffectType>, cx::exp::ptr_ref<std::decay_t<NodeEffectType>>> Reference;
+	typedef std::enable_if_t<is_node_effect<NodeEffectType>, cx::exp::ptr_ref<std::decay_t<NodeEffectType>>> Reference;
 
 	swl::cx::driver_handle  unique_id;
 	Reference               reference;

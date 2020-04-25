@@ -8,22 +8,22 @@
 using namespace swl::ui;
 using namespace swl::cx;
 
-struct SampleApplication: public Application {
-	explicit SampleApplication(void* instance) : Application(instance) {
+struct SampleApplication: public application {
+	explicit SampleApplication(void* instance) : application(instance) {
 	}
 
-	void applicationCreate() override {
+	void on_create() override {
 
-		auto &window = createWindow("Window", rect {100, 100, 800, 480 });
+		auto &window = create_window("window", rect{100, 100, 800, 480});
 	}
 
-	void applicationDestroy() override {
+	void on_destroy() override {
 	}
 };
 
 int main() {
 
-	Application::runApplication(SampleApplication(nullptr));
+	application::runApplication(SampleApplication(nullptr));
 
 	return 0;
 }

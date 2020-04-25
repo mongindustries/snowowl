@@ -8,93 +8,104 @@
 #include <condition_variable>
 
 #include <header.hpp>
-#include <rect.hpp>
 #include <core.hpp>
+#include <rect.hpp>
+#include <ownership_exp.hpp>
 
 #include "event.hpp"
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct Application;
+struct application;
 
 
-struct WindowSink;
+struct window_sink;
 
-struct WindowSurface;
+struct window_surface;
 
 
-struct SWL_EXPORT Window final {
+struct SWL_EXPORT window final {
 
-	enum class State {
+	enum class state {
 		Active,
 		Paused,
 		Background
 	};
 
-	std::condition_variable waitForNoWindowResizing;
-	std::mutex              lockForNoWindowResizing;
-	
-	Window  ();
+	window            (const window&) = delete;
 
-	Window  (std::string window_name, const cx::rect &frame);
+	window& operator= (const window&) = delete;
+
+
+	window            (window&&) noexcept;
+
+	window& operator= (window&&) noexcept;
+
+
+	window  ();
+
+	window  (std::string window_name, const cx::rect &frame);
+
+	~window ();
 
 	// window properties
 
-	void
-		setTitle      (const std::string &new_title);
+	void  set_title     (const std::string &value);
 
-	void
-		setFrame      (const cx::rect &new_frame);
+	void  set_frame     (const cx::rect &value);
 
 	[[nodiscard]] std::string
-		getTitle      () const;
+				get_title     () const;
 
 	[[nodiscard]] cx::size_2d
-		getSize       () const;
+				get_size      () const;
 
 	[[nodiscard]] cx::rect
-		getFrame      () const;
+				get_frame     () const;
 
-	[[nodiscard]] WindowSink*
-		getSink       () const;
+	[[nodiscard]] cx::exp::ptr_ref<window_sink>
+				get_sink      () const;
 
 	[[nodiscard]] bool
-		isSizing      () const;
+				is_sizing     () const;
 
 	// window events
 
-	bool
-		operator<     (const Window &rhs) const;
+	bool  operator<     (const window &rhs) const;
 
-	bool
-		operator==    (const Window &rhs) const;
+	bool  operator==    (const window &rhs) const;
 
 private:
 
-	typedef std::vector<Event<void, const Window&>> EventCloseList;
+	typedef std::vector<event<void, const window&>>                   EventCloseList;
 
-	typedef std::vector<Event<void, const Window&, const cx::rect&>> EventSizeList;
+	typedef std::vector<event<void, const window&, const state&>>     EventStateList;
 
-	typedef std::vector<Event<void, const Window&, const State&>> EventStateList;
+	typedef std::vector<event<void, const window&, const cx::rect&>>  EventSizeList;
 
 
-	cx::driver_handle _handle{0};
+	cx::driver_handle         handle{ 0 };
 
-	std::string      _title{};
-	cx::rect         _frame{};
+	std::string               title{};
 
-	WindowSink*      _sink;
+	cx::rect                  frame{};
 
-	bool             _resizing{ false };
+	bool                      resizing{ false };
 
-	friend struct WindowSink;
-	friend struct WindowSurface;
+
+	cx::exp::ptr<window_sink> sink;
+
+	friend struct window_sink;
+	friend struct window_surface;
 
 public:
 
-	EventCloseList   _event_close_list;
-	EventSizeList    _event_size_list;
-	EventStateList   _event_state_list;
+	std::condition_variable loop_wait;
+	std::mutex              loop_lock;
+
+	EventCloseList          event_on_close;
+	EventStateList          event_on_state;
+	EventSizeList           event_on_resize;
 };
 
 SNOW_OWL_NAMESPACE_END

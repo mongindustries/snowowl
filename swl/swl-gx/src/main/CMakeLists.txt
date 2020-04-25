@@ -1,36 +1,25 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 set(HEADER_LIST
-    public/graphics.hpp
-    public/graphics_context.hpp
-    public/graphics_swap_chain.h
-        public/vulkan_import.h
-        public/vulkan_context.hpp
-        public/vulkan_queue.hpp
-        public/vulkan_swap_chain.hpp
-    public/vulkan_shader.hpp public/vulkan_fence_lock.hpp public/vulkan_buffer_recorder.hpp)
+        public/graphics_context.hpp
+        public/graphics_swap_chain.hpp public/graphics_queue.hpp public/graphics_pass.hpp public/graphics_shader.hpp public/graphics_buffer.hpp public/graphics_sampler.hpp)
 
-set(PRIVATE_HEADER_LIST
-        headers/vulkan_graphics_backend.hpp)
+set(PRIVATE_HEADER_LIST public/graphics_pipeline.hpp)
 
 set(SOURCE_LIST
-    cpp/graphics.cpp
-        cpp/vulkan_context.cpp
-        cpp/vulkan_queue.cpp
-        cpp/vulkan_swap_chain.cpp cpp/vulkan_shader.cpp cpp/vulkan_fence_lock.cpp)
+        platform/darwin/metal/mtl_context.mm cpp/graphics_context.cpp cpp/graphics_swap_chain.cpp cpp/graphics_pipeline.cpp)
 
 if(WIN32)
-    set(PLATFORM_SOURCE_LIST
-            platform/windows/vulkan_graphics_backend.cpp)
+    set(PLATFORM_SOURCE_LIST)
 
     set(PLATFORM_HEADER_LIST)
 endif()
 
 if(APPLE)
-    set(PLATFORM_SOURCE_LIST
-            platform/darwin/vulkan_graphics_backend.cpp)
+    set(PLATFORM_SOURCE_LIST platform/darwin/metal/mtl_swap_chain.mm platform/darwin/metal/mtl_queue.mm)
 
-    set(PLATFORM_HEADER_LIST)
+    set(PLATFORM_HEADER_LIST
+            public/metal/mtl_context.h public/metal/mtl_swap_chain.h public/metal/mtl_queue.h cpp/graphics_queue.cpp cpp/graphics_pass.cpp public/metal/mtl_pass.h public/metal/mtl_pipeline.h platform/darwin/metal/mtl_pipeline.mm)
 endif()
 
 add_library(gx
@@ -45,10 +34,7 @@ target_include_directories(gx
     PRIVATE headers
 
     PRIVATE ../../../swl-cx/src/main/public
-    PRIVATE ../../../swl-cx/src/main/headers
-
     PRIVATE ../../../swl-ui/src/main/public
-    PRIVATE ../../../swl-ui/src/main/headers
 
     PRIVATE ${SRC_OS}
     PRIVATE ${VULKAN_SDK}/include)

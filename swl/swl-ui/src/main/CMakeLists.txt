@@ -3,9 +3,8 @@ cmake_minimum_required(VERSION 3.16.0)
 set(HEADER_LIST
         public/application.hpp
         public/event.hpp
-        public/ui.hpp
         public/window.hpp
-        public/windowSurface.hpp)
+        public/window_surface.hpp)
 
 set(PRIVATE_HEADER_LIST
         headers/swl_window_backend.hpp
@@ -13,9 +12,8 @@ set(PRIVATE_HEADER_LIST
 
 set(SOURCE_LIST
         cpp/application.cpp
-        cpp/ui.cpp
         cpp/window.cpp
-        cpp/windowSurface.cpp
+        cpp/window_surface.cpp
 
         headers/swl_window_sink.cpp)
 

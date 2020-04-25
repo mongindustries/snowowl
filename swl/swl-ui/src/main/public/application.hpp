@@ -14,60 +14,63 @@
 
 SNOW_OWL_NAMESPACE(ui::backend)
 
-struct WindowBackend;
+struct window_backend;
 
 SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(ui)
 
+struct SWL_EXPORT application {
 
-struct SWL_EXPORT Application {
+	application             (const application&) = delete;
 
-	explicit Application(void* native_instance);
+	application& operator=  (const application&) = delete;
 
-	Application(const Application& copy) = delete;
 
-	Application& operator= (const Application& copy) = delete;
-	
+	application             (application&& mov) noexcept  = default;
 
-	Application(Application&& mov) noexcept = default;
+	application& operator=  (application&& move) noexcept = default;
 
-	Application& operator= (Application&& move) noexcept = default;
 
-	
-	virtual ~Application() = default;
+	explicit application    (void* native_instance);
+
+	virtual ~application    () = default;
 
 	// methods
 
-	cx::exp::ptr<Window> createWindow(const std::string& caption, const cx::rect& frame);
+	cx::exp::ptr<window>
+			create_window       (const std::string& caption, const cx::rect& frame);
 
 	// hooks
 
-	virtual void applicationCreate() {
+	virtual void
+			on_create           () {
 	}
 
-	virtual void applicationDestroy() {
+	virtual void
+			on_destroy          () {
 	}
 
-	template<typename App, std::enable_if_t< std::is_base_of_v<Application, App>, int > = 0>
+	template<typename App, std::enable_if_t< std::is_base_of_v<application, App>, int > = 0>
 	static int runApplication(App app) {
 
 		App::preHeat(app);
 		app.applicationCreate();
-		App::runLoop(app);
 
-		return 0;
+		return App::runLoop(app);
 	}
 
-	friend struct backend::WindowBackend;
+	friend struct backend::window_backend;
 
 private:
 
-	void* _native_instance;
+	void* native_instance;
 
-	static void preHeat(Application &app);
+	static void
+			pre_heat            (application &app);
 
-	static void runLoop(Application &app);
+	static int
+			run_loop            (application &app);
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -5,7 +5,7 @@
 
 #import <AppKit/AppKit.h>
 
-@interface swlView: NSView
+@interface ui_view: NSView
 
 - (instancetype)initWithFrame:(NSRect)frame NS_DESIGNATED_INITIALIZER;
 

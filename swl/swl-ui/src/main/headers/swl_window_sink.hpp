@@ -9,16 +9,17 @@
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct WindowSink {
+struct window_sink {
 
 	cx::driver_handle handle;
 
 
-	void Sizing(bool value);
-	
-	void Update(const cx::rect &new_rect);
+	void sizing   (bool value);
 
-	void Closed();
+	void frame    (const cx::rect &new_rect);
+
+
+	void closed   ();
 };
 
 SNOW_OWL_NAMESPACE_END

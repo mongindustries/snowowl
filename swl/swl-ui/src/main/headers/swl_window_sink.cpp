@@ -5,33 +5,35 @@
 #include "swl_window_backend.hpp"
 
 using namespace swl::cx;
-using namespace swl::ui;
+
+SNOW_OWL_NAMESPACE(ui)
+
 using namespace backend;
 
-void WindowSink::Sizing(bool value) {
+void window_sink::sizing(bool value) {
 
-	for (const auto& item : WindowBackend::backend->activeNativeHandles) {
-		auto* window = const_cast<Window*>(std::get<0>(item));
+	for (const auto& item : window_backend::instance->native_handles) {
+		auto* window = const_cast<ui::window*>(std::get<0>(item));
 
-		if (window->_handle == handle) {
-			window->_resizing = value;
+		if (window->handle == handle) {
+			window->resizing = value;
 
-			if (!window->isSizing()) {
-				window->waitForNoWindowResizing.notify_all();
+			if (!window->is_sizing()) {
+				window->loop_wait.notify_all();
 			}
 		}
 	}
 }
 
-void WindowSink::Update(const rect &new_rect) {
+void window_sink::frame(const rect &new_rect) {
 
-	for (const auto &item : WindowBackend::backend->activeNativeHandles) {
-		auto* window = const_cast<Window*>(std::get<0>(item));
+	for (const auto &item : window_backend::instance->native_handles) {
+		auto* window = const_cast<ui::window*>(std::get<0>(item));
 
-		if (window->_handle == handle) {
-			window->_frame = new_rect;
+		if (window->handle == handle) {
+			window->frame = new_rect;
 
-			for (const auto &event : window->_event_size_list) {
+			for (const auto &event : window->event_on_resize) {
 				event.invoke(*window, new_rect);
 			}
 
@@ -40,23 +42,24 @@ void WindowSink::Update(const rect &new_rect) {
 	}
 }
 
-void WindowSink::Closed() {
+void window_sink::closed() {
 
-	auto &handles = WindowBackend::backend->activeNativeHandles;
+	auto &handles = window_backend::instance->native_handles;
 
 	for (const auto &item : handles) {
 
-		const Window *window = item.first;
+		const window *window = item.first;
 
-		if (window->_handle == handle) {
+		if (window->handle == handle) {
 
-			for (const auto &event : window->_event_close_list) {
+			for (const auto &event : window->event_on_close) {
 				event.invoke(*window);
 			}
 
-			WindowBackend::backend->RemoveEntry(window);
-
-			break;
+			window_backend::instance->destroy(window);
+			return;
 		}
 	}
 }
+
+SNOW_OWL_NAMESPACE_END

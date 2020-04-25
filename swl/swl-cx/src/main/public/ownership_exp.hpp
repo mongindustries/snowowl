@@ -85,7 +85,6 @@ struct ptr {
 	}
 
 	ptr<Base, void> abstract() {
-
 		return ptr<Base, void>{ abstract_and_release() };
 	}
 
@@ -239,6 +238,8 @@ private:
 template<typename ClassType>
 struct ptr_ref {
 
+	ptr_ref         (): _value(nullptr) { }
+
 	explicit ptr_ref(std::nullptr_t null): _value(null) { }
 
 	template<typename Base>
@@ -275,9 +276,44 @@ struct ptr_ref {
 		return *_value == rhs;
 	}
 
+
+	template<typename Anything>
+	ptr_ref<Anything> cast() const {
+		return ptr_ref<Anything> { static_cast<Anything*>(_value) };
+	}
+
 private:
 
 	ClassType* _value;
+};
+
+template<>
+struct ptr_ref<void> {
+
+	explicit ptr_ref(std::nullptr_t null): _value(null) { }
+
+	explicit ptr_ref(void* ptr): _value(ptr) { }
+
+
+	[[nodiscard]] bool is_valid() const {
+		return _value != nullptr;
+	}
+
+	explicit operator bool() const { return is_valid(); }
+
+
+	template<typename Anything>
+	ptr_ref<Anything> cast() const {
+		return ptr_ref<Anything> { static_cast<Anything*>(_value) };
+	}
+
+	void* pointer() const {
+		return _value;
+	}
+
+private:
+
+	void* _value;
 };
 
 SNOW_OWL_NAMESPACE_END

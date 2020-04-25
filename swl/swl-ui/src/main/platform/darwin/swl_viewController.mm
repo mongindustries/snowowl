@@ -1,10 +1,10 @@
 #import "swl_viewController.hxx"
 #import "swl_view.hxx"
 
-@implementation swlViewController
+@implementation ui_view_controller
 
 - (void)loadView {
-	self.view = [[swlView alloc] initWithFrame:CGRectZero];
+	self.view = [[ui_view alloc] initWithFrame:CGRectZero];
 }
 
 @end

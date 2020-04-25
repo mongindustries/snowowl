@@ -4,8 +4,6 @@
 #import <tell.hpp>
 #import <rect.hpp>
 
-#import <iostream>
-
 #import "swl_window.hxx"
 #import "swl_window_backend.hpp"
 
@@ -14,52 +12,53 @@ using namespace swl::cx;
 using namespace swl::ui;
 using namespace swl::ui::backend;
 
-@interface swlWindow(Delegate)<NSWindowDelegate>
+@interface ui_window(Delegate)<NSWindowDelegate>
 
 @end
 
-@implementation swlWindow
+@implementation ui_window
 
 - (void)windowDidBecomeKey: (NSNotification*) notification {
-
+	if (_sink) {
+	}
 }
 
 - (void)windowDidResignKey: (NSNotification*) notification {
-	if (_window != nullptr) {
+	if (_sink) {
 	}
 }
 
 - (void)windowWillClose: (NSNotification*) notification {
-	if (_window != nullptr) {
-		_window->Closed();
+	if (_sink) {
+		_sink->closed();
 	}
 }
 
 
 - (void)windowWillStartLiveResize: (NSNotification*) notification {
-	if (_window != nullptr) {
-		_window->Sizing(true);
+	if (_sink) {
+		_sink->sizing(true);
 	}
 }
 
 - (void)windowDidEndLiveResize: (NSNotification*) notification {
-	if (_window != nullptr) {
-		_window->Sizing(false);
+	if (_sink) {
+		_sink->sizing(false);
 	}
 }
 
 - (void)windowDidResize: (NSNotification*) notification {
-	if (_window != nullptr) {
+	if (_sink) {
 
 		auto frame = self.frame;
 
-		_window->Update(swl::cx::rect{
-			.origin = { (float)frame.origin.x, (float)frame.origin.y },
-			.size   = {   (int)frame.size.width, (int)frame.size.height } });
+		_sink->frame(swl::cx::rect{
+			{ (float) frame.origin.x, (float) frame.origin.y },
+			{ (int) frame.size.width, (int) frame.size.height } });
 	}
 }
 
-+ (swlWindow *)createWindow:(swlViewController *)controller engineWindow:(const Window *)window {
++ (ui_window *)createWindow:(ui_view_controller *)controller engineWindow:(const window *)window {
 
 	auto masks = NSWindowStyleMaskClosable |
 	             NSWindowStyleMaskMiniaturizable |
@@ -69,19 +68,19 @@ using namespace swl::ui::backend;
 	             NSWindowStyleMaskTitled;
 
 	auto screen   = [NSScreen mainScreen];
-	auto instance = [[swlWindow alloc] initWithContentRect:CGRectZero styleMask:masks backing:NSBackingStoreBuffered defer:NO screen:screen];
+	auto instance = [[ui_window alloc] initWithContentRect:CGRectZero styleMask:masks backing:NSBackingStoreBuffered defer:NO screen:screen];
 
-	return tell<swlWindow>(instance, [&window, &controller](swlWindow *ctx) {
+	return tell<ui_window>(instance, [&window, &controller](ui_window *ctx) {
 
-		ctx.title = [NSString stringWithCString:window->getTitle().c_str() encoding:NSUTF8StringEncoding];
+		ctx.title = [NSString stringWithCString:window->get_title().c_str() encoding:NSUTF8StringEncoding];
 
 		ctx.delegate = ctx;
 		ctx.contentViewController = controller;
 
-		ctx.titlebarAppearsTransparent = YES;
-		ctx.titleVisibility = NSWindowTitleHidden;
+		ctx.titlebarAppearsTransparent  = YES;
+		ctx.titleVisibility             = NSWindowTitleHidden;
 
-		ctx.window = window->getSink();
+		ctx.sink    = window->get_sink();
 
 		ctx.minSize = NSMakeSize(400, 400);
 	});

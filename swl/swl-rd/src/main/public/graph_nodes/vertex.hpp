@@ -8,7 +8,7 @@
 #include <header.hpp>
 #include <point.hpp>
 
-#include <vulkan_import.h>
+#include <vulkan/vulkan_import.h>
 
 #include "graph_node.hpp"
 #include "graph_node_effect.hpp"

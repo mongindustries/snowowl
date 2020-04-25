@@ -5,27 +5,29 @@
 
 using namespace swl::ui;
 
-Application* __app = nullptr;
+application* __app = nullptr;
 
-SwlApplicationDelegate* app_delegate = [[SwlApplicationDelegate alloc] init];
+application_delegate* app_delegate = [[application_delegate alloc] init];
 
-@implementation SwlApplicationDelegate
+@implementation application_delegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification {
+- (void)applicationDidFinishLaunching:  (NSNotification *)notification {
 }
 
-- (void)applicationWillTerminate:(NSNotification *)notification {
-	__app->applicationDestroy();
+- (void)applicationWillTerminate:       (NSNotification *)notification {
+	__app->on_destroy();
 }
 
 @end
 
-void Application::runLoop(Application &app) {
+
+int   application::run_loop(application &app) {
 
 	[[NSApplication sharedApplication] run];
+	return 0;
 }
 
-void Application::preHeat(Application &app) {
+void  application::pre_heat(application &app) {
 
 	__app = &app;
 
@@ -37,7 +39,7 @@ void Application::preHeat(Application &app) {
 		appMenu.submenu = appsubMenu;
 
 		auto serviceMenu = [[NSMenu alloc] init];
-		NSApp.servicesMenu = serviceMenu;
+		app.servicesMenu = serviceMenu;
 
 		[appsubMenu addItemWithTitle:@"About" action:nil keyEquivalent:@""];
 		[appsubMenu addItem:NSMenuItem.separatorItem];

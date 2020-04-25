@@ -8,43 +8,41 @@
 #include <map>
 
 #include "window.hpp"
-#include "windowSurface.hpp"
+#include "window_surface.hpp"
 
 #include "application.hpp"
 
 SNOW_OWL_NAMESPACE(ui)
 
-struct Application;
+struct application;
 
 SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(ui::backend)
 
-struct WindowBackend {
+struct window_backend {
 
-	static WindowBackend* backend;
-
-
-	Application* application{};
-
-	std::map< Window const*, void* > activeNativeHandles;
+	static window_backend* instance;
 
 
-	void Spawn            (Window const* window);
+	application*                        application{};
+
+	std::map< window const*, void* >    native_handles;
 
 
-	void UpdateTitle      (Window const* window);
+	void  create        (window const* window);
 
-	void UpdateFrame      (Window const* window);
-
-
-	void RemoveEntry      (Window const* window);
+	void  destroy       (window const* window);
 
 
-	void* NativeSurface   (Window const* window);
+	void  update_title  (window const* window);
+
+	void  update_frame  (window const* window);
 
 
-	friend struct ui::Application;
+	void* surface       (window const* window);
+
+	friend struct ui::application;
 };
 
 SNOW_OWL_NAMESPACE_END

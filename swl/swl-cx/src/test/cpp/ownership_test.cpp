@@ -2,7 +2,7 @@
 // Created by Michael Ong on 1/4/20.
 //
 
-#include "ownership.hpp"
+#include "ownership_exp.hpp"
 
 #include <iostream>
 #include <vector>
@@ -28,19 +28,19 @@ struct TestStruct {
 
 TEST(Ownership, ShouldDestruct) {
 
-	auto pointer = ptr<TestStruct>(100);
+	auto pointer = exp::ptr<TestStruct>{ TestStruct(100) };
 	ASSERT_EQ(pointer.is_valid(), true);
 }
 
 TEST(Ownership, ImplicitCastBool) {
 
-	auto pointer = ptr<TestStruct>(100);
+	auto pointer = exp::ptr<TestStruct>(TestStruct { 100 });
 	ASSERT_EQ(bool(pointer), true);
 }
 
 TEST(Ownership, OutsideShouldNotBeValidUponGoingInside) {
 
-	auto pointer = ptr<TestStruct>(100);
+	auto pointer = exp::ptr<TestStruct>(TestStruct { 100 });
 	ASSERT_EQ(pointer.is_valid(), true);
 
 	{

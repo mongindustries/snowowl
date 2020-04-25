@@ -5,15 +5,17 @@
 
 #import <AppKit/AppKit.h>
 
+#import <ownership_exp.hpp>
+
 #import "window.hpp"
 
 #import "swl_window_sink.hpp"
 #import "swl_viewController.hxx"
 
-@interface swlWindow: NSWindow
+@interface ui_window: NSWindow
 
-@property(assign) swl::ui::WindowSink *window;
+@property swl::cx::exp::ptr_ref<swl::ui::window_sink> sink;
 
-+ (swlWindow*) createWindow: (swlViewController*) controller engineWindow:(const swl::ui::Window*) window;
++ (ui_window*)createWindow: (ui_view_controller*) controller engineWindow:(const swl::ui::window*) window;
 
 @end

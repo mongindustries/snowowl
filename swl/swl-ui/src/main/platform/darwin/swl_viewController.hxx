@@ -5,5 +5,5 @@
 
 #import <AppKit/AppKit.h>
 
-@interface swlViewController: NSViewController
+@interface ui_view_controller: NSViewController
 @end

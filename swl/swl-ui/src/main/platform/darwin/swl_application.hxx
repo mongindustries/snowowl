@@ -5,6 +5,6 @@
 
 #import <AppKit/AppKit.h>
 
-@interface SwlApplicationDelegate: NSObject<NSApplicationDelegate>
+@interface application_delegate: NSObject<NSApplicationDelegate>
 
 @end
