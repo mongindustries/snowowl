@@ -16,6 +16,8 @@ struct graphics_queue;
 
 struct graphics_context {
 
+	virtual ~graphics_context() = default;
+
 	virtual cx::exp::ptr<graphics_swap_chain>
 			create_swap_chain (const cx::exp::ptr_ref<ui::window>& window);
 

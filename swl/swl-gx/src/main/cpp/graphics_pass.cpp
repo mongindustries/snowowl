@@ -28,8 +28,18 @@ void  graphics_pass::set_scissor
 }
 
 void  graphics_pass::bind_buffer
-			(graphics_pass::stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer> &buffer) {
+			(graphics_pass::stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer<>> &buffer) {
 
+}
+
+void graphics_pass::bind_fragment_texture
+			(unsigned index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeTexture2d>>& texture) {
+	
+}
+
+void graphics_pass::bind_fragment_texture
+			(unsigned index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeTexture3d>>& texture) {
+	
 }
 
 void  graphics_pass::bind_fragment_sampler
@@ -43,7 +53,7 @@ void  graphics_pass::draw
 }
 
 void  graphics_pass::draw
-			(const graphics_pass::draw_range &index_range, const cx::exp::ptr_ref<graphics_buffer> &buffer) {
+			(const graphics_pass::draw_range &index_range, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeData>> &buffer) {
 
 }
 

@@ -39,14 +39,19 @@ struct graphics_pass {
 	void  set_scissor           (const cx::rect& value);
 
 
-	void  bind_buffer           (stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer>& buffer);
+	void  bind_buffer           (stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeData>>& buffer);
 
+
+	void  bind_fragment_texture (unsigned int index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeTexture2d>>& texture);
+
+	void  bind_fragment_texture (unsigned int index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeTexture3d>>& texture);
+	
 	void  bind_fragment_sampler (unsigned int index, const cx::exp::ptr_ref<graphics_sampler>& sampler);
 
 
 	void  draw                  (const draw_range& vertex_range);
 
-	void  draw                  (const draw_range& index_range, const cx::exp::ptr_ref<graphics_buffer>& buffer);
+	void  draw                  (const draw_range& index_range, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeData>>& buffer);
 };
 
 SNOW_OWL_NAMESPACE_END

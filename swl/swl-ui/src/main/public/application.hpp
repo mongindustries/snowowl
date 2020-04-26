@@ -54,10 +54,10 @@ struct SWL_EXPORT application {
 	template<typename App, std::enable_if_t< std::is_base_of_v<application, App>, int > = 0>
 	static int runApplication(App app) {
 
-		App::preHeat(app);
-		app.applicationCreate();
+		App::pre_heat(app);
+		app.on_create();
 
-		return App::runLoop(app);
+		return App::run_loop(app);
 	}
 
 	friend struct backend::window_backend;

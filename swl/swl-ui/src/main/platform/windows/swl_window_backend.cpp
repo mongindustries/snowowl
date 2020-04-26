@@ -11,14 +11,14 @@ using namespace swl::cx;
 using namespace swl::ui;
 using namespace backend;
 
-WindowBackend* WindowBackend::backend = new WindowBackend();
+window_backend* window_backend::instance = new window_backend();
 
-void WindowBackend::Spawn(Window const* window) {
+void window_backend::create(window const* window) {
 
-	auto win32Win = new win32_window(static_cast<HINSTANCE>(application->_native_instance), window->getTitle());
+	auto win32Win = new win32_window(static_cast<HINSTANCE>(application->native_instance), window->get_title());
 	win32Win->reference = window;
 
-	auto frame = window->getFrame();
+	auto frame = window->get_frame();
 	RECT windowRect = { 0, 0, int(frame.size.x()), int(frame.size.y()) };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
 
@@ -29,18 +29,18 @@ void WindowBackend::Spawn(Window const* window) {
 	ShowWindow(win32Win->hwnd, SW_SHOW | SW_SHOWNORMAL);
 	UpdateWindow(win32Win->hwnd);
 
-	activeNativeHandles.insert(pair { reference_wrapper(window), win32Win });
+	native_handles.insert(pair { reference_wrapper(window), win32Win });
 }
 
-void WindowBackend::UpdateTitle(Window const* window) {
+void window_backend::update_title(window const* window) {
 	try {
-		HWND handle = static_cast<win32_window*>(activeNativeHandles.at(window))->hwnd;
+		HWND handle = static_cast<win32_window*>(native_handles.at(window))->hwnd;
 
 		wstring newTitle;
-		const auto titleSize = MultiByteToWideChar(CP_UTF8, 0, window->getTitle().c_str(), -1, nullptr, 0);
+		const auto titleSize = MultiByteToWideChar(CP_UTF8, 0, window->get_title().c_str(), -1, nullptr, 0);
 
 		newTitle.resize(titleSize);
-		MultiByteToWideChar(CP_UTF8, 0, window->getTitle().c_str(), -1, newTitle.data(), titleSize);
+		MultiByteToWideChar(CP_UTF8, 0, window->get_title().c_str(), -1, newTitle.data(), titleSize);
 
 		SetWindowText(handle, newTitle.c_str());
 
@@ -48,11 +48,11 @@ void WindowBackend::UpdateTitle(Window const* window) {
 	catch (const out_of_range&) { }
 }
 
-void WindowBackend::UpdateFrame(Window const* window) {
+void window_backend::update_frame(window const* window) {
 	try {
-		HWND handle = static_cast<win32_window*>(activeNativeHandles.at(window))->hwnd;
+		HWND handle = static_cast<win32_window*>(native_handles.at(window))->hwnd;
 
-		auto frame = window->getFrame();
+		auto frame = window->get_frame();
 		RECT windowRect{};
 
 		GetClientRect(handle, &windowRect);
@@ -64,20 +64,20 @@ void WindowBackend::UpdateFrame(Window const* window) {
 	catch (const out_of_range&) { }
 }
 
-void WindowBackend::RemoveEntry(Window const* window) {
+void window_backend::destroy(window const* window) {
 
-	auto instance = reinterpret_cast<win32_window*>(activeNativeHandles.at(window));
+	auto instance = static_cast<win32_window*>(native_handles.at(window));
 	DestroyWindow(instance->hwnd);
 
 	delete instance;
-	activeNativeHandles.erase(window);
+	native_handles.erase(window);
 
-	if (activeNativeHandles.empty()) {
-		delete backend;
+	if (native_handles.empty()) {
+		delete instance;
 		PostQuitMessage(0);
 	}
 }
 
-void* WindowBackend::NativeSurface(const Window *window) {
-	return static_cast<win32_window*>(activeNativeHandles.at(window))->hwnd;
+void* window_backend::surface(const window *window) {
+	return static_cast<win32_window*>(native_handles.at(window))->hwnd;
 }

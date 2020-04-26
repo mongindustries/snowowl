@@ -11,6 +11,6 @@ graphics_queue::graphics_queue
 
 void  graphics_queue::begin   () { }
 
-void  graphics_queue::submit  () { }
+void  graphics_queue::submit  (const std::vector<cx::exp::ptr_ref<graphics_pass>>& commands) { }
 
 SNOW_OWL_NAMESPACE_END

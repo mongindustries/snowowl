@@ -50,13 +50,13 @@ struct App: application {
 		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop() };
 		gameLoop->open();
 
-		window->_event_size_list.emplace_back([&](const window&, const rect&) {
-			if (window->isSizing()) {
+		window->event_on_resize.emplace_back([&](const ui::window&, const rect&) {
+			if (window->is_sizing()) {
 				gameLoop->frame();
 			}
 		});
 
-		window->_event_close_list.emplace_back([&](const window&) {
+		window->event_on_close.emplace_back([&](const ui::window&) {
 			gameLoop->close();
 		});
 	}

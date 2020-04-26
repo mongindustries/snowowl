@@ -8,8 +8,6 @@
 #include <header.hpp>
 #include <point.hpp>
 
-#include <vulkan/vulkan_import.h>
-
 #include "graph_node.hpp"
 #include "graph_node_effect.hpp"
 
@@ -44,10 +42,6 @@ struct vertex_argument_input: node_argument_input {
 	vertex_argument_input   ();
 
 	~vertex_argument_input  ();
-
-
-	vk::UniqueBuffer vertex_buffer;
-	vk::UniqueBuffer index_buffer;
 };
 
 struct vertex final : node {

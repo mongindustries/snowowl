@@ -21,26 +21,26 @@ using namespace std;
 using namespace swl::cx;
 using namespace swl::ui;
 
-Window* windowFromHWND(HWND hwnd) {
+window* windowFromHWND(HWND hwnd) {
 
-	for (const auto &item : backend::WindowBackend::backend->activeNativeHandles) {
+	for (const auto &item : backend::window_backend::instance->native_handles) {
 
 		auto winItem = static_cast<backend::win32_window*>(get<1>(item));
 
 		if (winItem->hwnd == hwnd) {
-			return const_cast<Window*>(winItem->reference);
+			return const_cast<window*>(winItem->reference);
 		}
 	}
 
 	return nullptr;
 }
 
-void updateSizeLock(HWND hwnd, Window* window) {
+void updateSizeLock(HWND hwnd, window* window) {
 
 	RECT rect{};
 	GetClientRect(hwnd, &rect);
 
-	window->getSink()->Update(::rect {
+	window->get_sink()->frame(::rect {
 		{ static_cast<float>(rect.left), static_cast<float>(rect.top) },
 		{ rect.right - rect.left, rect.bottom - rect.top }
 	});
@@ -51,7 +51,7 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	switch (message) {
 	case WM_ENTERSIZEMOVE: {
 		if (const auto window = windowFromHWND(hwnd)) {
-			window->getSink()->Sizing(true);
+			window->get_sink()->sizing(true);
 
 			OutputDebugString(L"Resize start\n");
 			
@@ -66,7 +66,7 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			
 			updateSizeLock(hwnd, window);
 
-			window->getSink()->Sizing(false);
+			window->get_sink()->sizing(false);
 		}
 		return 0;
 	}
@@ -82,7 +82,7 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	}
 	case WM_CLOSE: {
 		if (const auto window = windowFromHWND(hwnd)) {
-			window->getSink()->Closed();
+			window->get_sink()->closed();
 		}
 		return 0;
 	}
@@ -102,9 +102,9 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	}
 }
 
-void Application::preHeat(Application &app) {
+void application::pre_heat(application &app) {
 
-	HINSTANCE instance = (HINSTANCE)app._native_instance;
+	HINSTANCE instance = (HINSTANCE)app.native_instance;
 	
 	constexpr wchar_t* className = L"snowowl: window";
 	WNDCLASSEX customClass { };
@@ -125,12 +125,15 @@ void Application::preHeat(Application &app) {
 	RegisterClassEx(&customClass);
 }
 
-void Application::runLoop(Application &app) {
+int application::run_loop(application& app) {
 
 	MSG msg { };
+	int res = 0;
 
 	while (GetMessage(&msg, nullptr, 0, 0)) {
 		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		res = DispatchMessage(&msg);
 	}
+
+	return res;
 }

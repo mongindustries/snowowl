@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include <vector>
+
 #include <header.hpp>
 #include <ownership_exp.hpp>
 
@@ -10,13 +12,18 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
+struct graphics_pass;
+
 struct graphics_queue {
 
-	graphics_queue(const cx::exp::ptr_ref<graphics_context> &context);
+	graphics_queue           (const cx::exp::ptr_ref<graphics_context> &context);
+
+	virtual ~graphics_queue  () = default;
+
 
 	virtual void  begin   ();
 
-	virtual void  submit  ();
+	virtual void  submit  (const std::vector<cx::exp::ptr_ref<graphics_pass>>& commands);
 };
 
 SNOW_OWL_NAMESPACE_END

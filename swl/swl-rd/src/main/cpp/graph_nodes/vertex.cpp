@@ -40,9 +40,7 @@ nodes::vertex_argument_input::vertex_argument_input
 	() {}
 
 nodes::vertex_argument_input::vertex_argument_input
-	(vertex_argument_input&& mov) noexcept:
-	vertex_buffer  (::move(mov.vertex_buffer)),
-	index_buffer   (::move(mov.index_buffer)) {
+	(vertex_argument_input&& mov) noexcept {
 	
 }
 
@@ -51,9 +49,6 @@ nodes::vertex_argument_input::~vertex_argument_input
 
 nodes::vertex_argument_input&
 			nodes::vertex_argument_input::operator=(vertex_argument_input&& mov) noexcept {
-
-	vertex_buffer = std::move(mov.vertex_buffer);
-	index_buffer  = std::move(mov.index_buffer);
 
 	return *this;
 }
