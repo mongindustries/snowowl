@@ -4,7 +4,7 @@
 #pragma once
 
 #include <header.hpp>
-#include <graphics_pass.hpp>
+#include <graphics_render_pass.hpp>
 
 #include "mtl_context.h"
 #include "mtl_queue.h"
@@ -12,7 +12,7 @@
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
-struct mtl_pass: graphics_pass {
+struct mtl_pass: graphics_render_pass {
 
 	mtl_pass(
 		const cx::exp::ptr_ref<mtl_context>&   context ,

@@ -7,8 +7,6 @@ SNOW_OWL_NAMESPACE(gx::mtl)
 
 MTLBlendFactor convert_blend(pipeline::blend_type type) {
 
-	MTLBlendOperation;
-
 	switch (type) {
 		case pipeline::blend_type::typeZero:
 			return MTLBlendFactorZero;
@@ -61,7 +59,7 @@ mtl_pipeline::mtl_pipeline(
 	bool                                    independent_blend,
 	swl::gx::pipeline::topology_type        topology_type,
 	std::array<pipeline::render_output, 8>  render_outputs) :
-	graphics_pipeline(
+	graphics_render_pipeline(
 		shader_stages,
 		raster,
 		depth,

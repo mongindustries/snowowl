@@ -45,88 +45,40 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_context.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_pass.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_pipeline.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_queue.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_swap_chain.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_pipeline.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_pass.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_pipeline.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_queue.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_sampler.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_shader.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pass.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pipeline.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_buffer_allocator.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_buffer.mm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer_allocator.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_block.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_buffer.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/cpp/world.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/headers/world.hpp" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/googletest/lib" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/cpp/core.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership_exp.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership_exp.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/test/cpp/ownership_test.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_context.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_fence_lock.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_queue.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_shader.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/vulkan_swap_chain.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/headers/vulkan_graphics_backend.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/vulkan_graphics_backend.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/vulkan_graphics_backend.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_context.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_context.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_pass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pass.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_queue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_queue.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_swap_chain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_swap_chain.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_pipeline.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_pipeline.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_context.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_context.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_buffer_recorder.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_context.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_fence_lock.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_import.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_queue.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_shader.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/vulkan_swap_chain.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/cpp/graph_node.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/public/entity.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/public/entity.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/public/graph_node_effect.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/public/graph_node_effect.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/application.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/ui.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/windowSurface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window_surface.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_backend.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/headers/swl_window_sink.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.hxx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.hxx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_view.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.hxx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_viewController.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.hxx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window_backend.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window_backend.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/application.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/event.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/ui.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/windowSurface.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window_surface.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-ui/src/test/cpp/main_darwin.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/test/cpp/main_darwin.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_pass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pass.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pipeline.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_queue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_queue.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pass.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pass.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pipeline.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -412,7 +364,7 @@
       <workItem from="1587553866445" duration="12827000" />
       <workItem from="1587586101809" duration="6924000" />
       <workItem from="1587669592291" duration="9505000" />
-      <workItem from="1587743676260" duration="23964000" />
+      <workItem from="1587743676260" duration="34546000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
@@ -663,13 +615,13 @@
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1585674031758" />
     <state x="385" y="213" key="run.anything.popup/0.23.1440.813@0.23.1440.813" timestamp="1587795905326" />
-    <state x="385" y="200" width="672" height="613" key="search.everywhere.popup" timestamp="1587805649456">
-      <screen x="0" y="23" width="1440" height="813" />
+    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup" timestamp="1587875331984">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1587586379474" />
+    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1587875331984" />
     <state x="449" y="229" width="782" height="789" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1585387662135" />
     <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587395961989" />
-    <state x="385" y="200" width="672" height="613" key="search.everywhere.popup/0.23.1440.813@0.23.1440.813" timestamp="1587805649456" />
+    <state x="385" y="200" width="672" height="613" key="search.everywhere.popup/0.23.1440.813@0.23.1440.813" timestamp="1587873971658" />
     <state x="385" y="214" width="671" height="660" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1586015786428" />
     <state x="449" y="233" width="784" height="727" key="search.everywhere.popup/0.23.1680.963@0.23.1680.963" timestamp="1587665806109" />
     <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/1440.0.1920.1080/0.0.1440.900@0.0.1440.900" timestamp="1585987242259" />

@@ -6,7 +6,9 @@
 SNOW_OWL_NAMESPACE(gx)
 
 graphics_swap_chain::graphics_swap_chain
-	(const cx::exp::ptr_ref<graphics_context> &ctx, const cx::exp::ptr_ref<graphics_queue>& queue, const cx::exp::ptr_ref<ui::window> &window) { }
+			(const cx::exp::ptr_ref<graphics_context> &ctx,
+			 const cx::exp::ptr_ref<graphics_queue>& queue,
+			 const cx::exp::ptr_ref<ui::window> &window) { }
 
 cx::exp::ptr_ref<graphics_swap_chain::frame>
 			graphics_swap_chain::next_frame () { return cx::exp::ptr_ref<frame> { nullptr }; }

@@ -2,7 +2,7 @@
 
 #include <header.hpp>
 
-#include "graphics_pipeline.hpp"
+#include "graphics_render_pipeline.hpp"
 
 #include "directx/context.h"
 

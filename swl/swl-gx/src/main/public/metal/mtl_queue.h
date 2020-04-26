@@ -14,14 +14,14 @@
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
-struct mtl_queue: graphics_queue {
+struct mtl_queue final: graphics_queue {
 
-	mtl_queue(const cx::exp::ptr_ref<mtl_context>& context);
+	mtl_queue     (const cx::exp::ptr_ref<mtl_context>& context);
 
 
-	void  begin   () override;
+	void  begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
 
-	void  submit  () override;
+	void  submit  (const std::vector<cx::exp::ptr_ref<graphics_render_pass>>& commands) override;
 
 
 	cx::driver_handle     handle;

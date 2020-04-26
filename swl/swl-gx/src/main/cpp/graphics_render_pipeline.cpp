@@ -1,7 +1,7 @@
 //
 // Created by Michael Ong on 25/4/20.
 //
-#include "graphics_pipeline.hpp"
+#include "graphics_render_pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
@@ -17,7 +17,7 @@ bool pipeline::write_mask::operator&(const pipeline::write_mask &rhs) {
 	return (value & rhs.value) > 0;
 }
 
-graphics_pipeline::graphics_pipeline(
+graphics_render_pipeline::graphics_render_pipeline(
 	std::array<graphics_shader, 2>          shader_stages,
 	swl::gx::pipeline::raster               raster,
 	swl::gx::pipeline::depth                depth,

@@ -123,9 +123,9 @@ struct render_output    {
 };
 }
 
-struct graphics_pipeline {
+struct graphics_render_pipeline {
 
-	graphics_pipeline(
+	graphics_render_pipeline(
 			std::array<graphics_shader, 2>          shader_stages,
 			pipeline::raster                        raster,
 			pipeline::depth                         depth,

@@ -134,7 +134,6 @@ private:
 	Derive* _value;
 };
 
-
 template<typename Base>
 struct ptr<Base, void> {
 

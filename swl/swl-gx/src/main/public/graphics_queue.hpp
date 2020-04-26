@@ -12,18 +12,24 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_pass;
+struct graphics_render_block;
 
 struct graphics_queue {
 
-	graphics_queue           (const cx::exp::ptr_ref<graphics_context> &context);
+	graphics_queue            (const cx::exp::ptr_ref<graphics_context> &context);
 
-	virtual ~graphics_queue  () = default;
+	virtual ~graphics_queue   () = default;
 
 
-	virtual void  begin   ();
+	virtual cx::exp::ptr<graphics_render_block>
+				create_render_block ();
 
-	virtual void  submit  (const std::vector<cx::exp::ptr_ref<graphics_pass>>& commands);
+
+	virtual void
+				begin               (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies);
+
+	virtual void
+				submit              (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands);
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -5,12 +5,21 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
+template<typename c>
+using ptr_ref = cx::exp::ptr_ref<c>;
+
 graphics_queue::graphics_queue
-			(const cx::exp::ptr_ref<gx::graphics_context> &context) { }
+			(const ptr_ref<gx::graphics_context> &context) { }
 
 
-void  graphics_queue::begin   () { }
+cx::exp::ptr<graphics_render_block>
+			graphics_queue::create_render_block () {
+	return cx::exp::ptr<graphics_render_block>();
+}
 
-void  graphics_queue::submit  (const std::vector<cx::exp::ptr_ref<graphics_pass>>& commands) { }
+
+void  graphics_queue::begin               (const std::vector<ptr_ref<graphics_queue>>& dependencies) { }
+
+void  graphics_queue::submit              (const std::vector<ptr_ref<graphics_render_block>>& commands) { }
 
 SNOW_OWL_NAMESPACE_END

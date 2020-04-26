@@ -8,14 +8,14 @@
 #import <header.hpp>
 #import <ownership_exp.hpp>
 
-#import "graphics_pipeline.hpp"
+#import "graphics_render_pipeline.hpp"
 
 #import "mtl_context.h"
 #import "mtl_queue.h"
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
-struct mtl_pipeline: graphics_pipeline {
+struct mtl_pipeline: graphics_render_pipeline {
 
 	mtl_pipeline(
 		const cx::exp::ptr_ref<mtl_context>&    context,

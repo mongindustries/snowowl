@@ -14,6 +14,7 @@
 #import "graphics_swap_chain.hpp"
 
 #import "mtl_context.h"
+#import "mtl_queue.h"
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
@@ -27,17 +28,19 @@ struct mtl_swap_chain: graphics_swap_chain {
 	};
 
 
-	mtl_swap_chain    (const cx::exp::ptr_ref<mtl_context> &ctx, const cx::exp::ptr_ref<ui::window> &window);
+	mtl_swap_chain    (const cx::exp::ptr_ref<mtl_context> &ctx, const cx::exp::ptr_ref<mtl_queue>& queue, const cx::exp::ptr_ref<ui::window> &window);
 
 	cx::exp::ptr_ref <frame>
 				next_frame  () override;
 
-	void  present     (const cx::exp::ptr_ref<graphics_queue>& queue) override;
+	void  present     () override;
 
 
-	std::atomic<uint16_t> cur_frame;
+	std::atomic<uint16_t>       cur_frame;
 
-	__weak CAMetalLayer*  layer;
+	cx::exp::ptr_ref<mtl_queue> present_queue;
+
+	__weak CAMetalLayer*        layer;
 };
 
 SNOW_OWL_NAMESPACE_END

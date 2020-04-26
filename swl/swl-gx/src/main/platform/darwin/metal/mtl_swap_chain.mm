@@ -8,8 +8,9 @@
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
-mtl_swap_chain::mtl_swap_chain    (const cx::exp::ptr_ref<mtl_context> &ctx, const cx::exp::ptr_ref<ui::window> &window):
-	graphics_swap_chain(ctx.cast<graphics_context>(), window), layer(nil) {
+mtl_swap_chain::mtl_swap_chain
+	(const cx::exp::ptr_ref<mtl_context> &ctx, const cx::exp::ptr_ref<mtl_queue>& queue, const cx::exp::ptr_ref<ui::window> &window):
+	graphics_swap_chain(ctx.cast<graphics_context>(), queue.cast<graphics_queue>(), window), layer(nil), present_queue(queue) {
 
 	layer             = (__bridge CAMetalLayer*) ui::window_surface(window).cast<void>().pointer();
 
@@ -63,12 +64,10 @@ cx::exp::ptr_ref<graphics_swap_chain::frame>
 	return cx::exp::ptr_ref<mtl_frame>{ frame }.cast<graphics_swap_chain::frame>();
 }
 
-void  mtl_swap_chain::present     (const cx::exp::ptr_ref<graphics_queue> &queue) {
+void  mtl_swap_chain::present     () {
 
 	auto frame  = cx::exp::ptr_ref<graphics_swap_chain::frame> { frames[cur_frame] }.cast<mtl_frame>();
-	auto q      = queue.cast<mtl_queue>();
-
-	[q->buffer presentDrawable:frame->drawable];
+	[present_queue->buffer presentDrawable:frame->drawable];
 
 	frame->drawable = nil;
 	frame->texture  = nil;

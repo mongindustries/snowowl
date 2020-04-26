@@ -8,13 +8,13 @@
 
 #include "graphics_context.hpp"
 #include "graphics_queue.hpp"
-#include "graphics_pipeline.hpp"
+#include "graphics_render_pipeline.hpp"
 #include "graphics_buffer.hpp"
 #include "graphics_sampler.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_pass {
+struct graphics_render_pass {
 
 	enum class stage_binding {
 		bindingGraphicsVertex,
@@ -26,12 +26,12 @@ struct graphics_pass {
 		unsigned int size;
 	};
 
-	graphics_pass   (
-		const cx::exp::ptr_ref<graphics_context>&   context ,
-		const cx::exp::ptr_ref<graphics_queue>&     queue   ,
-		const cx::exp::ptr_ref<graphics_pipeline>&  pipeline);
+	graphics_render_pass   (
+		const cx::exp::ptr_ref<graphics_context>&           context ,
+		const cx::exp::ptr_ref<graphics_queue>&             queue   ,
+		const cx::exp::ptr_ref<graphics_render_pipeline>&   pipeline);
 
-	~graphics_pass  ();
+	~graphics_render_pass  ();
 
 
 	void  set_viewport          (const cx::size_2d& value);
