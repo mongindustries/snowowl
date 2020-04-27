@@ -22,10 +22,13 @@ struct mtl_buffer: graphics_buffer<graphics_buffer_type::typeData> {
 
 	void stage        (const cx::exp::ptr_ref<graphics_queue> &staging_queue) override;
 
-
+#ifdef __OBJC__
 	id<MTLBuffer>             buffer;
-
 	id<MTLBuffer> __nullable  staging_buffer;
+#else
+	void*                     buffer;
+	void*                     staging_buffer;
+#endif
 };
 
 SNOW_OWL_NAMESPACE_END

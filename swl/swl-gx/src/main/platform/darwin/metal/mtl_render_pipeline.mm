@@ -1,7 +1,9 @@
 //
 // Created by Michael Ong on 25/4/20.
 //
-#include "metal/mtl_pipeline.h"
+#import <Metal/Metal.h>
+
+#include "metal/mtl_render_pipeline.h"
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
@@ -48,7 +50,7 @@ MTLBlendOperation convert_blend_op(pipeline::blend_op op) {
 	}
 }
 
-mtl_pipeline::mtl_pipeline(
+mtl_render_pipeline::mtl_render_pipeline(
 	const cx::exp::ptr_ref<mtl_context>&    context,
 	const cx::exp::ptr_ref<mtl_queue>&      queue,
 	std::array<graphics_shader, 2>          shader_stages,
@@ -90,16 +92,16 @@ mtl_pipeline::mtl_pipeline(
 		obj.destinationAlphaBlendFactor = convert_blend(output.blend.destination_alpha_blend);
 
 		obj.writeMask                   = MTLColorWriteMaskNone;
-		if (output.blend.write_mask & pipeline::write_mask_r) {
+		if (output.blend.write_mask & pipeline::write_mask::r) {
 			obj.writeMask |= MTLColorWriteMaskRed;
 		}
-		if (output.blend.write_mask & pipeline::write_mask_g) {
+		if (output.blend.write_mask & pipeline::write_mask::g) {
 			obj.writeMask |= MTLColorWriteMaskGreen;
 		}
-		if (output.blend.write_mask & pipeline::write_mask_b) {
+		if (output.blend.write_mask & pipeline::write_mask::b) {
 			obj.writeMask |= MTLColorWriteMaskBlue;
 		}
-		if (output.blend.write_mask & pipeline::write_mask_a) {
+		if (output.blend.write_mask & pipeline::write_mask::a) {
 			obj.writeMask |= MTLColorWriteMaskAlpha;
 		}
 

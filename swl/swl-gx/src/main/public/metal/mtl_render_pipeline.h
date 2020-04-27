@@ -3,8 +3,6 @@
 //
 #pragma once
 
-#import <Metal/Metal.h>
-
 #import <header.hpp>
 #import <ownership_exp.hpp>
 
@@ -15,9 +13,9 @@
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
-struct mtl_pipeline: graphics_render_pipeline {
+struct mtl_render_pipeline: graphics_render_pipeline {
 
-	mtl_pipeline(
+	mtl_render_pipeline(
 		const cx::exp::ptr_ref<mtl_context>&    context,
 		const cx::exp::ptr_ref<mtl_queue>&      queue,
 		std::array<graphics_shader, 2>          shader_stages,

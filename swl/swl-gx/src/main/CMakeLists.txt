@@ -42,15 +42,15 @@ if(APPLE)
     set(PLATFORM_SOURCE_LIST
             platform/darwin/metal/mtl_swap_chain.mm
             platform/darwin/metal/mtl_queue.mm
-            platform/darwin/metal/mtl_pipeline.mm
-            platform/darwin/metal/mtl_context.mm platform/darwin/metal/mtl_buffer.mm)
+            platform/darwin/metal/mtl_render_pipeline.mm
+            platform/darwin/metal/mtl_context.mm platform/darwin/metal/mtl_buffer.mm platform/darwin/metal/mtl_cpu_fence.mm)
 
     set(PLATFORM_HEADER_LIST
             public/metal/mtl_context.h
             public/metal/mtl_swap_chain.h
             public/metal/mtl_queue.h
-            public/metal/mtl_pass.h
-            public/metal/mtl_pipeline.h public/metal/mtl_buffer.h)
+            public/metal/mtl_render_pass.h
+            public/metal/mtl_render_pipeline.h public/metal/mtl_buffer.h public/metal/mtl_render_block.h platform/darwin/metal/mtl_render_block.mm public/metal/mtl_cpu_fence.h)
 
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX metal FILES ${PLATFORM_SOURCE_LIST} ${PLATFORM_HEADER_LIST})
 endif()

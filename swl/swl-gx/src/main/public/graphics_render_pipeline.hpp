@@ -60,22 +60,23 @@ struct write_mask {
 	bool operator&(const write_mask& rhs);
 
 	uint16_t value;
-};
 
-write_mask write_mask_r = { 0b0001 };
-write_mask write_mask_g = { 0b0010 };
-write_mask write_mask_b = { 0b0100 };
-write_mask write_mask_a = { 0b1000 };
+	static write_mask r;
+	static write_mask g;
+	static write_mask b;
+	static write_mask a;
+};
 
 struct shader_stage {
 
 	operator uint16_t() const;
 
 	uint16_t value;
-};
 
-shader_stage vertex_stage   = { 0b0001 };
-shader_stage fragment_stage = { 0b0010 };
+	static shader_stage vertex;
+	static shader_stage fragment;
+
+};
 
 struct raster           {
 

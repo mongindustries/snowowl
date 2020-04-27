@@ -4,13 +4,14 @@
 #pragma once
 
 #import <atomic>
-
-#import <Metal/Metal.h>
-
 #import <core.hpp>
 
 #import "graphics_queue.hpp"
 #import "mtl_context.h"
+
+#ifdef __OBJC__
+#import "mtl_cpu_fence.h"
+#endif
 
 SNOW_OWL_NAMESPACE(gx::mtl)
 
@@ -21,15 +22,21 @@ struct mtl_queue final: graphics_queue {
 
 	void  begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
 
-	void  submit  (const std::vector<cx::exp::ptr_ref<graphics_render_pass>>& commands) override;
+	void  submit  (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) override;
 
+	cx::exp::ptr_ref<mtl_context>   context;
 
-	cx::driver_handle     handle;
+	cx::driver_handle               handle;
 
-	std::atomic<uint64_t> fence;
+	std::atomic<uint64_t>           fence;
 
-	id<MTLEvent>          event;
-	id<MTLCommandBuffer>  buffer;
+#if __OBJC__
+	MTLCpuFence*                    event;
+	id<MTLCommandBuffer>            buffer;
+#else
+	void*                           buffer;
+	void*                           lock;
+#endif
 };
 
 SNOW_OWL_NAMESPACE_END

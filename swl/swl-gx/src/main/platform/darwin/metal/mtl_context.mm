@@ -1,6 +1,9 @@
 //
 // Created by Michael Ong on 25/4/20.
 //
+#import <Metal/Metal.h>
+#import <QuartzCore/QuartzCore.h>
+
 #import "metal/mtl_context.h"
 
 #import "metal/mtl_swap_chain.h"

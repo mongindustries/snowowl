@@ -15,13 +15,15 @@ struct graphics_render_pass;
 
 struct graphics_render_block {
 
+	virtual void
+			render_pass  (const std::function<void(graphics_render_pass&)> &configure);
 
-	void  render_pass  (const std::function<void(graphics_render_pass&)> &configure);
 
+	virtual void
+			begin        ();
 
-	void  begin        ();
-
-	void  end          ();
+	virtual void
+			end          ();
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -1,6 +1,8 @@
 //
 // Created by Michael Ong on 26/4/20.
 //
+#import <Metal/Metal.h>
+
 #import "metal/mtl_buffer.h"
 
 SNOW_OWL_NAMESPACE(gx::mtl)

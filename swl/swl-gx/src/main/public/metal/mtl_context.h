@@ -3,8 +3,6 @@
 //
 #pragma once
 
-#include <Metal/Metal.h>
-
 #include <header.hpp>
 
 #include "graphics_context.hpp"
@@ -22,10 +20,15 @@ struct mtl_context: graphics_context {
 	cx::exp::ptr<graphics_queue>
 		create_queue      () override;
 
-
+#ifdef __OBJC__
 	id<MTLDevice>         device;
 
 	id<MTLCommandQueue>   queue;
+#else
+	void*                 device;
+
+	void*                 queue;
+#endif
 };
 
 SNOW_OWL_NAMESPACE_END
