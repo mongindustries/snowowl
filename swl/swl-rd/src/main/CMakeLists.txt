@@ -35,6 +35,7 @@ target_include_directories(rd
 
         PRIVATE ../../../swl-cx/src/main/public
         PRIVATE ../../../swl-gx/src/main/public
+        PRIVATE ../../../swl-ui/src/main/public
 
         PRIVATE ${SRC_OS}
         PRIVATE ${VULKAN_SDK}/include)

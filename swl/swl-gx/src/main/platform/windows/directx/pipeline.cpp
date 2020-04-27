@@ -11,10 +11,9 @@ pipeline::pipeline(
 	gx::pipeline::sample                        sample,
 	bool                                        independent_blend,
 	gx::pipeline::topology_type                 topology_type,
-	std::array<gx::pipeline::render_output, 8>  render_outputs):
+	std::array<gx::pipeline::render_output, 8>  render_outputs) :
 
-	graphics_pipeline(shader_stages, raster, depth, stencil, sample, independent_blend, topology_type, render_outputs) {
-
+	graphics_render_pipeline(shader_stages, raster, depth, stencil, sample, independent_blend, topology_type, render_outputs) {
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
 
@@ -22,4 +21,5 @@ pipeline::pipeline(
 
 	context->device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
+
 SNOW_OWL_NAMESPACE_END

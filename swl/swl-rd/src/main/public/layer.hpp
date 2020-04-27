@@ -4,7 +4,9 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <vector>
+#include <functional>
 
 #include <core.hpp>
 #include <header.hpp>
@@ -30,8 +32,8 @@ struct layer {
 
 		typedef std::enable_if_t<is_entity<EntityType>, cx::exp::ptr_ref<std::decay_t<EntityType>>> Reference;
 
-		cx::driver_handle  unique_id;
-		Reference          reference;
+		cx::driver_handle        unique_id{ 0 };
+		Reference                reference;
 	};
 
 
@@ -52,10 +54,10 @@ struct layer {
 
 	template<typename EntityType> requires is_entity<EntityType>
 	entity_reference<EntityType>
-				add_entity           (EntityType&& entity);
+				add_entity           (EntityType&& entity, const std::function<void(EntityType&)>& configure = [](auto _) {});
 
 	template<typename EntityType> requires is_entity<EntityType>
-	void  add_entity_static    (EntityType&& entity);
+	void  add_entity_static    (EntityType&& entity, const std::function<void(EntityType&)>& configure = [](auto _) {});
 
 	template<typename EntityType> requires is_entity<EntityType>
 	entity_reference<EntityType>
@@ -63,23 +65,40 @@ struct layer {
 
 	void  bind_renderer        (const cx::driver_handle& reference);
 
+	void  mark_dirty           ();
 
-	layer_camera                      camera{};
 
-	cx::driver_handle                 bound_renderer{};
+	layer_camera                                                        camera{};
 
-	std::vector<cx::exp::ptr<entity>> entities;
+	cx::driver_handle                                                   bound_renderer{};
+
+
+	std::vector<cx::exp::ptr<entity>>                                   entities;
+
+	std::map<cx::driver_handle, std::vector<cx::exp::ptr_ref<entity>>>  effect_entity_reference;
+
+	friend struct world;
+	friend struct world_renderer;
+
+private:
+
+	bool                                                                dirty;
 };
 
 
 template<typename EntityType> requires is_entity<EntityType>
 layer::entity_reference<EntityType>
-			layer::add_entity         (EntityType &&entity) {
+			layer::add_entity         (EntityType &&entity, const std::function<void(EntityType&)>& configure) {
 
 	using TypeNoRef = std::decay_t <EntityType>;
 
 	cx::exp::ptr<rd::entity, TypeNoRef> obj { std::forward<TypeNoRef>(entity) };
 	cx::exp::ptr_ref<TypeNoRef>         ref { obj };
+
+	obj->ref_layer = cx::exp::ptr_ref<layer>{ this };
+
+	configure(obj);
+	mark_dirty();
 
 	entities.emplace_back(obj.abstract_and_release());
 
@@ -88,11 +107,18 @@ layer::entity_reference<EntityType>
 
 
 template<typename EntityType> requires is_entity<EntityType>
-void  layer::add_entity_static  (EntityType &&entity) {
+void  layer::add_entity_static  (EntityType &&entity, const std::function<void(EntityType&)>& configure) {
 
 	using TypeNoRef = std::decay_t <EntityType>;
 
-	entities.emplace_back(cx::exp::ptr<rd::entity, TypeNoRef>{ std::forward<TypeNoRef>(entity) }.abstract_and_release());
+	cx::exp::ptr<rd::entity, TypeNoRef> obj{ std::forward<TypeNoRef>(entity) };
+
+	obj->ref_layer = cx::exp::ptr_ref<layer>{ this };
+
+	configure(obj);
+	mark_dirty();
+
+	entities.emplace_back(obj.abstract_and_release());
 }
 
 template<typename EntityType> requires is_entity<EntityType>

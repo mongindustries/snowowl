@@ -5,19 +5,30 @@
 #include <file_manager.hpp>
 #include <application.hpp>
 
+#include <directx/context.h>
+#include <directx/swap_chain.h>
+
 using namespace swl;
 using namespace cx;
 using namespace ui;
 
 struct AppGameLoop: game_loop {
 
-	AppGameLoop(): game_loop(60, 4) {
+	cx::exp::ptr<gx::graphics_context>     context;
+
+	cx::exp::ptr<gx::graphics_queue>       main_queue;
+	cx::exp::ptr<gx::graphics_swap_chain>  swap_chain;
+
+	AppGameLoop    (const cx::exp::ptr_ref<window>& window): game_loop(60, 4),
+		context     (new gx::dx::context()),
+		main_queue  (context->create_queue()),
+		swap_chain  (context->create_swap_chain(window, cx::exp::ptr_ref{ main_queue })) {
+		}
+
+	void create    () override {
 	}
 
-	void create() override {
-	}
-
-	void preFrame() override {
+	void preFrame  () override {
 
 //		if (window.is_sizing()) {
 //			std::unique_lock<std::mutex> lock(window.loop_lock);
@@ -25,10 +36,10 @@ struct AppGameLoop: game_loop {
 //		}
 	}
 
-	void update(std::chrono::milliseconds delta) override {
+	void update    (std::chrono::milliseconds delta) override {
 	}
 
-	void render(float offset) override {
+	void render    (float offset) override {
 	}
 };
 
@@ -44,10 +55,9 @@ struct App: application {
 
 		const auto pp = cx::file_manager::resourcePath;
 
-		window = create_window("[SnowOwl:] App", rect{{100, 100},
-		                                              {800, 480}});
+		window = create_window("[SnowOwl:] App", rect{ {100, 100}, {800, 480} });
 
-		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop() };
+		gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(cx::exp::ptr_ref{ window }) };
 		gameLoop->open();
 
 		window->event_on_resize.emplace_back([&](const ui::window&, const rect&) {

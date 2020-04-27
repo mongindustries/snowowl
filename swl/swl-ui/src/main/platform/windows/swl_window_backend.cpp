@@ -73,7 +73,6 @@ void window_backend::destroy(window const* window) {
 	native_handles.erase(window);
 
 	if (native_handles.empty()) {
-		delete instance;
 		PostQuitMessage(0);
 	}
 }

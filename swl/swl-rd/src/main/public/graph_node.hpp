@@ -28,16 +28,18 @@ struct node_reference {
 	Reference          reference;
 };
 
-struct node_argument_input {
+struct node_argument_state {
 };
 
 struct node_context {
 
-	cx::exp::ptr_ref<layer> const                       layer;
+	typedef std::pair<cx::exp::ptr_ref<entity>, std::vector<cx::exp::ptr_ref<node_effect>>> EntityEffectContext;
 
-	std::vector<cx::exp::ptr_ref<entity>> const         entites;
+	cx::exp::ptr_ref<rd::layer> const                   layer;
 
-	std::vector<cx::exp::ptr_ref<node_argument_input>>  inputs;
+	std::vector<EntityEffectContext> const              entites;
+
+	std::vector<cx::exp::ptr_ref<node_argument_state>>  inputs;
 };
 
 /**
@@ -69,9 +71,9 @@ struct node {
 
 	/**
 	 * \brief Creates this node's persistent render resource.
-	 * \return A \code cx::exp::ptr_ref<node_argument_input> \endcode to the node's resource.
+	 * \return A \code cx::exp::ptr_ref<node_argument_state> \endcode to the node's resource.
 	 */
-	[[nodiscard]] virtual std::vector<cx::exp::ptr<node_argument_input>>
+	[[nodiscard]] virtual std::vector<cx::exp::ptr<node_argument_state>>
 				create_resource   () const { return { }; }
 
 	/**

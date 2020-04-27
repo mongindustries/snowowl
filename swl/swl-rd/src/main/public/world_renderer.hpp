@@ -25,7 +25,7 @@ struct invalid_linkage: std::exception {
 
 struct world_renderer_state {
 
-	typedef std::map<cx::driver_handle, std::vector<cx::exp::ptr<graph::node_argument_input>>> state_input;
+	typedef std::map<cx::driver_handle, std::vector<cx::exp::ptr<graph::node_argument_state>>> state_input;
 
 
 	world_renderer_state             (const world_renderer_state& cpy) = delete;

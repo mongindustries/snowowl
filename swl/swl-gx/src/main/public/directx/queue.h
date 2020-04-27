@@ -16,9 +16,9 @@ struct queue final: graphics_queue {
 	~queue  () override;
 
 
-	void   begin   () override;
+	void   begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
 	
-	void   submit  (const std::vector<cx::exp::ptr_ref<graphics_pass>>& commands) override;
+	void   submit  (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) override;
 
 
 	std::atomic<uint64_t>              frame;

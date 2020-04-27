@@ -8,7 +8,7 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-struct pipeline: graphics_pipeline {
+struct pipeline: graphics_render_pipeline {
 
 	pipeline(
 		const cx::exp::ptr_ref<dx::context>&        context,

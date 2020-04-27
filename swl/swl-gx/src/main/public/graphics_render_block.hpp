@@ -4,6 +4,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include <header.hpp>
 #include <ownership_exp.hpp>
@@ -14,24 +15,13 @@ struct graphics_render_pass;
 
 struct graphics_render_block {
 
-	virtual cx::exp::ptr_ref<graphics_render_pass>
-				create_render_pass  ();
+
+	void  render_pass  (const std::function<void(graphics_render_pass&)> &configure);
 
 
-	virtual void
-				commit_render_pass  ();
+	void  begin        ();
 
-	virtual void
-				compile             ();
-
-
-	bool  is_compiled         () const;
-
-protected:
-
-	bool compiled;
-
-	std::vector<cx::exp::ptr<graphics_render_pass>> passes;
+	void  end          ();
 };
 
 SNOW_OWL_NAMESPACE_END

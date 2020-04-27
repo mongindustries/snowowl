@@ -17,7 +17,8 @@ set(SOURCE_LIST
         cpp/graphics_swap_chain.cpp
         cpp/graphics_render_pipeline.cpp
         cpp/graphics_queue.cpp
-        cpp/graphics_render_pass.cpp cpp/graphics_buffer_allocator.cpp)
+        cpp/graphics_render_pass.cpp cpp/graphics_buffer_allocator.cpp
+        cpp/graphics_render_block.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST
@@ -30,9 +31,11 @@ if(WIN32)
             "public/directx/context.h"
             "public/directx/queue.h"
             "public/directx/swap_chain.h"
-            "public/directx/pipeline.h")
+            "public/directx/pipeline.h"
+            "public/directx/render_block.h")
 
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx FILES ${PLATFORM_SOURCE_LIST} ${PLATFORM_HEADER_LIST})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/cpp FILES ${PLATFORM_SOURCE_LIST})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/hpp FILES ${PLATFORM_HEADER_LIST})
 endif()
 
 if(APPLE)

@@ -7,6 +7,12 @@
 #include <ownership_exp.hpp>
 #include <core.hpp>
 
+SNOW_OWL_NAMESPACE(rd)
+
+struct entity;
+
+SNOW_OWL_NAMESPACE_END
+
 SNOW_OWL_NAMESPACE(rd::graph)
 
 /**
@@ -32,8 +38,10 @@ struct node_effect_reference {
 
 	typedef std::enable_if_t<is_node_effect<NodeEffectType>, cx::exp::ptr_ref<std::decay_t<NodeEffectType>>> Reference;
 
-	swl::cx::driver_handle  unique_id;
-	Reference               reference;
+	cx::driver_handle        unique_id{ 0 };
+	Reference                reference;
+
+	cx::exp::ptr_ref<entity> entity_reference;
 };
 
 SNOW_OWL_NAMESPACE_END

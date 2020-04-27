@@ -14,6 +14,10 @@
 
 SNOW_OWL_NAMESPACE(rd)
 
+struct layer;
+
+struct world_renderer;
+
 /**
  * An entity serves as the base class a\code layer\endcode would get buffer information from.
  */
@@ -53,11 +57,23 @@ struct entity {
 				update      (std::chrono::milliseconds offset);
 
 
+	void  mark_dirty  ();
+
+
+	friend struct world_renderer;
+
+
 	std::string                                   name;
 
 	cx::matrix<float, 4>                          transform;
 
+	cx::exp::ptr_ref<layer>                       ref_layer;
+
 	std::vector<cx::exp::ptr<graph::node_effect>> effects;
+
+protected:
+
+	bool                                          dirty;
 };
 
 template<typename NodeEffectType> requires rd::graph::is_node_effect<NodeEffectType>
@@ -71,7 +87,7 @@ graph::node_effect_reference<NodeEffectType>
 
 	effects.emplace_back(obj.abstract_and_release());
 
-	return { cx::core::make_handle(), ref };
+	return { cx::core::make_handle(), ref, cx::exp::ptr_ref<entity>{ this } };
 }
 
 template<typename EntityType>

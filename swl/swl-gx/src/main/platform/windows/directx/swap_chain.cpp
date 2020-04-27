@@ -21,16 +21,16 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 	swap_chain_desc.Scaling     = DXGI_SCALING_STRETCH;
 	swap_chain_desc.SwapEffect  = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
-	swap_chain_desc.AlphaMode   = DXGI_ALPHA_MODE_PREMULTIPLIED;
+	swap_chain_desc.AlphaMode   = DXGI_ALPHA_MODE_IGNORE;
 
 	context->dxgi_factory->CreateSwapChainForComposition(queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
 
 	const ui::window_surface surface{ window };
-	const HWND window_handle = surface.cast<HWND>();
+	auto window_handle = surface.cast<void>().pointer();
 
 	DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
 
-	comp_device->CreateTargetForHwnd(window_handle, true, comp_target.put());
+	comp_device->CreateTargetForHwnd((HWND) window_handle, true, comp_target.put());
 
 	comp_device->CreateVisual(comp_content.put());
 

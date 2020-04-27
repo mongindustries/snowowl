@@ -2,6 +2,7 @@
 // Created by Michael Ong on 25/4/20.
 //
 #include "graphics_queue.hpp"
+#include "graphics_render_block.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 

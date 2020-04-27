@@ -9,11 +9,9 @@ using namespace std;
 
 SNOW_OWL_NAMESPACE(rd)
 
-world_renderer_state::world_renderer_state
-	() { }
+world_renderer_state::world_renderer_state   () = default;
 
-world_renderer_state::~world_renderer_state
-	() = default;
+world_renderer_state::~world_renderer_state  () = default;
 
 
 world_renderer_state::world_renderer_state
@@ -146,44 +144,58 @@ void  world_renderer::step       (const std::vector<cx::exp::ptr_ref<layer>>& la
 
 		while (batch.empty() == false) {
 
+			vector<cx::exp::ptr_ref<_node_graph>> next_batch{};
+			next_batch.reserve(10); // conservative guess
+
 			for (auto& graph_item : batch) {
 
 				auto node = cx::exp::ptr_ref<graph::node>{ nodes.at(graph_item->node) };
 				auto effects = node->effects();
 
-				vector<cx::exp::ptr_ref<entity>> filtered_entities;
+				vector<graph::node_context::EntityEffectContext> filtered_entities;
 
+				// find entities that match this node's requirement
 				for (const auto& entity : layer->entities) {
 
-					auto should_include = false;
+					vector<cx::exp::ptr_ref<graph::node_effect>> staged_effects{};
 
+					// fill the effects this node is going to use for this entity
 					for (const auto& effect : entity->effects) {
 						if (std::find(effects.begin(), effects.end(), effect->id) != effects.end()) {
-							should_include = true;
-							break;
+							staged_effects.emplace_back(effect);
 						}
 					}
 
-					if (should_include) {
-						filtered_entities.emplace_back(entity);
+					if (!staged_effects.empty()) {
+						filtered_entities.emplace_back(entity, staged_effects);
 					}
 				}
 
 				auto &input_ref = state[layer_index++]->inputs.at(graph_item->node);
 
-				vector<cx::exp::ptr_ref<graph::node_argument_input>> inputs{ };
+				vector<cx::exp::ptr_ref<graph::node_argument_state>> inputs{ };
 				inputs.reserve(input_ref.size());
 
 				std::transform(
-					input_ref.begin(),
-					input_ref.end(),
-					inputs.begin(), [](const auto& item) {
-					return cx::exp::ptr_ref<graph::node_argument_input>{ item };
-				});
+					input_ref  .begin(),
+					input_ref   .end(),
+					inputs      .begin(), [](const auto& item) { return cx::exp::ptr_ref<graph::node_argument_state>{ item }; });
 
 				node->ingest_data(graph::node_context{
 					layer, filtered_entities, inputs
 				});
+
+				vector<cx::exp::ptr_ref<_node_graph>> ref_children{};
+				ref_children.reserve(graph_item->children.size());
+
+				transform(
+					graph_item->children.begin(),
+					graph_item->children.end(),
+					ref_children.begin(),
+					[](const auto& item) { return cx::exp::ptr_ref<_node_graph>{ item }; }
+				);
+
+				next_batch.insert(next_batch.end(), ref_children.begin() , ref_children.end());
 			}
 		}
 	}
@@ -191,56 +203,6 @@ void  world_renderer::step       (const std::vector<cx::exp::ptr_ref<layer>>& la
 
 void  world_renderer::render     (const std::vector<cx::exp::ptr_ref<layer>>& layers) {
 
-	// TODO: add a caching state for entity filter and input construction (input most likely be after create resource).
-
-	unsigned int layer_index = 0;
-	for (const auto& layer : layers) {
-
-		auto batch = std::vector{ cx::exp::ptr_ref<_node_graph>{ tree } };
-
-		while (batch.empty() == false) {
-
-			for (auto& graph_item : batch) {
-
-				auto node = cx::exp::ptr_ref<graph::node>{ nodes.at(graph_item->node) };
-				auto effects = node->effects();
-
-				vector<cx::exp::ptr_ref<entity>> filtered_entities;
-
-				for (const auto& entity : layer->entities) {
-
-					auto should_include = false;
-
-					for (const auto& effect : entity->effects) {
-						if (std::find(effects.begin(), effects.end(), effect->id) != effects.end()) {
-							should_include = true;
-							break;
-						}
-					}
-
-					if (should_include) {
-						filtered_entities.emplace_back(entity);
-					}
-				}
-
-				auto& input_ref = state[layer_index++]->inputs.at(graph_item->node);
-
-				vector<cx::exp::ptr_ref<graph::node_argument_input>> inputs{ };
-				inputs.reserve(input_ref.size());
-
-				std::transform(
-					input_ref.begin(),
-					input_ref.end(),
-					inputs.begin(), [](const auto& item) {
-						return cx::exp::ptr_ref<graph::node_argument_input>{ item };
-					});
-
-				node->render_data(graph::node_context{
-					layer, filtered_entities, inputs
-					});
-			}
-		}
-	}
 }
 
 SNOW_OWL_NAMESPACE_END

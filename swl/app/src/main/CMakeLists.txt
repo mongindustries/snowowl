@@ -19,7 +19,11 @@ if(WIN32)
             platform/windows/resource.h)
 
     target_link_libraries(app
-        "dwmapi")
+        "dwmapi"
+        "dxgi"
+        "d3d12"
+        "dcomp")
+
 endif()
 
 if(APPLE)

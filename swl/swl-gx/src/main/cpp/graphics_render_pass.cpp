@@ -28,7 +28,7 @@ void  graphics_render_pass::set_scissor
 }
 
 void  graphics_render_pass::bind_buffer
-			(graphics_render_pass::stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer<>> &buffer) {
+			(graphics_render_pass::stage_binding binding, unsigned int index, const cx::exp::ptr_ref<graphics_buffer<graphics_buffer_type::typeData>> &buffer) {
 
 }
 
