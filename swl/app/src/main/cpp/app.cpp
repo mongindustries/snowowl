@@ -56,13 +56,13 @@ struct AppGameLoop: game_loop {
 
     void render    (float offset) override {
 
-        swap_chain->next_frame  ();
-
         main_queue->begin       ({ });
 
-        main_queue->submit      ({ });
+        swap_chain->next_frame  ();
 
         swap_chain->present     ();
+
+        main_queue->submit      ({ });
     }
 };
 

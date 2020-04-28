@@ -36,7 +36,7 @@ using namespace std::chrono_literals;
 - (void)cpuWait:    (uint64_t) value {
 
 	std::unique_lock<std::mutex> lock{ _lock };
-	while (value < _value) {
+	while (value > _value) {
 		_wait.wait_for(lock, 1ms);
 	}
 
