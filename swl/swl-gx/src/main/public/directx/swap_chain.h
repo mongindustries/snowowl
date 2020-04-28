@@ -28,7 +28,7 @@ struct swap_chain: graphics_swap_chain {
 	void  present     () override;
 
 
-	std::atomic<uint16_t>                frame;
+	std::atomic<uint64_t>                frame;
 	
 
 	cx::exp::ptr_ref<queue>              queue;
@@ -41,6 +41,10 @@ struct swap_chain: graphics_swap_chain {
 	winrt::com_ptr<IDCompositionTarget>  comp_target;
 
 	winrt::com_ptr<IDCompositionVisual>  comp_content;
+
+
+	cx::size_2d                          cur_size;
+	bool                                 needs_resize;
 };
 
 SNOW_OWL_NAMESPACE_END

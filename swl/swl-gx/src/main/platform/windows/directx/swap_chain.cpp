@@ -12,6 +12,8 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 	swap_chain_desc.Width       = window->get_size().x();
 	swap_chain_desc.Height      = window->get_size().y();
 
+	swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+
 	swap_chain_desc.Format      = DXGI_FORMAT_B8G8R8A8_UNORM;
 	swap_chain_desc.BufferCount = 3;
 
@@ -40,6 +42,9 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 	comp_device->Commit();
 
 	frames.reserve(swap_chain_desc.BufferCount);
+
+	needs_resize = false;
+	cur_size = window->get_size();
 	
 	for(auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
 
@@ -48,30 +53,17 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 		frame.index       = i;
 		frame.swap_chain  = cx::exp::ptr_ref{ this }.cast<graphics_swap_chain>();
 
-		instance->GetBuffer(i, __uuidof(ID3D12Resource), frame.resource.put_void());
+		HRESULT buf = instance->GetBuffer(i, __uuidof(ID3D12Resource), frame.resource.put_void());
 
 		cx::exp::ptr<graphics_swap_chain::frame, dx_frame> obj{ std::move(frame) };
 		frames.emplace_back(obj.abstract_and_release());
 	}
 
-	std::function<void(const ui::window&, const cx::rect&)> func = [&](const ui::window&, const cx::rect& rect) {
+	window->event_on_resize.emplace_back([&](const ui::window&, const cx::rect& rect) {
 
-		for (auto& item: frames) {
-			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
-			frame->resource->Release();
-			frame->resource = nullptr;
-		}
-		
-		instance->ResizeBuffers(0, rect.size.x(), rect.size.y(), DXGI_FORMAT_UNKNOWN, 0);
-
-		for (auto& item : frames) {
-			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
-
-			instance->GetBuffer(item->index, __uuidof(ID3D12Resource), frame->resource.put_void());
-		}
-	};
-	
-	window->event_on_resize.emplace_back(func);
+		needs_resize = cur_size.components == rect.size.components;
+		cur_size = rect.size;
+	});
 }
 
 swap_chain::~swap_chain       () = default;
@@ -79,16 +71,31 @@ swap_chain::~swap_chain       () = default;
 cx::exp::ptr_ref<graphics_swap_chain::frame>
 			swap_chain::next_frame  () {
 
-	const auto ref = cx::exp::ptr_ref<graphics_swap_chain::frame>{ frames[frame] };
+	if (needs_resize) {
+		needs_resize = false;
 
-	frame = ++frame % frames.size();
-	
-	return ref;
+		for (auto& item : frames) {
+			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
+			frame->resource = nullptr;
+		}
+
+		instance->ResizeBuffers(0, cur_size.x(), cur_size.y(), DXGI_FORMAT_UNKNOWN, 0);
+
+		for (auto& item : frames) {
+			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
+
+			instance->GetBuffer(item->index, __uuidof(ID3D12Resource), frame->resource.put_void());
+		}
+	}
+
+	return cx::exp::ptr_ref<graphics_swap_chain::frame>{ frames[frame % frames.size()] };
 }
 
 void  swap_chain::present     () {
 
-	instance->Present1(1, 0, nullptr);
+	instance->Present(1, 0);
+
+	frame += 1;
 }
 
 SNOW_OWL_NAMESPACE_END

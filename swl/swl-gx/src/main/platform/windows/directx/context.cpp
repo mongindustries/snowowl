@@ -2,11 +2,18 @@
 #include "directx/swap_chain.h"
 #include "directx/queue.h"
 
+#include <dxgidebug.h>
+
 SNOW_OWL_NAMESPACE(gx::dx)
 
 context::context() {
 
-	CreateDXGIFactory(__uuidof(IDXGIFactory2), dxgi_factory.put_void());
+	winrt::com_ptr<ID3D12Debug> debug;
+	D3D12GetDebugInterface(__uuidof(ID3D12Debug), debug.put_void());
+
+	debug->EnableDebugLayer();
+	
+	CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, __uuidof(IDXGIFactory2), dxgi_factory.put_void());
 	winrt::com_ptr<IDXGIAdapter> adapter{};
 
 	uint16_t index{ 0 };
