@@ -71,10 +71,14 @@ void    mtl_swap_chain::present     () {
 
     @autoreleasepool {
 
-        [present_queue->event cpuWait:present_queue->fence];
-
         auto frame  = cx::exp::ptr_ref<graphics_swap_chain::frame> { frames[cur_frame % frames.size()] }.cast<mtl_frame>();
-        [frame->drawable present];
+        auto drawb = frame->drawable;
+
+        if (present_queue->buffer.status == MTLCommandBufferStatusNotEnqueued) {
+            [present_queue->buffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
+                [drawb present];
+            }];
+        }
 
         frame->drawable = nil;
         frame->texture  = nil;
