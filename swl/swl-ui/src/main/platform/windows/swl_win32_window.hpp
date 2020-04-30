@@ -18,6 +18,8 @@ struct SWL_EXPORT win32_window {
 
 	HWND hwnd;
 
+	HANDLE resize_event;
+
 	window const* reference;
 
 	win32_window(HINSTANCE instance, const std::string &name);

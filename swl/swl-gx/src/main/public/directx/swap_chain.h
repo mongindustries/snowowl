@@ -17,19 +17,23 @@ struct swap_chain: graphics_swap_chain {
 
 		winrt::com_ptr<ID3D12Resource> resource;
 	};
+
+	swap_chain        (const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<queue>& queue, const cx::exp::ptr_ref<ui::window>& window);
 	
-	swap_chain(const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<queue>& queue, const cx::exp::ptr_ref<ui::window>& window);
-	
-	~swap_chain() override;
+	~swap_chain       () override;
 
 	cx::exp::ptr_ref<frame>
 				next_frame  () override;
 
 	void  present     () override;
 
+	void  resize      (const cx::size_2d& new_size) override;
+
 
 	std::atomic<uint64_t>                frame;
-	
+
+	HANDLE                               event_resize;
+
 
 	cx::exp::ptr_ref<queue>              queue;
 
@@ -41,10 +45,6 @@ struct swap_chain: graphics_swap_chain {
 	winrt::com_ptr<IDCompositionTarget>  comp_target;
 
 	winrt::com_ptr<IDCompositionVisual>  comp_content;
-
-
-	cx::size_2d                          cur_size;
-	bool                                 needs_resize;
 };
 
 SNOW_OWL_NAMESPACE_END

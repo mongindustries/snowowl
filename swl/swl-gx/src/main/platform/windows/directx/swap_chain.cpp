@@ -1,12 +1,19 @@
 #include "directx/swap_chain.h"
 
+#include <sstream>
+
 #include <window_surface.hpp>
+
+#include <swl_window_backend.hpp>
+#include <../platform/windows/swl_win32_window.hpp>
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
 swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<dx::queue>& queue, const cx::exp::ptr_ref<ui::window>& window):
-	graphics_swap_chain(context.cast<graphics_context>(), queue.cast<graphics_queue>(), window), queue(queue) {
+	graphics_swap_chain(context.cast<graphics_context>(), queue.cast<graphics_queue>(), window), queue(queue), event_resize(nullptr) {
 	
+	window->swap_chain = cx::exp::ptr_ref<graphics_swap_chain>{ this };
+
 	DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};
 
 	swap_chain_desc.Width       = window->get_size().x();
@@ -32,6 +39,7 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 
 	DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
 
+	SetWindowLongPtr((HWND) window_handle, GWL_EXSTYLE, WS_EX_NOREDIRECTIONBITMAP);
 	comp_device->CreateTargetForHwnd((HWND) window_handle, true, comp_target.put());
 
 	comp_device->CreateVisual(comp_content.put());
@@ -43,9 +51,6 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 
 	frames.reserve(swap_chain_desc.BufferCount);
 
-	needs_resize = false;
-	cur_size = window->get_size();
-	
 	for(auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
 
 		dx_frame frame;
@@ -55,45 +60,60 @@ swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const c
 
 		HRESULT buf = instance->GetBuffer(i, __uuidof(ID3D12Resource), frame.resource.put_void());
 
+		auto info = (std::wstringstream() << L"Swap Chain buffer " << frame.index).str();
+		frame.resource->SetName(info.c_str());
+
 		cx::exp::ptr<graphics_swap_chain::frame, dx_frame> obj{ std::move(frame) };
 		frames.emplace_back(obj.abstract_and_release());
 	}
-
-	window->event_on_resize.emplace_back([&](const ui::window&, const cx::rect& rect) {
-
-		needs_resize = cur_size.components == rect.size.components;
-		cur_size = rect.size;
-	});
 }
 
 swap_chain::~swap_chain       () = default;
 
-cx::exp::ptr_ref<graphics_swap_chain::frame>
-			swap_chain::next_frame  () {
+void  swap_chain::resize      (const cx::size_2d& new_size) {
+	
+	for (auto& frame : frames) {
+		auto dx_frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ frame }.cast<swap_chain::dx_frame>();
 
-	if (needs_resize) {
-		needs_resize = false;
-
-		for (auto& item : frames) {
-			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
-			frame->resource = nullptr;
-		}
-
-		instance->ResizeBuffers(0, cur_size.x(), cur_size.y(), DXGI_FORMAT_UNKNOWN, 0);
-
-		for (auto& item : frames) {
-			auto frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ item }.cast<dx_frame>();
-
-			instance->GetBuffer(item->index, __uuidof(ID3D12Resource), frame->resource.put_void());
+		if (auto resource = dx_frame->resource.detach()) {
+			resource->Release();
 		}
 	}
 
+	// wait for current queue execution to complete.
+	// TODO: check queue status instead, and assert if begin is not called (as begin will also do the same thing).
+	if (queue->fence_frame > queue->fence->GetCompletedValue()) {
+		queue->fence->SetEventOnCompletion(queue->fence_frame, event_resize);
+		WaitForSingleObject(event_resize, INFINITE);
+	}
+
+	instance->ResizeBuffers(0, new_size.x(), new_size.y(), DXGI_FORMAT_UNKNOWN, 0);
+
+	for (auto& frame : frames) {
+		auto dx_frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ frame }.cast<swap_chain::dx_frame>();
+		instance->GetBuffer(dx_frame->index, __uuidof(ID3D12Resource), dx_frame->resource.put_void());
+
+		auto info = (std::wstringstream() << L"Swap Chain buffer " << dx_frame->index).str();
+		dx_frame->resource->SetName(info.c_str());
+	}
+
+	frame = 0;
+}
+
+cx::exp::ptr_ref<graphics_swap_chain::frame>
+			swap_chain::next_frame  () {
 	return cx::exp::ptr_ref<graphics_swap_chain::frame>{ frames[frame % frames.size()] };
 }
 
 void  swap_chain::present     () {
 
-	instance->Present(1, 0);
+	if (!this->should_present) {
+
+		OutputDebugString(L"Frame skipped!\n");
+		return;
+	}
+
+	instance->Present(swaps_immediately ? 0 : 1, 0);
 
 	frame += 1;
 }

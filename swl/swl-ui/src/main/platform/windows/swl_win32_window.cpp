@@ -10,6 +10,8 @@ using namespace swl::ui::backend;
 
 win32_window::win32_window(HINSTANCE instance, const string &name) {
 
+	resize_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+
 	constexpr wchar_t* className = L"snowowl: window";
 
 	// translate &name to wide string
@@ -24,7 +26,7 @@ win32_window::win32_window(HINSTANCE instance, const string &name) {
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
 	
 	hwnd = CreateWindowEx(
-		WS_EX_NOREDIRECTIONBITMAP,
+		0,
 		className,
 		w_name.c_str(),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,

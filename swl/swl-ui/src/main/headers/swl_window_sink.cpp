@@ -17,10 +17,6 @@ void window_sink::sizing(bool value) {
 
 		if (window->handle == handle) {
 			window->resizing = value;
-
-			if (!window->is_sizing()) {
-				window->loop_wait.notify_all();
-			}
 		}
 	}
 }

@@ -25,10 +25,10 @@ set(PUB_HEAD "public")
 
 include(buildDir/compileShaders.cmake)
 
-include(buildDir/importVulkan.cmake)
+# include(buildDir/importVulkan.cmake)
 include(buildDir/applyPlatformFlags.cmake)
 
-import_vulkan(${CMAKE_SOURCE_DIR}/local.properties)
+# import_vulkan(${CMAKE_SOURCE_DIR}/local.properties)
 apply_platform_flags()
 
 option(PACKAGE_TESTS "Build tests" ON)

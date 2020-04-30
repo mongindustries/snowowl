@@ -1,6 +1,8 @@
 //
 // Created by Michael Ong on 31/3/20.
 //
+#include <cassert>
+
 #include "window.hpp"
 
 #include "swl_window_sink.hpp"
@@ -33,6 +35,14 @@ window::window            (window &&mov) noexcept:
 window
 			&window::operator=  (window &&) noexcept {
 	return *this;
+}
+
+
+void  window::bind_loop   (const cx::exp::ptr_ref<cx::game_loop>& loop) {
+
+	assert(!game_loop);
+
+	game_loop = loop;
 }
 
 

@@ -11,8 +11,15 @@
 #include <core.hpp>
 #include <rect.hpp>
 #include <ownership_exp.hpp>
+#include <game_loop.hpp>
 
 #include "event.hpp"
+
+SNOW_OWL_NAMESPACE(gx)
+
+struct graphics_swap_chain;
+
+SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(ui)
 
@@ -49,6 +56,8 @@ struct SWL_EXPORT window final {
 	~window ();
 
 	// window properties
+
+	void  bind_loop     (const cx::exp::ptr_ref<cx::game_loop> &game_loop);
 
 	void  set_title     (const std::string &value);
 
@@ -100,8 +109,9 @@ private:
 
 public:
 
-	std::condition_variable loop_wait;
-	std::mutex              loop_lock;
+	cx::exp::ptr_ref<gx::graphics_swap_chain> swap_chain;
+
+	cx::exp::ptr_ref<cx::game_loop>           game_loop;
 
 	EventCloseList          event_on_close;
 	EventStateList          event_on_state;

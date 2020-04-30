@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cassert>
 
 #include "application.hpp"
 
@@ -17,34 +18,48 @@
 #include <Windows.h>
 #include <dwmapi.h>
 
+#include <directx/swap_chain.h>
+#include <directx/queue.h>
+
 using namespace std;
-using namespace swl::cx;
-using namespace swl::ui;
+using namespace swl;
 
-window* windowFromHWND(HWND hwnd) {
+ui::backend::win32_window* win32WindowFromHWND(HWND hwnd) {
 
-	for (const auto &item : backend::window_backend::instance->native_handles) {
+	for (const auto& item : ui::backend::window_backend::instance->native_handles) {
 
-		auto winItem = static_cast<backend::win32_window*>(get<1>(item));
+		auto winItem = static_cast<ui::backend::win32_window*>(get<1>(item));
 
 		if (winItem->hwnd == hwnd) {
-			return const_cast<window*>(winItem->reference);
+			return winItem;
 		}
 	}
 
 	return nullptr;
 }
 
-void updateSizeLock(HWND hwnd, window* window) {
+ui::window* windowFromHWND(HWND hwnd) {
+	auto result = win32WindowFromHWND(hwnd);
+
+	if (!result) {
+		return nullptr;
+	}
+
+	return const_cast<ui::window*>(result->reference);
+}
+
+void updateSizeLock(HWND hwnd, ui::window* window) {
 
 	RECT rect{};
 	GetClientRect(hwnd, &rect);
 
-	window->get_sink()->frame(::rect {
+	window->get_sink()->frame(cx::rect {
 		{ static_cast<float>(rect.left), static_cast<float>(rect.top) },
 		{ rect.right - rect.left, rect.bottom - rect.top }
 	});
 }
+
+std::mutex proc_mutex;
 
 LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
@@ -53,18 +68,46 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		if (const auto window = windowFromHWND(hwnd)) {
 			window->get_sink()->sizing(true);
 
-			OutputDebugString(L"Resize start\n");
-			
-			updateSizeLock(hwnd, window);
+			if (window->swap_chain) {
+				// this is added assurance that if there is a frame that is not flighted, inform the swap chain
+				// to not present its current back buffer as it might be outdated.
+				window->swap_chain->should_present = false;
+			}
+
+			if (window->game_loop) {
+
+				// wait game loop frame complete...
+				std::unique_lock<std::mutex> lock{ proc_mutex };
+				window->game_loop->target_lock.wait(lock);
+
+				// ...so that we can lock its execution in-order
+				window->game_loop->check_for_lock = true;
+			}
 		}
 		return 0;
 	}
 	case WM_EXITSIZEMOVE: {
 		if (const auto window = windowFromHWND(hwnd)) {
-
-			OutputDebugString(L"Resize end\n");
-			
 			updateSizeLock(hwnd, window);
+
+			// this thread now owns the framing... start by resizing the swapchain
+			if (window->swap_chain) {
+				window->swap_chain->resize(window->get_size());
+				window->swap_chain->should_present = true;
+			}
+
+			// then run a game loop frame
+			if (window->game_loop) {
+				window->game_loop->frame();
+
+				if (window->swap_chain) {
+					window->swap_chain->swaps_immediately = false;
+				}
+
+				// then give back execution of the frame back to the game loop
+				window->game_loop->check_for_lock = false;
+				window->game_loop->loop_lock.notify_all();
+			}
 
 			window->get_sink()->sizing(false);
 		}
@@ -72,10 +115,56 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	}
 	case WM_WINDOWPOSCHANGED: {
 
-		if (const auto window = windowFromHWND(hwnd)) {
+		if (auto window = windowFromHWND(hwnd)) {
 
-			OutputDebugString(L"Resizing...\n");
+			WINDOWPOS* data = reinterpret_cast<WINDOWPOS*>(lparam);
+
+			if (data->flags & SWP_NOSIZE) {
+				return 0;
+			}
+
+			bool interactive_resize = window->is_sizing();
+
 			updateSizeLock(hwnd, window);
+
+			// if this window is not interactively resizing (maximize, restore operations)
+			if (!interactive_resize) {
+
+				if (window->swap_chain) {
+					// this is added assurance that if there is a frame that is not flighted, inform the swap chain
+					// to not present its current back buffer as it might be outdated.
+					window->swap_chain->should_present = false;
+				}
+
+				if (window->game_loop) {
+
+					// wait game loop frame complete...
+					std::unique_lock<std::mutex> lock{ proc_mutex };
+					window->game_loop->target_lock.wait(lock);
+
+					// ...so that we can lock its execution in-order
+					window->game_loop->check_for_lock = true;
+				}
+			}
+
+			// this thread now owns the framing... start by resizing the swapchain
+			if (window->swap_chain) {
+				window->swap_chain->resize(window->get_size());
+
+				window->swap_chain->swaps_immediately = window->is_sizing();
+				window->swap_chain->should_present = true;
+			}
+
+			// then run a game loop frame
+			if (window->game_loop) {
+				window->game_loop->frame();
+
+				// then give back execution of the frame back to the game loop
+				if (!interactive_resize) {
+					window->game_loop->check_for_lock = false;
+					window->game_loop->loop_lock.notify_all();
+				}
+			}
 		}
 
 		return 0;
@@ -102,7 +191,7 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	}
 }
 
-void application::pre_heat(application &app) {
+void ui::application::pre_heat(application &app) {
 
 	HINSTANCE instance = (HINSTANCE)app.native_instance;
 	
@@ -125,7 +214,7 @@ void application::pre_heat(application &app) {
 	RegisterClassEx(&customClass);
 }
 
-int application::run_loop(application& app) {
+int ui::application::run_loop(application& app) {
 
 	MSG msg { };
 	int res = 0;

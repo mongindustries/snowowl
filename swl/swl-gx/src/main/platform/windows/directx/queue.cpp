@@ -23,15 +23,23 @@ void queue::begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& depend
 	for (auto& item : dependencies) {
 		auto queue = item.cast<dx::queue>();
 
-		queue->fence->SetEventOnCompletion(queue->fence_frame, wait);
-		WaitForSingleObject(wait, INFINITE);
+		if (queue->fence_frame < queue->fence->GetCompletedValue()) {
+			queue->fence->SetEventOnCompletion(queue->fence_frame, wait);
+			WaitForSingleObject(wait, INFINITE);
+		}
 	}
 
-	fence->SetEventOnCompletion(fence_frame, wait);
-	WaitForSingleObject(wait, INFINITE);
+	if (fence && fence_frame > fence->GetCompletedValue()) {
+		fence->SetEventOnCompletion(fence_frame, wait);
+		WaitForSingleObject(wait, INFINITE);
+	}
 }
 
 void queue::submit  (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) {
+
+	if (!fence) {
+		return;
+	}
 
 	fence_frame += 1;
 

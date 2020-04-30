@@ -21,13 +21,26 @@ void game_loop::open() {
 
 	auto func = [](game_loop* game_loop) {
 
+		game_loop->game_thread_id = this_thread::get_id();
+
 		game_loop->create();
 
 		game_loop->t1 = duration_cast<milliseconds>(high_resolution_clock::now().time_since_epoch());
 
 		while (game_loop->running) {
-			game_loop->preFrame();
+
+			// when check_for_lock is enabled, the game loops checks this every frame.
+			// the use for this check is when other threads other than the game loop wants to lock loop
+			// execution (because of OS-level stuff, eg: window resize)
+			if (game_loop->check_for_lock) {
+				std::unique_lock<std::mutex> lock{ game_loop->loop_mutex };
+				game_loop->loop_lock.wait(lock);
+			}
+
 			game_loop->frame();
+
+			// notify any threads waiting for this game loop iteration's execution to complete.
+			game_loop->target_lock.notify_all();
 		}
 	};
 
@@ -61,7 +74,15 @@ void game_loop::frame() {
 		}
 	}
 
+	const auto after = duration_cast<nanoseconds>(high_resolution_clock::now().time_since_epoch());
+	const auto frame_time = after - duration_cast<nanoseconds>(current);
+
 	t1 = current;
 
 	render(accumulate / target_frame_time);
+}
+
+bool game_loop::is_in_game_thread() const
+{
+	return this_thread::get_id() == game_thread_id;
 }

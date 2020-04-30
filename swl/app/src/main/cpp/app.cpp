@@ -22,14 +22,14 @@ using namespace std::chrono;
 
 struct AppGameLoop: game_loop {
 
-    cx::exp::ptr_ref<window>               window;
+  cx::exp::ptr_ref<window>               window;
 
-    cx::exp::ptr<gx::graphics_context>     context;
+  cx::exp::ptr<gx::graphics_context>     context;
 
-    cx::exp::ptr<gx::graphics_queue>       main_queue;
-    cx::exp::ptr<gx::graphics_swap_chain>  swap_chain;
+  cx::exp::ptr<gx::graphics_queue>       main_queue;
+  cx::exp::ptr<gx::graphics_swap_chain>  swap_chain;
 
-    AppGameLoop    (const cx::exp::ptr_ref<ui::window>& window): game_loop(60, 4),
+  AppGameLoop    (const cx::exp::ptr_ref<ui::window>& window): game_loop(60, 4),
     window      (window),
 #if defined(SWL_WIN32)
     context     (new gx::dx::context()),
@@ -38,62 +38,52 @@ struct AppGameLoop: game_loop {
 #endif
     main_queue  (context->create_queue()),
     swap_chain  (context->create_swap_chain(window, cx::exp::ptr_ref{ main_queue })) {
-    }
 
-    void create    () override {
-    }
+    window->bind_loop(cx::exp::ptr_ref<game_loop>{ this });
+  }
 
-    void preFrame  () override {
+  void create    () override {
+  }
 
-        if (window->is_sizing()) {
-            std::unique_lock<std::mutex> lock(window->loop_lock);
-            window->loop_wait.wait(lock);
-        }
-    }
+  void update    (std::chrono::milliseconds delta) override {
+  }
 
-    void update    (std::chrono::milliseconds delta) override {
-    }
+  void render    (float offset) override {
 
-    void render    (float offset) override {
+    main_queue->begin       ({ });
 
-        main_queue->begin       ({ });
+    swap_chain->next_frame  ();
 
-        swap_chain->next_frame  ();
+    swap_chain->present     ();
 
-        swap_chain->present     ();
-
-        main_queue->submit      ({ });
-    }
+    main_queue->submit      ({ });
+  }
 };
 
 struct App: application {
 
-    exp::ptr<window>       window;
-    exp::ptr<AppGameLoop>  gameLoop;
+  exp::ptr<window>       window;
+  exp::ptr<AppGameLoop>  gameLoop;
 
-    App(void* instance): application(instance), window(nullptr), gameLoop(nullptr) {
-    }
+  App(void* instance): application(instance), window(nullptr), gameLoop(nullptr) {
+  }
 
-    void on_create  () override {
+  void on_create  () override {
 
-        const auto pp = cx::file_manager::resourcePath;
+    const auto pp = cx::file_manager::resourcePath;
 
-        window = create_window("[SnowOwl:] App", rect{ {100, 100}, {800, 480} });
+    window = create_window("[SnowOwl:] App", rect{ {100, 100}, {800, 480} });
 
-        gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(cx::exp::ptr_ref{ window }) };
-        gameLoop->open();
+    gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(cx::exp::ptr_ref{ window }) };
+    gameLoop->open();
 
-        window->event_on_resize.emplace_back([&](const ui::window&, const rect&) {
-            gameLoop->frame();
-        });
+    window->event_on_close.emplace_back([&](const ui::window&) {
+      gameLoop->close();
+    });
+  }
 
-        window->event_on_close.emplace_back([&](const ui::window&) {
-            gameLoop->close();
-        });
-    }
-
-    void on_destroy () override {
-    }
+  void on_destroy () override {
+  }
 };
 
 #if defined(SWL_WIN32)
@@ -104,8 +94,8 @@ struct App: application {
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR cmdArgs, int cmdShow) {
 #elif defined(SWL_DARWIN)
 int main () {
-    std::nullptr_t instance = nullptr; // implied [NSApplication sharedApplication];
+  std::nullptr_t instance = nullptr; // implied [NSApplication sharedApplication];
 #endif
 
-    return application::runApplication(App(instance));
+  return application::runApplication(App(instance));
 }

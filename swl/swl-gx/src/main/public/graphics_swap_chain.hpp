@@ -38,6 +38,17 @@ struct graphics_swap_chain {
 				present     ();
 
 
+	virtual void
+				resize      (const cx::size_2d& new_size);
+
+
+	bool                             should_present     { true };
+
+	bool                             swaps_immediately  { false };
+
+
+	cx::exp::ptr_ref<ui::window>     window;
+
 	std::vector<cx::exp::ptr<frame>> frames;
 };
 
