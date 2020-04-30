@@ -73,6 +73,9 @@ struct ptr {
 		reset();
 	}
 
+	operator ptr<Base>() {
+		return abstract();
+	}
 
 	Base* abstract_pointer() const {
 		return static_cast<Base*>(_value);

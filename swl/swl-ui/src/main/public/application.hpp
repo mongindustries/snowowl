@@ -52,7 +52,7 @@ struct SWL_EXPORT application {
 	}
 
 	template<typename App, std::enable_if_t< std::is_base_of_v<application, App>, int > = 0>
-	static int runApplication(App app) {
+	static int run          (App app) {
 
 		App::pre_heat(app);
 		app.on_create();

@@ -41,6 +41,29 @@
           "type": "BOOL"
         }
       ]
+    },
+    {
+      "name": "x64-Debug-UWP",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\out\\build\\${name}",
+      "installRoot": "${projectDir}\\out\\install\\${name}",
+      "cmakeCommandArgs": "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "variables": [
+        {
+          "name": "INSTALL_GTEST",
+          "value": "False",
+          "type": "BOOL"
+        },
+        {
+          "name": "PACKAGE_TESTS",
+          "value": "False",
+          "type": "BOOL"
+        }
+      ]
     }
   ]
 }

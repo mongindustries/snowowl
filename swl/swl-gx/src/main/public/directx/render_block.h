@@ -9,20 +9,20 @@ SNOW_OWL_NAMESPACE(gx::dx)
 
 struct render_block final : graphics_render_block {
 
-	render_block          (const cx::exp::ptr_ref<context>& context);
-
-	cx::exp::ptr_ref<graphics_render_pass>
-		create_render_pass  () override;
+  render_block        (const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<graphics_render_pipeline>& pipeline);
 
 
-	void
-		commit_render_pass  () override;
+  void  reset         (const cx::exp::ptr_ref<graphics_render_pipeline>& pipeline) override;
 
-	void
-		compile             () override;
+  void  close         () override;
 
 
-	winrt::com_ptr<ID3D12GraphicsCommandList4> command_list;
+  void  render_pass   (const std::function<void(graphics_render_pass&)>& configure) override;
+
+
+  winrt::com_ptr<ID3D12CommandAllocator>      allocator;
+
+  winrt::com_ptr<ID3D12GraphicsCommandList4>  command_list;
 };
 
 SNOW_OWL_NAMESPACE_END

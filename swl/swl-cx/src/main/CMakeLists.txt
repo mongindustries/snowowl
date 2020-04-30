@@ -17,11 +17,16 @@ set(SOURCE_LIST
         cpp/game_loop.cpp)
 
 if(WIN32)
-    set(PLATFORM_SOURCE_LIST
-            platform/windows/file_manager.cpp)
+    if(WINDOWS_STORE)
+      set(PLATFORM_SOURCE_LIST
+              platform/uwp/file_manager.cpp)
+    else()
+      set(PLATFORM_SOURCE_LIST
+              platform/windows/file_manager.cpp)
+    endif()
 endif()
 
-if(APPLE)
+if(DARWIN)
     set(PLATFORM_SOURCE_LIST
             platform/darwin/file_manager.mm)
 endif()

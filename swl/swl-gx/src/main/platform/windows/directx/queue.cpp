@@ -1,10 +1,13 @@
 #include "directx/queue.h"
+#include "directx/render_block.h"
+
 #include "graphics_render_block.hpp"
+
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-queue::queue   (const cx::exp::ptr_ref<context>& context):
-	graphics_queue(context.cast<graphics_context>()), wait(CreateEvent(nullptr, FALSE, TRUE, nullptr)) {
+queue::queue   (const cx::exp::ptr_ref<dx::context>& context):
+	graphics_queue(context.cast<graphics_context>()), wait(CreateEvent(nullptr, FALSE, TRUE, nullptr)), context(context) {
 
 	D3D12_COMMAND_QUEUE_DESC queue_desc{};
 
@@ -17,13 +20,17 @@ queue::queue   (const cx::exp::ptr_ref<context>& context):
 
 queue::~queue  () = default;
 
+cx::exp::ptr<graphics_render_block>
+			queue::create_render_block  () {
+	return cx::exp::ptr<graphics_render_block, dx::render_block>{ this->context };
+}
 
-void queue::begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) {
+void  queue::begin                (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) {
 
 	for (auto& item : dependencies) {
 		auto queue = item.cast<dx::queue>();
 
-		if (queue->fence_frame < queue->fence->GetCompletedValue()) {
+		if (queue->fence_frame > queue->fence->GetCompletedValue()) {
 			queue->fence->SetEventOnCompletion(queue->fence_frame, wait);
 			WaitForSingleObject(wait, INFINITE);
 		}
@@ -35,10 +42,20 @@ void queue::begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& depend
 	}
 }
 
-void queue::submit  (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) {
+void  queue::submit               (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) {
 
 	if (!fence) {
 		return;
+	}
+
+	std::vector<winrt::com_ptr<ID3D12GraphicsCommandList4>> commandLists{ commands.size(), nullptr };
+
+	for (auto& command : commands) {
+
+		auto& list = command.cast<dx::render_block>()->command_list;
+		list->Close();
+
+		commandLists.emplace_back(list);
 	}
 
 	fence_frame += 1;

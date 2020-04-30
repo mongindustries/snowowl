@@ -19,7 +19,7 @@ struct graphics_swap_chain {
 
 	struct frame {
 		unsigned int                          index;
-		cx::exp::ptr_ref<graphics_swap_chain> swap_chain;
+		cx::exp::ptr_ref<graphics_swap_chain> swap_chain{ nullptr };
 	};
 
 	graphics_swap_chain

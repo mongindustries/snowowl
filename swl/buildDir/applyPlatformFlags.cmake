@@ -11,7 +11,8 @@ function(apply_platform_flags)
         message("Apply platform macros and compile options for Windows")
         set(SRC_OS "platform/windows")
 
-        #add_compile_options(/EHs)
+        set(SWL_WIN32 PARENT_SCOPE)
+
         add_compile_definitions(SWL_WIN32=1)
         add_compile_definitions(UNICODE=1)
     endif (WIN32)
@@ -19,6 +20,8 @@ function(apply_platform_flags)
     if (APPLE)
         message("Apply platform macros and compile options for Darwin")
         set(SRC_OS "platform/darwin")
+
+        set(SWL_DARWIN PARENT_SCOPE)
 
         add_compile_options(-fobjc-arc -fobjc-abi-version=2)
         add_compile_options(-stdlib=libc++)

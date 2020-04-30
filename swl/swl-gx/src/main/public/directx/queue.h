@@ -16,14 +16,20 @@ struct queue final: graphics_queue {
 	~queue  () override;
 
 
-	void   begin   (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
-	
-	void   submit  (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) override;
+	cx::exp::ptr<graphics_render_block>
+				create_render_block  () override;
+
+	void  begin                (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
+
+	void  submit               (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) override;
 
 
 	std::atomic<uint64_t>              fence_frame;
 
 	HANDLE                             wait;
+
+
+	cx::exp::ptr_ref<context>          context;
 
 
 	winrt::com_ptr<ID3D12CommandQueue> command_queue;
