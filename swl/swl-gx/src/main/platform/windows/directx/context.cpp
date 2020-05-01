@@ -8,7 +8,7 @@ SNOW_OWL_NAMESPACE(gx::dx)
 
 context::context() {
 
-#if defined(SWL_DEBUG)==0
+#if defined(SWL_DEBUG)
 	winrt::com_ptr<ID3D12Debug> debug;
 	D3D12GetDebugInterface(__uuidof(ID3D12Debug), debug.put_void());
 

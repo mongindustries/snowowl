@@ -76,7 +76,7 @@ struct AppGameLoop: game_loop {
           float g = sin(rad - (2.0f / 3.0f) * M_PI);
           float b = sin(rad - (4.0f / 3.0f) * M_PI);
 
-          frame_context.load_clear        = std::array<float, 4>{ r, g, b, 1.0f };
+          frame_context.load_clear        = std::array<float, 4>{ r, g, b, 0.75f };
 
           frame_context.transition_before = gx::transitionInherit;
           frame_context.transition_during = gx::transitionRenderTargetView;

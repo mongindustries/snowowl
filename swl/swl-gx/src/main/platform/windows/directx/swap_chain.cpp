@@ -47,10 +47,12 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
   auto window_handle = surface.cast<void>().pointer();
 
   winrt::com_ptr<IDXGISwapChain1> instance;
-  context->dxgi_factory->CreateSwapChainForComposition(present_queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
+  // context->dxgi_factory->CreateSwapChainForComposition(present_queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
+  context->dxgi_factory->CreateSwapChainForHwnd(present_queue->command_queue.get(), (HWND) window_handle, &swap_chain_desc, nullptr, nullptr, instance.put());
 
   instance->QueryInterface(__uuidof(IDXGISwapChain3), this->instance.put_void());
 
+  /*
   DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
 
   comp_device->CreateTargetForHwnd((HWND)window_handle, true, comp_target.put());
@@ -61,6 +63,7 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
 
   comp_target->SetRoot(comp_content.get());
   comp_device->Commit();
+  */
 
   frames.reserve(swap_chain_desc.BufferCount);
 
