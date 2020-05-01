@@ -3,66 +3,65 @@
 
 #include "graphics_render_block.hpp"
 
+#include <chrono>
+#include <sstream>
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-queue::queue   (const cx::exp::ptr_ref<dx::context>& context):
-	graphics_queue(context.cast<graphics_context>()), wait(CreateEvent(nullptr, FALSE, TRUE, nullptr)), context(context) {
+queue::queue(const cx::exp::ptr_ref<dx::context>& context) :
+  graphics_queue(context.cast<graphics_context>()), wait(CreateEvent(nullptr, FALSE, TRUE, nullptr)) {
 
-	D3D12_COMMAND_QUEUE_DESC queue_desc{};
+  D3D12_COMMAND_QUEUE_DESC queue_desc{};
 
-	queue_desc.Flags     = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	queue_desc.Type      = D3D12_COMMAND_LIST_TYPE_DIRECT;
+  queue_desc.Flags  = D3D12_COMMAND_QUEUE_FLAG_NONE;
+  queue_desc.Type   = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-	context->device->CreateCommandQueue(&queue_desc, __uuidof(ID3D12CommandQueue), command_queue.put_void());
-	context->device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), fence.put_void());
+  context->device->CreateCommandQueue(&queue_desc, __uuidof(ID3D12CommandQueue), command_queue.put_void());
+  context->device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), fence.put_void());
+
+  context->device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), command_allocator.put_void());
 }
 
-queue::~queue  () = default;
+queue::~queue() = default;
 
 cx::exp::ptr<graphics_render_block>
-			queue::create_render_block  () {
-	return cx::exp::ptr<graphics_render_block, dx::render_block>{ this->context };
+queue::create_render_block(const cx::exp::ptr_ref<graphics_render_pipeline> & pipeline) {
+  return cx::exp::ptr<graphics_render_block, dx::render_block>{ new dx::render_block{ cx::exp::ptr_ref{ this }, pipeline } };
 }
 
-void  queue::begin                (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) {
+void  queue::begin(const std::vector<cx::exp::ptr_ref<graphics_queue>> & dependencies) {
 
-	for (auto& item : dependencies) {
-		auto queue = item.cast<dx::queue>();
+  auto time = std::chrono::high_resolution_clock::now();
 
-		if (queue->fence_frame > queue->fence->GetCompletedValue()) {
-			queue->fence->SetEventOnCompletion(queue->fence_frame, wait);
-			WaitForSingleObject(wait, INFINITE);
-		}
-	}
+  command_queue->Signal(fence.get(), fence_frame);
+  fence_frame += 1;
 
-	if (fence && fence_frame > fence->GetCompletedValue()) {
-		fence->SetEventOnCompletion(fence_frame, wait);
-		WaitForSingleObject(wait, INFINITE);
-	}
+  if (fence && fence_frame > fence->GetCompletedValue()) {
+
+    fence->SetEventOnCompletion(fence_frame - 1, wait); // waiting for previous frame to complete
+    WaitForSingleObject(wait, INFINITE);
+  }
+
+  auto after      = std::chrono::high_resolution_clock::now();
+  auto difference = std::chrono::duration_cast<std::chrono::milliseconds>(after - time);
+
+  command_allocator->Reset();
 }
 
-void  queue::submit               (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) {
+void  queue::submit(const std::vector<cx::exp::ptr_ref<graphics_render_block>> & commands) {
 
-	if (!fence) {
-		return;
-	}
+  if (!fence) {
+    return;
+  }
 
-	std::vector<winrt::com_ptr<ID3D12GraphicsCommandList4>> commandLists{ commands.size(), nullptr };
+  std::vector<ID3D12CommandList*> commandLists;
+  commandLists.reserve(commands.size());
 
-	for (auto& command : commands) {
+  for (auto& command : commands) {
+    commandLists.emplace_back(command.cast<dx::render_block>()->command_list.get());
+  }
 
-		auto& list = command.cast<dx::render_block>()->command_list;
-		list->Close();
-
-		commandLists.emplace_back(list);
-	}
-
-	fence_frame += 1;
-
-	command_queue->ExecuteCommandLists(0, nullptr);
-
-	command_queue->Signal(fence.get(), fence_frame);
+  command_queue->ExecuteCommandLists(commandLists.size(), commandLists.data());
 }
 
 SNOW_OWL_NAMESPACE_END

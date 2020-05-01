@@ -190,6 +190,11 @@ struct ptr<Base, void> {
 		return ptr<Base, Derive>{ reify_and_release<Derive>(_value) };
 	}
 
+	template<typename Derive>
+	std::enable_if_t<std::is_base_of_v<Base, Derive>, ptr<Derive>> cast() const {
+		return ptr<Derive> { reify_and_release<Derive>(_value)._value };
+	}
+
 
 	[[nodiscard]] bool is_valid() const {
 		return _value != nullptr;

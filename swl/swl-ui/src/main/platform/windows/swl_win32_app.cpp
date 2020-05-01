@@ -65,44 +65,41 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 
 	switch (message) {
 	case WM_ENTERSIZEMOVE: {
+		// TODO: check if we're only moving the window, not resizing it.
+
 		if (const auto window = windowFromHWND(hwnd)) {
 			window->get_sink()->sizing(true);
 
-			if (window->swap_chain) {
-				// this is added assurance that if there is a frame that is not flighted, inform the swap chain
-				// to not present its current back buffer as it might be outdated.
-				window->swap_chain->should_present = false;
-			}
-
 			if (window->game_loop) {
+
+				// ...so that we can lock its execution in-order
+				window->game_loop->check_for_lock = true;
 
 				// wait game loop frame complete...
 				std::unique_lock<std::mutex> lock{ proc_mutex };
 				window->game_loop->target_lock.wait(lock);
+			}
 
-				// ...so that we can lock its execution in-order
-				window->game_loop->check_for_lock = true;
+			if (window->swap_chain) {
+				window->swap_chain->swaps_immediately = true;
 			}
 		}
 		return 0;
 	}
 	case WM_EXITSIZEMOVE: {
+		// TODO: check if we're only moving the window, not resizing it.
 		if (const auto window = windowFromHWND(hwnd)) {
 			updateSizeLock(hwnd, window);
 
-			// this thread now owns the framing... start by resizing the swapchain
+			// resizing the swapchain one last time
 			if (window->swap_chain) {
 				window->swap_chain->resize(window->get_size());
-				window->swap_chain->should_present = true;
+				window->swap_chain->swaps_immediately = false;
 			}
 
 			// then run a game loop frame
 			if (window->game_loop) {
 				window->game_loop->frame();
-
-				if (window->swap_chain) {
-					window->swap_chain->swaps_immediately = false;
-				}
 
 				// then give back execution of the frame back to the game loop
 				window->game_loop->check_for_lock = false;
@@ -111,6 +108,7 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 
 			window->get_sink()->sizing(false);
 		}
+
 		return 0;
 	}
 	case WM_WINDOWPOSCHANGED: {
@@ -123,6 +121,10 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 				return 0;
 			}
 
+			// this flag is for when the window is interactively resized, that is, 
+			// there is a resize drag going on.
+			// the execution order is different since the frame locks are done at
+			// the interactive resize begin/end.
 			bool interactive_resize = window->is_sizing();
 
 			updateSizeLock(hwnd, window);
@@ -130,36 +132,29 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			// if this window is not interactively resizing (maximize, restore operations)
 			if (!interactive_resize) {
 
-				if (window->swap_chain) {
-					// this is added assurance that if there is a frame that is not flighted, inform the swap chain
-					// to not present its current back buffer as it might be outdated.
-					window->swap_chain->should_present = false;
-				}
-
 				if (window->game_loop) {
+
+					// ...so that we can lock its execution in-order
+					window->game_loop->check_for_lock = true;
 
 					// wait game loop frame complete...
 					std::unique_lock<std::mutex> lock{ proc_mutex };
 					window->game_loop->target_lock.wait(lock);
 
-					// ...so that we can lock its execution in-order
-					window->game_loop->check_for_lock = true;
 				}
 			}
 
-			// this thread now owns the framing... start by resizing the swapchain
+			// this thread now owns the framing...
 			if (window->swap_chain) {
+				// ...start by resizing the swapchain
 				window->swap_chain->resize(window->get_size());
-
-				window->swap_chain->swaps_immediately = window->is_sizing();
-				window->swap_chain->should_present = true;
 			}
 
-			// then run a game loop frame
+			// ...then run a game loop frame
 			if (window->game_loop) {
 				window->game_loop->frame();
 
-				// then give back execution of the frame back to the game loop
+				// ...then give back execution of the frame back to the game loop
 				if (!interactive_resize) {
 					window->game_loop->check_for_lock = false;
 					window->game_loop->loop_lock.notify_all();
@@ -171,6 +166,15 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	}
 	case WM_CLOSE: {
 		if (const auto window = windowFromHWND(hwnd)) {
+
+			if (window->game_loop) {
+
+				// wait game loop frame complete...
+				std::unique_lock<std::mutex> lock{ proc_mutex };
+				window->game_loop->target_lock.wait(lock);
+				window->game_loop->close();
+			}
+
 			window->get_sink()->closed();
 		}
 		return 0;
@@ -179,13 +183,9 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		reinterpret_cast<MINMAXINFO*>(lparam)->ptMinTrackSize = { 400, 400 };
 		return 0;
 	}
-	case WM_ACTIVATE: {
-		return 0;
-	}
 	case WM_QUIT:
 		PostQuitMessage(0);
 		return 0;
-
 	default:
 		return DefWindowProc(hwnd, message, wparam, lparam);
 	}

@@ -8,7 +8,10 @@ set(HEADER_LIST
         public/graphics_shader.hpp
         public/graphics_buffer.hpp
         public/graphics_sampler.hpp
-        public/graphics_render_pipeline.hpp public/graphics_buffer_allocator.hpp public/graphics_render_block.hpp)
+        public/graphics_render_pipeline.hpp
+        public/graphics_buffer_allocator.hpp 
+        public/graphics_render_block.hpp
+        public/graphics_resource_reference.hpp)
 
 set(PRIVATE_HEADER_LIST)
 
@@ -26,14 +29,16 @@ if(WIN32)
             "platform/windows/directx/queue.cpp" 
             "platform/windows/directx/swap_chain.cpp"
             "platform/windows/directx/pipeline.cpp"
-            "platform/windows/directx/render_block.cpp")
+            "platform/windows/directx/render_block.cpp"
+            "platform/windows/directx/resource_reference.cpp")
 
     set(PLATFORM_HEADER_LIST
             "public/directx/context.h"
             "public/directx/queue.h"
             "public/directx/swap_chain.h"
             "public/directx/pipeline.h"
-            "public/directx/render_block.h")
+            "public/directx/render_block.h"
+            "public/directx/resource_reference.h")
 
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/cpp FILES ${PLATFORM_SOURCE_LIST})
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/hpp FILES ${PLATFORM_HEADER_LIST})

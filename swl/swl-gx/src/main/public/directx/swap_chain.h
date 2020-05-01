@@ -11,40 +11,46 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-struct swap_chain: graphics_swap_chain {
+struct render_block;
 
-	struct dx_frame: frame {
+struct swap_chain : graphics_swap_chain {
 
-		winrt::com_ptr<ID3D12Resource> resource;
-	};
+  swap_chain    (const cx::exp::ptr_ref<dx::context>& context, const cx::exp::ptr_ref<dx::queue>& present_queue, const cx::exp::ptr_ref<ui::window>& window);
 
-	swap_chain        (const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<queue>& queue, const cx::exp::ptr_ref<ui::window>& window);
-	
-	~swap_chain       () override;
+  ~swap_chain   () override;
 
-	cx::exp::ptr_ref<frame>
-				next_frame  () override;
+  cx::exp::ptr_ref<frame>
+        next_frame  () override;
 
-	void  present     () override;
-
-	void  resize      (const cx::size_2d& new_size) override;
+  void  present     (std::vector<cx::exp::ptr_ref<graphics_queue>> const& dependencies) override;
 
 
-	std::atomic<uint64_t>                frame;
-
-	HANDLE                               event_resize;
+  void  resize      (const cx::size_2d& new_size) override;
 
 
-	cx::exp::ptr_ref<queue>              queue;
-
-	winrt::com_ptr<IDXGISwapChain1>      instance;
+  HANDLE                                    event_wait;
 
 
-	winrt::com_ptr<IDCompositionDevice>  comp_device;
+  uint64_t                                  current_frame;
 
-	winrt::com_ptr<IDCompositionTarget>  comp_target;
+  winrt::com_ptr<ID3D12Fence>               frame_fence;
 
-	winrt::com_ptr<IDCompositionVisual>  comp_content;
+  bool                                      needs_resize{ false };
+
+
+  cx::exp::ptr_ref<dx::queue>               present_queue;
+
+
+  winrt::com_ptr<IDXGISwapChain3>           instance;
+
+  winrt::com_ptr<ID3D12DescriptorHeap>      frame_heap;
+
+
+  winrt::com_ptr<IDCompositionDevice>       comp_device;
+
+  winrt::com_ptr<IDCompositionTarget>       comp_target;
+
+  winrt::com_ptr<IDCompositionVisual>       comp_content;
 };
 
 SNOW_OWL_NAMESPACE_END

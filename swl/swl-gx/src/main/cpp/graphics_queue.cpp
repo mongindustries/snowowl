@@ -2,6 +2,8 @@
 // Created by Michael Ong on 25/4/20.
 //
 #include "graphics_queue.hpp"
+
+#include "graphics_render_pipeline.hpp"
 #include "graphics_render_block.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
@@ -10,12 +12,12 @@ template<typename c>
 using ptr_ref = cx::exp::ptr_ref<c>;
 
 graphics_queue::graphics_queue
-			(const ptr_ref<gx::graphics_context> &context) { }
+			(const ptr_ref<gx::graphics_context> &context): context(context) { }
 
 
 cx::exp::ptr<graphics_render_block>
-			graphics_queue::create_render_block () {
-	return cx::exp::ptr<graphics_render_block>();
+			graphics_queue::create_render_block (const ptr_ref<graphics_render_pipeline>& pipeline) {
+	return cx::exp::ptr<graphics_render_block>{ new graphics_render_block(cx::exp::ptr_ref{ this }, pipeline) };
 }
 
 

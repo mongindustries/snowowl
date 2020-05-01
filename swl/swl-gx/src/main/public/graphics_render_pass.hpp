@@ -11,6 +11,7 @@
 #include "graphics_render_pipeline.hpp"
 #include "graphics_buffer.hpp"
 #include "graphics_sampler.hpp"
+#include "graphics_resource_reference.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 

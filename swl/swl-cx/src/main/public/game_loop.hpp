@@ -9,56 +9,61 @@
 #include <thread>
 #include <chrono>
 
+#include <functional>
+
 #include "header.hpp"
 
 SNOW_OWL_NAMESPACE(cx)
 
 struct game_loop {
 
-	game_loop                (uint16_t targetFramerate, uint16_t bailAmount);
+  game_loop(uint16_t targetFramerate, uint16_t bailAmount);
 
-	virtual ~game_loop       () = default;
-
-
-	void  open               ();
-
-	void  close              ();
-
-	void  frame              ();
+  virtual ~game_loop() = default;
 
 
-	virtual void
-				create             () = 0;
+  void  open();
 
-	virtual void
-				update             (std::chrono::milliseconds delta) = 0;
+  void  close();
 
-	virtual void 
-				render             (float offset) = 0;
+  void  frame();
 
 
-	bool  is_in_game_thread  () const;
+  virtual void
+    create() = 0;
 
-	bool                      check_for_lock{false};
-	std::condition_variable   loop_lock;
+  virtual void
+    update(std::chrono::milliseconds delta) = 0;
 
-	std::condition_variable   target_lock;
+  virtual void
+    render(float offset) = 0;
+
+
+  bool  is_in_game_thread() const;
+
+  bool                      check_for_lock{ false };
+  std::condition_variable   loop_lock;
+
+  std::condition_variable   target_lock;
+
+  std::function<void(uint16_t)>
+    frame_callback;
 
 private:
 
-	std::thread::id           game_thread_id;
-	std::thread               game_thread;
+  std::thread::id           game_thread_id;
+  std::thread               game_thread;
 
-	std::mutex                loop_mutex;
+  std::mutex                loop_mutex;
 
 
-	std::chrono::milliseconds t1{};
-	std::chrono::milliseconds accumulate{};
+  std::chrono::milliseconds t1{};
+  std::chrono::milliseconds accumulate{};
 
-	bool                      running{false};
+  bool                      running{ false };
 
-	std::chrono::milliseconds target_frame_time{};
-	uint16_t                  target_update_count{};
+  std::chrono::milliseconds target_frame_time{};
+  uint16_t                  target_update_count{};
 };
 
 SNOW_OWL_NAMESPACE_END

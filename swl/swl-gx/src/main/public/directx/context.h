@@ -31,8 +31,6 @@ struct context final : graphics_context {
 	winrt::com_ptr<IDXGIFactory2>           dxgi_factory;
 
 	winrt::com_ptr<ID3D12Device>            device;
-
-	winrt::com_ptr<ID3D12CommandAllocator>  command_allocator;
 };
 
 SNOW_OWL_NAMESPACE_END

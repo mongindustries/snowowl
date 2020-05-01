@@ -26,7 +26,7 @@ win32_window::win32_window(HINSTANCE instance, const string &name) {
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, false, 0);
 	
 	hwnd = CreateWindowEx(
-		0,
+		WS_EX_NOREDIRECTIONBITMAP,
 		className,
 		w_name.c_str(),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,

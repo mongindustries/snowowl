@@ -1,6 +1,11 @@
 #include "directx/swap_chain.h"
+#include "directx/resource_reference.h"
+#include "directx/render_block.h"
+
+#include <chrono>
 
 #include <sstream>
+#include <array>
 
 #include <window_surface.hpp>
 
@@ -9,113 +14,151 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-swap_chain::swap_chain        (const cx::exp::ptr_ref<context>& context, const cx::exp::ptr_ref<dx::queue>& queue, const cx::exp::ptr_ref<ui::window>& window):
-	graphics_swap_chain(context.cast<graphics_context>(), queue.cast<graphics_queue>(), window), queue(queue), event_resize(nullptr) {
-	
-	window->swap_chain = cx::exp::ptr_ref<graphics_swap_chain>{ this };
+template<typename c>
+using ptr_ref = cx::exp::ptr_ref<c>;
 
-	DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};
+swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref<dx::queue>& present_queue, ptr_ref<ui::window> const& window) :
+  graphics_swap_chain (context.cast<graphics_context>(), present_queue.cast<graphics_queue>(), window),
+  event_wait          (CreateEvent(nullptr, false, false, L"Swapchain resize wait event")),
+  present_queue       (present_queue),
+  current_frame       (0) {
 
-	swap_chain_desc.Width       = window->get_size().x();
-	swap_chain_desc.Height      = window->get_size().y();
+  window->swap_chain = ptr_ref<graphics_swap_chain>{ this };
 
-	swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};
 
-	swap_chain_desc.Format      = DXGI_FORMAT_B8G8R8A8_UNORM;
-	swap_chain_desc.BufferCount = 3;
+  swap_chain_desc.Width       = window->get_size().x();
+  swap_chain_desc.Height      = window->get_size().y();
 
-	swap_chain_desc.SampleDesc.Count    = 1;
-	swap_chain_desc.SampleDesc.Quality  = 0;
+  swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-	swap_chain_desc.Scaling     = DXGI_SCALING_STRETCH;
-	swap_chain_desc.SwapEffect  = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+  swap_chain_desc.Format      = DXGI_FORMAT_B8G8R8A8_UNORM;
+  swap_chain_desc.BufferCount = 3;
 
-	swap_chain_desc.AlphaMode   = DXGI_ALPHA_MODE_IGNORE;
+  swap_chain_desc.Scaling     = DXGI_SCALING_STRETCH;
+  swap_chain_desc.SwapEffect  = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
-	context->dxgi_factory->CreateSwapChainForComposition(queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
+  swap_chain_desc.AlphaMode   = DXGI_ALPHA_MODE_IGNORE;
 
-	const ui::window_surface surface{ window };
-	auto window_handle = surface.cast<void>().pointer();
+  swap_chain_desc.SampleDesc.Count    = 1;
+  swap_chain_desc.SampleDesc.Quality  = 0;
 
-	DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
+  const ui::window_surface surface{ window };
+  auto window_handle = surface.cast<void>().pointer();
 
-	SetWindowLongPtr((HWND) window_handle, GWL_EXSTYLE, WS_EX_NOREDIRECTIONBITMAP);
-	comp_device->CreateTargetForHwnd((HWND) window_handle, true, comp_target.put());
+  winrt::com_ptr<IDXGISwapChain1> instance;
+  context->dxgi_factory->CreateSwapChainForComposition(present_queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
 
-	comp_device->CreateVisual(comp_content.put());
+  instance->QueryInterface(__uuidof(IDXGISwapChain3), this->instance.put_void());
 
-	comp_content->SetContent(instance.get());
+  DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
 
-	comp_target->SetRoot(comp_content.get());
-	comp_device->Commit();
+  comp_device->CreateTargetForHwnd((HWND)window_handle, true, comp_target.put());
 
-	frames.reserve(swap_chain_desc.BufferCount);
+  comp_device->CreateVisual(comp_content.put());
 
-	for(auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
+  comp_content->SetContent(instance.get());
 
-		dx_frame frame;
+  comp_target->SetRoot(comp_content.get());
+  comp_device->Commit();
 
-		frame.index       = i;
-		frame.swap_chain  = cx::exp::ptr_ref{ this }.cast<graphics_swap_chain>();
+  frames.reserve(swap_chain_desc.BufferCount);
 
-		HRESULT buf = instance->GetBuffer(i, __uuidof(ID3D12Resource), frame.resource.put_void());
+  D3D12_DESCRIPTOR_HEAP_DESC frameHeapDesc{};
 
-		auto info = (std::wstringstream() << L"Swap Chain buffer " << frame.index).str();
-		frame.resource->SetName(info.c_str());
+  frameHeapDesc.NumDescriptors  = swap_chain_desc.BufferCount;
+  frameHeapDesc.Type            = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 
-		cx::exp::ptr<graphics_swap_chain::frame, dx_frame> obj{ std::move(frame) };
-		frames.emplace_back(obj.abstract_and_release());
-	}
+  context->device->CreateDescriptorHeap(&frameHeapDesc, __uuidof(ID3D12DescriptorHeap), frame_heap.put_void());
+
+  SIZE_T offset_size  = context->device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+  auto   heap_start   = frame_heap->GetCPUDescriptorHandleForHeapStart();
+
+  for (auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
+
+    graphics_swap_chain::frame frame;
+
+    frame.index       = i;
+    frame.swap_chain  = cx::exp::ptr_ref{ this }.cast<graphics_swap_chain>();
+
+    dx::resource_reference ref;
+
+    ref.handle.cpu_handle = heap_start;
+    ref.type              = typeCPU;
+    ref.created_state     = D3D12_RESOURCE_STATE_PRESENT;
+    ref.format            = swap_chain_desc.Format;
+
+    HRESULT buffer_res = instance->GetBuffer(i, __uuidof(ID3D12Resource), ref.resource.put_void());
+    context->device->CreateRenderTargetView(ref.resource.get(), nullptr, heap_start);
+
+    ref.resource->SetName((std::wstringstream() << L"Swapchain back buffer index " << i).str().c_str());
+
+    frame.reference       = cx::exp::ptr<graphics_resource_reference, dx::resource_reference>{ std::move(ref) };
+
+    frames.emplace_back(std::move(frame));
+
+    heap_start = D3D12_CPU_DESCRIPTOR_HANDLE{ heap_start.ptr + offset_size };
+  }
 }
 
-swap_chain::~swap_chain       () = default;
+swap_chain::~swap_chain () = default;
 
-void  swap_chain::resize      (const cx::size_2d& new_size) {
-	
-	for (auto& frame : frames) {
-		auto dx_frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ frame }.cast<swap_chain::dx_frame>();
 
-		if (auto resource = dx_frame->resource.detach()) {
-			resource->Release();
-		}
-	}
+void  swap_chain::resize      (const cx::size_2d & new_size) {
 
-	// wait for current queue execution to complete.
-	// TODO: check queue status instead, and assert if begin is not called (as begin will also do the same thing).
-	if (queue->fence_frame > queue->fence->GetCompletedValue()) {
-		queue->fence->SetEventOnCompletion(queue->fence_frame, event_resize);
-		WaitForSingleObject(event_resize, INFINITE);
-	}
+  DXGI_SWAP_CHAIN_DESC1 desc{};
+  instance->GetDesc1(&desc);
 
-	instance->ResizeBuffers(0, new_size.x(), new_size.y(), DXGI_FORMAT_UNKNOWN, 0);
-
-	for (auto& frame : frames) {
-		auto dx_frame = cx::exp::ptr_ref<graphics_swap_chain::frame>{ frame }.cast<swap_chain::dx_frame>();
-		instance->GetBuffer(dx_frame->index, __uuidof(ID3D12Resource), dx_frame->resource.put_void());
-
-		auto info = (std::wstringstream() << L"Swap Chain buffer " << dx_frame->index).str();
-		dx_frame->resource->SetName(info.c_str());
-	}
-
-	frame = 0;
+  needs_resize = new_size.x() != desc.Width || new_size.y() != desc.Height;
 }
 
 cx::exp::ptr_ref<graphics_swap_chain::frame>
-			swap_chain::next_frame  () {
-	return cx::exp::ptr_ref<graphics_swap_chain::frame>{ frames[frame % frames.size()] };
+      swap_chain::next_frame  () {
+
+  if (needs_resize) {
+    needs_resize = false;
+
+    for (auto& frame : frames) {
+
+      auto ref = cx::exp::ptr_ref{ frame->reference }.cast<dx::resource_reference>();
+
+      ref->handle.cpu_handle = {};
+
+      if (auto resource = ref->resource.detach()) {
+        resource->Release();
+      }
+    }
+
+    auto new_size = window->get_size();
+    instance->ResizeBuffers(0, new_size.x(), new_size.y(), DXGI_FORMAT_UNKNOWN, 0);
+
+    winrt::com_ptr<ID3D12Device> device;
+    instance->GetDevice(__uuidof(ID3D12Device), device.put_void());
+
+    SIZE_T offset_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    auto   heap_start = frame_heap->GetCPUDescriptorHandleForHeapStart();
+
+    for (auto i = 0U; i < frames.size(); i += 1) {
+
+      auto reference = cx::exp::ptr_ref{ frames[i]->reference }.cast<dx::resource_reference>();
+      instance->GetBuffer(i, __uuidof(ID3D12Resource), reference->resource.put_void());
+
+      reference->resource->SetName((std::wstringstream() << L"Swapchain back buffer index " << i).str().c_str());
+
+      reference->handle.cpu_handle = heap_start;
+      device->CreateRenderTargetView(reference->resource.get(), nullptr, heap_start);
+
+      heap_start = D3D12_CPU_DESCRIPTOR_HANDLE{ heap_start.ptr + offset_size };
+    }
+  }
+
+  UINT index = instance->GetCurrentBackBufferIndex();
+  return cx::exp::ptr_ref<graphics_swap_chain::frame>{ frames[index] };
 }
 
-void  swap_chain::present     () {
+void  swap_chain::present     (std::vector<ptr_ref<graphics_queue>> const& dependencies) {
 
-	if (!this->should_present) {
-
-		OutputDebugString(L"Frame skipped!\n");
-		return;
-	}
-
-	instance->Present(swaps_immediately ? 0 : 1, 0);
-
-	frame += 1;
+  assert(instance->Present(swaps_immediately ? 0 : 1, 0) == S_OK);
 }
 
 SNOW_OWL_NAMESPACE_END

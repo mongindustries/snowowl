@@ -14,6 +14,9 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct graphics_render_block;
 
+struct graphics_render_pipeline;
+
+
 struct graphics_queue {
 
 	graphics_queue            (const cx::exp::ptr_ref<graphics_context> &context);
@@ -22,7 +25,7 @@ struct graphics_queue {
 
 
 	virtual cx::exp::ptr<graphics_render_block>
-				create_render_block ();
+				create_render_block (const cx::exp::ptr_ref<graphics_render_pipeline>& pipeline);
 
 
 	virtual void
@@ -30,6 +33,10 @@ struct graphics_queue {
 
 	virtual void
 				submit              (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands);
+
+protected:
+
+	cx::exp::ptr_ref<graphics_context> context;
 };
 
 SNOW_OWL_NAMESPACE_END
