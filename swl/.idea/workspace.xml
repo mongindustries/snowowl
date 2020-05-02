@@ -23,24 +23,23 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="snow_owl" targetName="gtest" />
-      <config projectName="snow_owl" targetName="rd-test" />
-      <config projectName="snow_owl" targetName="app" />
-      <config projectName="snow_owl" targetName="ui-test" />
-      <config projectName="snow_owl" targetName="gx-test" />
-      <config projectName="snow_owl" targetName="gmock_main" />
       <config projectName="snow_owl" targetName="gtest_main" />
       <config projectName="snow_owl" targetName="cx-test" />
-      <config projectName="snow_owl" targetName="rd" />
+      <config projectName="snow_owl" targetName="gtest" />
       <config projectName="snow_owl" targetName="gmock" />
+      <config projectName="snow_owl" targetName="rd" />
+      <config projectName="snow_owl" targetName="rd-test" />
+      <config projectName="snow_owl" targetName="app" />
       <config projectName="snow_owl" targetName="gx" />
+      <config projectName="snow_owl" targetName="gx-test" />
+      <config projectName="snow_owl" targetName="gmock_main" />
       <config projectName="snow_owl" targetName="ui" />
       <config projectName="snow_owl" targetName="cx" />
     </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Default" GENERATION_OPTIONS="-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -GNinja" GENERATION_DIR="../build/clion" />
+      <configuration PROFILE_NAME="Debug-Visual Studio" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" GENERATION_OPTIONS="-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15 -GNinja" GENERATION_DIR="../build/clion" />
     </configurations>
   </component>
   <component name="ChangeListManager">
@@ -83,7 +82,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -170,9 +169,6 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="raisj8uk" />
   </component>
-  <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-Debug-gx" />
-  </component>
   <component name="ProjectId" id="1ZdAUJ2I3s0uKeIXM4jRjJpF1e7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -199,7 +195,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.23727088" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
@@ -212,7 +208,7 @@
       <recent name="$PROJECT_DIR$/app/src/main" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.app">
+  <component name="RunManager" selected="CMake Application.ui">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -220,51 +216,45 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test" TEST_MODE="SUITE_TEST">
+    <configuration name="cx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="gx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test" TEST_MODE="SUITE_TEST">
+    <configuration name="gx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="rd-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="rd-test" TEST_MODE="SUITE_TEST">
+    <configuration name="rd-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="rd-test" TEST_MODE="SUITE_TEST">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
         <option name="BeforeTestRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ui-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui-test" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="ui-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
+    <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx" CONFIG_NAME="Debug">
+    <configuration name="cx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug">
+    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="rd" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd" CONFIG_NAME="Debug">
+    <configuration name="rd" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui" CONFIG_NAME="Debug">
+    <configuration name="ui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui" CONFIG_NAME="Debug-Visual Studio">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -273,12 +263,11 @@
       <item itemvalue="CMake Application.app" />
       <item itemvalue="CMake Application.cx" />
       <item itemvalue="CMake Application.gx" />
-      <item itemvalue="CMake Application.ui" />
       <item itemvalue="CMake Application.rd" />
-      <item itemvalue="Google Test.rd-test" />
-      <item itemvalue="Google Test.ui-test" />
+      <item itemvalue="CMake Application.ui" />
       <item itemvalue="Google Test.cx-test" />
       <item itemvalue="Google Test.gx-test" />
+      <item itemvalue="Google Test.rd-test" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -450,9 +439,10 @@
     <state x="458" y="204" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.900@0.0.1440.900" timestamp="1586714149937" />
     <state x="458" y="207" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.813@0.23.1440.813" timestamp="1587747950065" />
     <state x="458" y="222" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1440.877@0.23.1440.877" timestamp="1586016110742" />
-    <state x="515" y="391" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1585217785029">
-      <screen x="0" y="0" width="1680" height="1050" />
+    <state x="441" y="320" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1588448355594">
+      <screen x="0" y="0" width="1440" height="860" />
     </state>
+    <state x="441" y="320" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1440.860@0.0.1440.860" timestamp="1588448355594" />
     <state x="515" y="391" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1680.1050@0.0.1680.1050" timestamp="1585217785029" />
     <state x="1440" y="0" width="1920" height="1080" key="CommitChangelistDialog2" timestamp="1585718376367">
       <screen x="1440" y="0" width="1920" height="1080" />
@@ -573,9 +563,10 @@
     </state>
     <state x="0" y="0" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585526512968" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585376473157" />
-    <state x="125" y="63" width="1142" height="722" key="SettingsEditor" timestamp="1587798501499">
-      <screen x="0" y="23" width="1440" height="813" />
+    <state x="125" y="42" width="1142" height="722" key="SettingsEditor" timestamp="1588446902371">
+      <screen x="0" y="0" width="1440" height="860" />
     </state>
+    <state x="125" y="42" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1588446902371" />
     <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586360168987" />
     <state x="0" y="0" width="1680" height="1050" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1585380212419" />
     <state x="190" y="129" width="1129" height="815" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1587396210796" />
@@ -594,9 +585,10 @@
       <screen x="0" y="23" width="1440" height="813" />
     </state>
     <state x="274" y="165" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1440.813@0.23.1440.813" timestamp="1586717388368" />
-    <state x="665" y="119" width="590" height="801" key="find.popup" timestamp="1587395967175">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="499" y="98" width="555" height="663" key="find.popup" timestamp="1588448307182">
+      <screen x="0" y="0" width="1440" height="860" />
     </state>
+    <state x="499" y="98" width="555" height="663" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1588448307182" />
     <state x="665" y="119" width="590" height="801" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587395967175" />
     <state x="378" y="244" key="git4idea.merge.GitPullDialog" timestamp="1585659370253">
       <screen x="0" y="0" width="1440" height="900" />
@@ -616,9 +608,10 @@
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1585674031758" />
     <state x="385" y="213" key="run.anything.popup/0.23.1440.813@0.23.1440.813" timestamp="1587795905326" />
-    <state x="385" y="196" width="671" height="677" key="search.everywhere.popup" timestamp="1587969701598">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="386" y="188" width="672" height="647" key="search.everywhere.popup" timestamp="1588448354253">
+      <screen x="0" y="0" width="1440" height="860" />
     </state>
+    <state x="386" y="188" width="672" height="647" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1588448354253" />
     <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1587969701598" />
     <state x="449" y="229" width="782" height="789" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1585387662135" />
     <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587395961989" />

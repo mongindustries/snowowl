@@ -20,12 +20,14 @@ SNOW_OWL_NAMESPACE(cx::exp)
 template<typename Base, typename Derive = void>
 struct ptr {
 
+  typedef ptr<Base, Derive>& reference;
+
 	static_assert(std::is_base_of_v<Base, Derive>, "Derive must be inherited from Base!");
 
 
-	ptr(const ptr<Base, Derive>& cpy) = delete;
+	ptr                 (const ptr<Base, Derive>& cpy) = delete;
 
-	ptr<Base, Derive>& operator=(const ptr<Base, Derive>& cpy) = delete;
+	reference operator= (const ptr<Base, Derive>& cpy) = delete;
 
 
 	ptr(ptr<Base, Derive>&& mov) noexcept : _value(mov._value) {

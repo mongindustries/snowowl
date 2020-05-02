@@ -6,7 +6,7 @@ set(HEADER_LIST
         public/game_loop.hpp
         public/header.hpp
         public/matrix.hpp
-        public/ownership_exp.hpp
+        public/ownership.hpp
         public/point.hpp
         public/point_operators.hpp
         public/rect.hpp

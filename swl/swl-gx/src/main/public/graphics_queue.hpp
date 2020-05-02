@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <header.hpp>
-#include <ownership_exp.hpp>
+#include <ownership.hpp>
 
 #include "graphics_context.hpp"
 

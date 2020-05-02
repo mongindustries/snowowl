@@ -4,7 +4,7 @@
 #pragma once
 
 #include <header.hpp>
-#include <ownership_exp.hpp>
+#include <ownership.hpp>
 #include <core.hpp>
 
 SNOW_OWL_NAMESPACE(rd)

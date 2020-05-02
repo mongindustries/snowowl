@@ -4,7 +4,7 @@
 #pragma once
 
 #include <header.hpp>
-#include <ownership_exp.hpp>
+#include <ownership.hpp>
 #include "graphics_context.hpp"
 #include "graphics_buffer.hpp"
 

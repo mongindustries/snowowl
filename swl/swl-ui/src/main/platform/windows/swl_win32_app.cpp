@@ -1,7 +1,6 @@
 //
 // Created by micha on 4/3/2020.
 //
-
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -24,7 +23,11 @@
 using namespace std;
 using namespace swl;
 
-ui::backend::win32_window* win32WindowFromHWND(HWND hwnd) {
+std::mutex proc_mutex;
+
+
+ui::backend::win32_window*
+      win32WindowFromHWND (HWND hwnd) {
 
   for (const auto& item : ui::backend::window_backend::instance->native_handles) {
 
@@ -38,7 +41,8 @@ ui::backend::win32_window* win32WindowFromHWND(HWND hwnd) {
   return nullptr;
 }
 
-ui::window* windowFromHWND(HWND hwnd) {
+ui::window*
+      windowFromHWND      (HWND hwnd) {
   auto result = win32WindowFromHWND(hwnd);
 
   if (!result) {
@@ -48,7 +52,7 @@ ui::window* windowFromHWND(HWND hwnd) {
   return const_cast<ui::window*>(result->reference);
 }
 
-void updateSizeLock(HWND hwnd, ui::window* window) {
+void  updateSizeLock      (HWND hwnd, ui::window* window) {
 
   RECT rect{};
   GetClientRect(hwnd, &rect);
@@ -59,9 +63,8 @@ void updateSizeLock(HWND hwnd, ui::window* window) {
     });
 }
 
-std::mutex proc_mutex;
-
-LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
+LRESULT CALLBACK
+      win32_windowProc    (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
 
   switch (message) {
   case WM_ENTERSIZEMOVE: {
@@ -190,7 +193,8 @@ LRESULT CALLBACK win32_windowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
   }
 }
 
-void ui::application::pre_heat(application& app) {
+
+void  ui::application::pre_heat         (application& app) {
 
   HINSTANCE instance = (HINSTANCE)app.native_instance;
 
@@ -213,15 +217,24 @@ void ui::application::pre_heat(application& app) {
   RegisterClassEx(&customClass);
 }
 
-int ui::application::run_loop(application& app) {
+int   ui::application::run_loop         (application& app) {
 
   MSG msg{ };
   int res = 0;
+
+  app.on_create();
 
   while (GetMessage(&msg, nullptr, 0, 0)) {
     TranslateMessage(&msg);
     res = DispatchMessage(&msg);
   }
 
+  app.on_destroy();
+
   return res;
+}
+
+cx::exp::ptr_ref<ui::window>
+      ui::application::get_main_window  () {
+  return cx::exp::ptr_ref<ui::window>{ nullptr };
 }

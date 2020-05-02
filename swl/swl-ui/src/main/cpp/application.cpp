@@ -19,7 +19,7 @@ application::application(void *native_instance):
 }
 
 cx::exp::ptr<window> application::create_window(const std::string& caption, const cx::rect& frame) {
-	return cx::exp::ptr<window>{new window(caption, frame) };
+	return cx::exp::ptr<window>{ new window(caption, frame) };
 }
 
 SNOW_OWL_NAMESPACE_END

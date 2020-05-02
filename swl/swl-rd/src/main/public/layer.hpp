@@ -10,7 +10,7 @@
 
 #include <core.hpp>
 #include <header.hpp>
-#include <ownership_exp.hpp>
+#include <ownership.hpp>
 
 #include "entity.hpp"
 #include "layer_camera.hpp"

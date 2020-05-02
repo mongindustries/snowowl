@@ -25,7 +25,7 @@ window::window            (string window_name, const rect &frame):
 	window_backend::instance->create(this);
 }
 
-window::~window           () { }
+window::~window           () = default;
 
 
 window::window            (window &&mov) noexcept:
@@ -38,24 +38,27 @@ window
 }
 
 
-void  window::bind_loop   (const cx::exp::ptr_ref<cx::game_loop>& loop) {
+void  window::bind_loop     (const cx::exp::ptr_ref<cx::game_loop>& loop) {
 
 	assert(!game_loop);
 
 	game_loop = loop;
 }
 
-
-void  window::set_title   (const std::string &new_title) {
+void  window::set_title     (const std::string &new_title) {
 
 	title = new_title;
 	window_backend::instance->update_title(this);
 }
 
-void  window::set_frame   (const cx::rect &new_frame) {
+void  window::set_frame     (const cx::rect &new_frame) {
 
 	frame = new_frame;
 	window_backend::instance->update_frame(this);
+}
+
+void window::set_fullscreen (bool value) {
+
 }
 
 
