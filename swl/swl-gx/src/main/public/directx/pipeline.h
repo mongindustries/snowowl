@@ -8,21 +8,12 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-struct pipeline: graphics_render_pipeline {
+struct render_pipeline : graphics_render_pipeline {
 
-	pipeline(
-		const cx::exp::ptr_ref<dx::context>&        context,
-		std::array<graphics_shader, 2>              shader_stages,
-		gx::pipeline::raster                        raster,
-		gx::pipeline::depth                         depth,
-		gx::pipeline::stencil                       stencil,
-		gx::pipeline::sample                        sample,
-		bool                                        independent_blend,
-		gx::pipeline::topology_type                 topology_type,
-		std::array<gx::pipeline::render_output, 8>  render_outputs);
+  render_pipeline(const cx::exp::ptr_ref<dx::context>& context);
 
 
-	winrt::com_ptr<ID3D12PipelineState> pipeline_state;
+  winrt::com_ptr<ID3D12PipelineState> pipeline_state;
 };
 
 SNOW_OWL_NAMESPACE_END

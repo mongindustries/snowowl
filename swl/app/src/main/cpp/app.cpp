@@ -103,8 +103,6 @@ struct App: application {
 
   void on_create  () override {
 
-    const auto pp = cx::file_manager::resourcePath;
-
     window = create_window("[SnowOwl:] App", rect{ {100, 100}, {800, 480} });
 
     gameLoop = exp::ptr<AppGameLoop>{ new AppGameLoop(cx::exp::ptr_ref{ window }) };

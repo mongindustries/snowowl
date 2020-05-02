@@ -1,25 +1,37 @@
 #include "directx/pipeline.h"
 
+#include <array>
+#include <tell.hpp>
+
 SNOW_OWL_NAMESPACE(gx::dx)
 
-pipeline::pipeline(
-	const cx::exp::ptr_ref<dx::context>& context,
-	std::array<graphics_shader, 2>              shader_stages,
-	gx::pipeline::raster                        raster,
-	gx::pipeline::depth                         depth,
-	gx::pipeline::stencil                       stencil,
-	gx::pipeline::sample                        sample,
-	bool                                        independent_blend,
-	gx::pipeline::topology_type                 topology_type,
-	std::array<gx::pipeline::render_output, 8>  render_outputs) :
+render_pipeline::render_pipeline(const cx::exp::ptr_ref<dx::context>& context) : graphics_render_pipeline() {
 
-	graphics_render_pipeline(shader_stages, raster, depth, stencil, sample, independent_blend, topology_type, render_outputs) {
+  std::array parameters{
+    cx::tell<D3D12_ROOT_PARAMETER>({}, [](D3D12_ROOT_PARAMETER& param) {
+      param.ParameterType     = D3D12_ROOT_PARAMETER_TYPE_CBV;
+      param.Descriptor        = D3D12_ROOT_DESCRIPTOR{ 0, 0 };
+      param.ShaderVisibility  = D3D12_SHADER_VISIBILITY_VERTEX;
+    })
+  };
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
+  D3D12_ROOT_SIGNATURE_DESC rootDesc{};
 
-	desc.NumRenderTargets = render_outputs.size();
+  rootDesc.Flags          = D3D12_ROOT_SIGNATURE_FLAG_NONE;
 
-	context->device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
+  rootDesc.pParameters    = parameters.data();
+  rootDesc.NumParameters  = parameters.size();
+
+  winrt::com_ptr<ID3DBlob> result;
+  D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);
+
+  context->device->CreateRootSignature(0, result.get(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), nullptr);
+
+  D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
+
+  desc.NumRenderTargets = render_outputs.size();
+
+  context->device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
 
 SNOW_OWL_NAMESPACE_END

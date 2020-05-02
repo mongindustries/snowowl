@@ -1,7 +1,5 @@
 #pragma once
 
-#include <dcomp.h>
-
 #include <header.hpp>
 
 #include "graphics_swap_chain.hpp"
@@ -44,13 +42,6 @@ struct swap_chain : graphics_swap_chain {
   winrt::com_ptr<IDXGISwapChain3>           instance;
 
   winrt::com_ptr<ID3D12DescriptorHeap>      frame_heap;
-
-
-  winrt::com_ptr<IDCompositionDevice>       comp_device;
-
-  winrt::com_ptr<IDCompositionTarget>       comp_target;
-
-  winrt::com_ptr<IDCompositionVisual>       comp_content;
 };
 
 SNOW_OWL_NAMESPACE_END

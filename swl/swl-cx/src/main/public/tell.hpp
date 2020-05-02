@@ -14,4 +14,10 @@ Object* tell(Object *instance, std::function<void(Object *)> block) {
 	return instance;
 }
 
+template<typename Object>
+Object tell(Object instance, std::function<void(Object&)> block) {
+	block(instance);
+	return instance;
+}
+
 SNOW_OWL_NAMESPACE_END

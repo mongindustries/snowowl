@@ -16,10 +16,12 @@ queue::queue(const cx::exp::ptr_ref<dx::context>& context) :
   queue_desc.Flags  = D3D12_COMMAND_QUEUE_FLAG_NONE;
   queue_desc.Type   = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-  context->device->CreateCommandQueue(&queue_desc, __uuidof(ID3D12CommandQueue), command_queue.put_void());
-  context->device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), fence.put_void());
+  auto& device = context->device;
 
-  context->device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), command_allocator.put_void());
+  device->CreateCommandQueue(&queue_desc, __uuidof(ID3D12CommandQueue), command_queue.put_void());
+  device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), fence.put_void());
+
+  device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), command_allocator.put_void());
 }
 
 queue::~queue() = default;
@@ -31,8 +33,6 @@ queue::create_render_block(const cx::exp::ptr_ref<graphics_render_pipeline> & pi
 
 void  queue::begin(const std::vector<cx::exp::ptr_ref<graphics_queue>> & dependencies) {
 
-  auto time = std::chrono::high_resolution_clock::now();
-
   command_queue->Signal(fence.get(), fence_frame);
   fence_frame += 1;
 
@@ -41,9 +41,6 @@ void  queue::begin(const std::vector<cx::exp::ptr_ref<graphics_queue>> & depende
     fence->SetEventOnCompletion(fence_frame - 1, wait); // waiting for previous frame to complete
     WaitForSingleObject(wait, INFINITE);
   }
-
-  auto after      = std::chrono::high_resolution_clock::now();
-  auto difference = std::chrono::duration_cast<std::chrono::milliseconds>(after - time);
 
   command_allocator->Reset();
 }

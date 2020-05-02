@@ -47,23 +47,9 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
   auto window_handle = surface.cast<void>().pointer();
 
   winrt::com_ptr<IDXGISwapChain1> instance;
-  // context->dxgi_factory->CreateSwapChainForComposition(present_queue->command_queue.get(), &swap_chain_desc, nullptr, instance.put());
   context->dxgi_factory->CreateSwapChainForHwnd(present_queue->command_queue.get(), (HWND) window_handle, &swap_chain_desc, nullptr, nullptr, instance.put());
 
   instance->QueryInterface(__uuidof(IDXGISwapChain3), this->instance.put_void());
-
-  /*
-  DCompositionCreateDevice(nullptr, __uuidof(IDCompositionDevice), comp_device.put_void());
-
-  comp_device->CreateTargetForHwnd((HWND)window_handle, true, comp_target.put());
-
-  comp_device->CreateVisual(comp_content.put());
-
-  comp_content->SetContent(instance.get());
-
-  comp_target->SetRoot(comp_content.get());
-  comp_device->Commit();
-  */
 
   frames.reserve(swap_chain_desc.BufferCount);
 
@@ -72,9 +58,11 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
   frameHeapDesc.NumDescriptors  = swap_chain_desc.BufferCount;
   frameHeapDesc.Type            = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 
-  context->device->CreateDescriptorHeap(&frameHeapDesc, __uuidof(ID3D12DescriptorHeap), frame_heap.put_void());
+  auto& device = context->device;
 
-  SIZE_T offset_size  = context->device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+  device->CreateDescriptorHeap(&frameHeapDesc, __uuidof(ID3D12DescriptorHeap), frame_heap.put_void());
+
+  SIZE_T offset_size  = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
   auto   heap_start   = frame_heap->GetCPUDescriptorHandleForHeapStart();
 
   for (auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
@@ -92,7 +80,7 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
     ref.format            = swap_chain_desc.Format;
 
     HRESULT buffer_res = instance->GetBuffer(i, __uuidof(ID3D12Resource), ref.resource.put_void());
-    context->device->CreateRenderTargetView(ref.resource.get(), nullptr, heap_start);
+    device->CreateRenderTargetView(ref.resource.get(), nullptr, heap_start);
 
     ref.resource->SetName((std::wstringstream() << L"Swapchain back buffer index " << i).str().c_str());
 
@@ -104,7 +92,9 @@ swap_chain::swap_chain  (ptr_ref<context> const& context, const cx::exp::ptr_ref
   }
 }
 
-swap_chain::~swap_chain () = default;
+swap_chain::~swap_chain       () {
+  frames.clear();
+}
 
 
 void  swap_chain::resize      (const cx::size_2d & new_size) {
