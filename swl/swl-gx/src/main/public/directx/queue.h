@@ -5,29 +5,23 @@
 #include <header.hpp>
 
 #include "context.h"
-#include "graphics_queue.hpp"
+#include "queue.hpp"
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-struct queue final : graphics_queue {
+struct queue final : gx::queue {
 
-  queue   (const cx::exp::ptr_ref<dx::context>& context);
-
-  ~queue  () override;
+  explicit queue  (dx::context& context);
 
 
-  cx::exp::ptr<graphics_render_block>
-        create_render_block (const cx::exp::ptr_ref<graphics_render_pipeline>& pipeline) override;
+  void  begin     (std::vector<cx::exp::ptr_ref<gx::queue>> const& dependencies) override;
+
+  void  submit    (std::vector<cx::exp::ptr_ref<gx::render_block>> const& commands) override;
 
 
-  void  begin               (const std::vector<cx::exp::ptr_ref<graphics_queue>>& dependencies) override;
+  std::atomic<uint64_t>                   fence_frame;
 
-  void  submit              (const std::vector<cx::exp::ptr_ref<graphics_render_block>>& commands) override;
-
-
-  std::atomic<uint64_t>              fence_frame;
-
-  HANDLE                             wait;
+  HANDLE                                  wait;
 
 
   winrt::com_ptr<ID3D12CommandQueue>      command_queue;

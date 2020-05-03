@@ -46,7 +46,7 @@ SNOW_OWL_NAMESPACE(ui)
  * @endcode
  *
  */
-struct SWL_EXPORT application { SWL_REFERENCEABLE(application)
+struct SWL_EXPORT application { SWL_REFERENCEABLE(application) SWL_POLYMORPHIC(application)
 
   /**
    * Creates a new instance with the specified native application interface.
@@ -54,19 +54,7 @@ struct SWL_EXPORT application { SWL_REFERENCEABLE(application)
    */
   explicit application  (void* native_instance);
 
-  ~application          () = default;
-
   // methods
-
-  /**
-   * Creates a new <code>swl::ui::window</code> instance.
-   * @remarks This is deprecated, construct <code>swl::ui::window</code> instances directly.
-   * @param caption The initial title of the window.
-   * @param frame The initial frame of the window.
-   * @return An owned reference to the window instance.
-   */
-  [[deprecated]] cx::exp::ptr<window>
-    create_window   (const std::string& caption, const cx::rect& frame);
 
   /**
    * Obtains the main window object.
@@ -103,7 +91,9 @@ struct SWL_EXPORT application { SWL_REFERENCEABLE(application)
 
 private:
 
-  void* native_instance;
+  void*                     native_instance = nullptr;
+
+  cx::exp::ptr<ui::window>  screen_window;
 
   static void
     pre_heat(application& app);

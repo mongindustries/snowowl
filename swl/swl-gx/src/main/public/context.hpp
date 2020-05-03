@@ -7,7 +7,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_shader {
+struct context { SWL_REFERENCEABLE(context) SWL_POLYMORPHIC(context)
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -22,27 +22,29 @@ SNOW_OWL_NAMESPACE(ui::backend)
 
 struct window_backend {
 
-	static window_backend* instance;
+  static window_backend* instance;
 
 
-	application*                        application{};
+  application* application{};
 
-	std::map< window const*, void* >    native_handles;
-
-
-	void  create        (window const* window);
-
-	void  destroy       (window const* window);
+  std::map< window const*, void* >    native_handles;
 
 
-	void  update_title  (window const* window);
+  void  create        (window const* window);
 
-	void  update_frame  (window const* window);
+  void  destroy       (window const* window);
+
+  void  fullscreen    (window const* window);
 
 
-	void* surface       (window const* window);
+  void  update_title  (window const* window);
 
-	friend struct ui::application;
+  void  update_frame  (window const* window);
+
+
+  void* surface       (window const* window);
+
+  friend struct ui::application;
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -7,8 +7,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_sampler {
-
+struct shader {
 };
 
 SNOW_OWL_NAMESPACE_END

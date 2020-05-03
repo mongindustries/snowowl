@@ -18,80 +18,100 @@ SNOW_OWL_NAMESPACE(ui)
 
 using namespace backend;
 
-window::window            () = default;
+cx::size_2d window::fullscreen_size = cx::size_2d{ -2, -2 };
 
-window::window            (string window_name, const rect &frame):
-	handle(cx::core::make_handle()), title(std::move(window_name)), frame(frame), sink(window_sink{ handle }) {
-	window_backend::instance->create(this);
+window::window  () = default;
+
+window::window  (string window_name, const rect & frame) :
+  handle(cx::core::make_handle()), title(std::move(window_name)), frame(frame), sink(window_sink{ handle }) {
+  window_backend::instance->create(this);
 }
 
-window::~window           () = default;
+window::~window () = default;
 
 
-window::window            (window &&mov) noexcept:
-	handle(mov.handle), title(std::move(mov.title)), frame(mov.frame), sink(std::move(mov.sink)) {
+window::window  (window && mov) noexcept :
+  handle(mov.handle), title(std::move(mov.title)), frame(mov.frame), sink(std::move(mov.sink)) {
 }
 
-window
-			&window::operator=  (window &&) noexcept {
-	return *this;
+window&
+  window::operator=       (window&&) noexcept {
+  return *this;
 }
 
 
-void  window::bind_loop     (const cx::exp::ptr_ref<cx::game_loop>& loop) {
+void
+  window::bind_loop       (const cx::exp::ptr_ref<cx::game_loop> & loop) {
 
-	assert(!game_loop);
+  assert(!game_loop);
 
-	game_loop = loop;
+  game_loop = loop;
 }
 
-void  window::set_title     (const std::string &new_title) {
+void
+  window::set_title       (const std::string & new_title) {
 
-	title = new_title;
-	window_backend::instance->update_title(this);
+  title = new_title;
+  window_backend::instance->update_title(this);
 }
 
-void  window::set_frame     (const cx::rect &new_frame) {
+void
+  window::set_frame       (const cx::rect & new_frame) {
 
-	frame = new_frame;
-	window_backend::instance->update_frame(this);
+  frame = new_frame;
+  window_backend::instance->update_frame(this);
 }
 
-void window::set_fullscreen (bool value) {
+void
+  window::set_fullscreen  (bool value) {
 
+  full_screen = value;
+  backend::window_backend::instance->fullscreen(this);
 }
 
 
 size_2d
-			window::get_size    () const {
-	return frame.size;
+  window::get_size        () const {
+  return frame.size;
 }
 
-rect  window::get_frame   () const {
-	return frame;
+rect
+  window::get_frame       () const {
+  return frame;
 }
 
 string
-			window::get_title   () const {
-	return title;
+  window::get_title       () const {
+  return title;
 }
 
 exp::ptr_ref<window_sink>
-			window::get_sink    () const {
-	return exp::ptr_ref<window_sink>{ sink };
+  window::get_sink        () const {
+  return exp::ptr_ref<window_sink>{ sink };
 }
 
-bool  window::is_sizing   () const {
-	return resizing;
+bool
+  window::get_fullscreen  () const {
+  return full_screen;
+}
+
+cx::driver_handle
+  window::get_handle      () const {
+  return handle;
+}
+
+bool
+  window::is_sizing       () const {
+  return resizing;
 }
 
 
-bool  window::operator<   (const window &rhs) const {
-	return handle < rhs.handle;
+bool  window::operator<   (const window & rhs) const {
+  return handle < rhs.handle;
 }
 
-bool  window::operator==  (const window &rhs) const {
-	return handle == rhs.handle;
+bool  window::operator==  (const window & rhs) const {
+  return handle == rhs.handle;
 }
 
 SNOW_OWL_NAMESPACE_END

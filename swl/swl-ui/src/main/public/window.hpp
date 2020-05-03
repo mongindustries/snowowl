@@ -17,7 +17,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_swap_chain;
+struct swap_chain;
 
 SNOW_OWL_NAMESPACE_END
 
@@ -36,20 +36,21 @@ struct window_surface;
  * This encapsulates a platform-native window. Basic operations such as
  * updating the title and frame are provided.
  *
- * To create a window, use <code>swl::ui::application</code>'s <code>create_window</code>
- * method or instantiate a window using any of the constructors of this object. Alternatively,
+ * To create a window, instantiate a window using any of the constructors of this object. Alternatively,
  * for platforms that requires a "main" window to be shown (in the case of Android, iOS, and UWP)
- * use <code>swl::ui::application</code>'s <code>get_main_window</code> method.
+ * use the <code>swl::ui::application</code> <code>get_main_window</code> method.
  *
  * To establish interactivity, bind a <code>swl::cx::game_loop</code> using the method
  * <code>bind_loop</code>. Take note that actions referring to the window inside the game
- * loop must be synchronised as the game loop runs in a separate thread.
+ * loop must be synchronized as the game loop runs in a separate thread.
  *
  * The window exposes a swap chain variable for display output. A valid
- * <code>swl:gx::graphics_swap_chain</code> instance is linked to this window
- * when created from a <code>swl::gx::graphics_context</code>.
+ * <code>swl:gx::swap_chain</code> instance is linked to this window
+ * when created from a <code>swl::gx::factory</code>.
  */
 struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
+
+  static cx::size_2d fullscreen_size;
 
 	/// Possible window states.
   enum state {
@@ -64,7 +65,7 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
    * @param frame The frame of the window.
    * @return A new swl::ui::window instance.
   */
-  window  (std::string window_name, const cx::rect& frame);
+  window  (std::string window_name, cx::rect const& frame);
 
   /**
    * @brief Creates a new instance with the default settings.
@@ -81,19 +82,19 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
    * @param game_loop The swl::cx::game_loop to bind.
    * @remarks The game loop runs in a separate thread. TODO: add a dispatcher for window.
    */
-  void  bind_loop       (const cx::exp::ptr_ref<cx::game_loop>& game_loop);
+  void  bind_loop       (cx::exp::ptr_ref<cx::game_loop> const& game_loop);
 
   /**
    * Updates the title of the window.
    * @param value The new value to apply.
    */
-  void  set_title       (const std::string& value);
+  void  set_title       (std::string const& value);
 
   /**
    * Updates the frame of the window.
    * @param value The new value to apply.
    */
-  void  set_frame       (const cx::rect& value);
+  void  set_frame       (cx::rect const& value);
 
   /**
    * @brief Updates the window if it needs to display full screen.
@@ -131,6 +132,12 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
   [[nodiscard]] cx::exp::ptr_ref<window_sink>
     get_sink            () const;
 
+  [[nodiscard]] bool
+    get_fullscreen      () const;
+
+  [[nodiscard]] cx::driver_handle
+    get_handle          () const;
+
   /**
    * Returns if the window is currently in an active resize mode.
    * Active resize is when the use click-drags a window to change its size.
@@ -165,6 +172,8 @@ private:
 
   bool                      resizing{ false };
 
+  bool                      full_screen{ false };
+
 
   cx::exp::ptr<window_sink> sink;
 
@@ -174,7 +183,7 @@ private:
 public:
 
   /// The swap chain reference of the window.
-  cx::exp::ptr_ref<gx::graphics_swap_chain> swap_chain;
+  cx::exp::ptr_ref<gx::swap_chain> swap_chain;
 
   /// The game loop reference of the window.
   cx::exp::ptr_ref<cx::game_loop>           game_loop;

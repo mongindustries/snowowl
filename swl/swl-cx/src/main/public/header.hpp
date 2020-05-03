@@ -21,6 +21,12 @@
   type              (type&&) noexcept; \
   type& operator=   (type&&) noexcept;
 
+#define SWL_BLOCK_CONTEXT(type) \
+  type(const type&) = delete; \
+  type(type&&) = delete; \
+  type& operator= (const type&) = delete; \
+  type& operator= (type&&) = delete; 
+
 /**
  * Designates an object to only have a move constructor. Instances
  * of this object is usually wrapped inside a <code>swl::cx::ptr</code>
@@ -30,6 +36,10 @@
   SWL_NO_CPY_CTOR(type) \
   SWL_MOVE_CTOR(type)
 
+/**
+ * Designates an object intending to be inherited from: it creates a default constructor and a virtual destructor.
+ * This is helpful for standardised polymorphic type requirements. (Inspiration from <code>NSObject</code> inheritance)
+ */
 #define SWL_POLYMORPHIC(type) \
   explicit type () noexcept; \
   virtual ~type ();

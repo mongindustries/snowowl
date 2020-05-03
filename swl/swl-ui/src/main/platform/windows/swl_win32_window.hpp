@@ -22,7 +22,7 @@ struct SWL_EXPORT win32_window {
 
 	window const* reference;
 
-	win32_window(HINSTANCE instance, const std::string &name);
+	win32_window(HINSTANCE instance, std::string const& name, cx::rect const& frame);
 };
 
 SNOW_OWL_NAMESPACE_END

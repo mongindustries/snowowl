@@ -8,9 +8,11 @@
 
 #include <header.hpp>
 
-#include "graphics_shader.hpp"
+#include "shader.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
+
+struct context;
 
 namespace pipeline {
 
@@ -57,7 +59,7 @@ namespace pipeline {
 
     operator uint16_t() const;
 
-    bool operator&(const write_mask& rhs);
+    bool operator&(const write_mask& rhs) const;
 
     uint16_t value;
 
@@ -135,9 +137,11 @@ namespace pipeline {
   };
 }
 
-struct graphics_render_pipeline {
+struct render_pipeline { SWL_REFERENCEABLE(render_pipeline) SWL_POLYMORPHIC(render_pipeline)
 
-  std::array<graphics_shader, 2>          shader_stages;
+  render_pipeline(context& context);
+
+  std::array<shader, 2>          shader_stages;
 
   pipeline::raster                        raster;
   pipeline::depth                         depth;

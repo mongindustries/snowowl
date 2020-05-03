@@ -167,7 +167,7 @@ LRESULT CALLBACK
     return 0;
   }
   case WM_CLOSE: {
-    if (const auto window = windowFromHWND(hwnd)) {
+    if (auto* const window = windowFromHWND(hwnd)) {
 
       if (window->game_loop) {
 

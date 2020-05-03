@@ -5,7 +5,11 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-render_pipeline::render_pipeline(const cx::exp::ptr_ref<dx::context>& context) : graphics_render_pipeline() {
+render_pipeline::render_pipeline(): gx::render_pipeline() {
+
+}
+
+render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
 
   std::array parameters{
     cx::tell<D3D12_ROOT_PARAMETER>({}, [](D3D12_ROOT_PARAMETER& param) {
@@ -25,13 +29,13 @@ render_pipeline::render_pipeline(const cx::exp::ptr_ref<dx::context>& context) :
   winrt::com_ptr<ID3DBlob> result;
   D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);
 
-  context->device->CreateRootSignature(0, result.get(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), nullptr);
+  context.device->CreateRootSignature(0, result.get(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), nullptr);
 
   D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
 
   desc.NumRenderTargets = render_outputs.size();
 
-  context->device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
+  context.device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
 
 SNOW_OWL_NAMESPACE_END

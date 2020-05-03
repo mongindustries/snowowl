@@ -11,8 +11,8 @@
 #include "graph_node.hpp"
 #include "graph_node_effect.hpp"
 
-#include "graphics_buffer.hpp"
-#include "graphics_shader.hpp"
+#include "buffer.hpp"
+#include "shader.hpp"
 
 SNOW_OWL_NAMESPACE(rd::graph::nodes)
 
@@ -47,10 +47,10 @@ struct vertex_argument_state: node_argument_state {
 	~vertex_argument_state  ();
 
 
-	cx::exp::ptr<gx::graphics_buffer<gx::graphics_buffer_type::typeData>> buffer;
-	cx::exp::ptr<gx::graphics_buffer<gx::graphics_buffer_type::typeData>> index_buffer;
+	cx::exp::ptr<gx::buffer<gx::buffer_type::typeData>> buffer;
+	cx::exp::ptr<gx::buffer<gx::buffer_type::typeData>> index_buffer;
 
-	gx::graphics_shader                                                   shader;
+	gx::shader                                                   shader;
 };
 
 struct vertex_entity_state: node_argument_state {

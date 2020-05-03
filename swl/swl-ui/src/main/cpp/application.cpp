@@ -13,13 +13,12 @@ SNOW_OWL_NAMESPACE(ui)
 
 using namespace backend;
 
-application::application(void *native_instance):
-	native_instance(native_instance) {
-	window_backend::instance->application = this;
+application::application  () noexcept: screen_window(nullptr) { }
+
+application::application  (void* native_instance) : native_instance(native_instance), screen_window(nullptr) {
+  window_backend::instance->application = this;
 }
 
-cx::exp::ptr<window> application::create_window(const std::string& caption, const cx::rect& frame) {
-	return cx::exp::ptr<window>{ new window(caption, frame) };
-}
+application::~application () = default;
 
 SNOW_OWL_NAMESPACE_END

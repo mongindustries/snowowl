@@ -26,8 +26,8 @@
       <config projectName="snow_owl" targetName="gtest_main" />
       <config projectName="snow_owl" targetName="cx-test" />
       <config projectName="snow_owl" targetName="gtest" />
-      <config projectName="snow_owl" targetName="gmock" />
       <config projectName="snow_owl" targetName="rd" />
+      <config projectName="snow_owl" targetName="gmock" />
       <config projectName="snow_owl" targetName="rd-test" />
       <config projectName="snow_owl" targetName="app" />
       <config projectName="snow_owl" targetName="gx" />
@@ -44,35 +44,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_cpu_fence.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_render_block.mm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_cpu_fence.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_block.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_block.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/swap_chain.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/buffer.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/buffer_allocator.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/factory.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_block.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deps/googletest/lib" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/header.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/header.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_block.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pass.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_buffer.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_buffer.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_pipeline.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_render_pipeline.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_block.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_block.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pass.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pipeline.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_buffer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pass.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_pass.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_pipeline.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_buffer_allocator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/buffer_allocator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_context.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/context.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_queue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/queue.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_block.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_pass.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_swap_chain.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/context.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/context.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/queue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/queue.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/render_block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/render_block.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/swap_chain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/swap_chain.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/context.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/context.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/queue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/render_block.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/render_block.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/resource_reference.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/resource_reference.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/swap_chain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/swap_chain.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer_allocator.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_context.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/context.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_queue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/queue.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_block.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_pass.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_pipeline.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_resource_reference.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/resource_reference.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_sampler.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/sampler.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_shader.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/shader.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/swap_chain.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,6 +182,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="raisj8uk" />
   </component>
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-app" />
+  </component>
   <component name="ProjectId" id="1ZdAUJ2I3s0uKeIXM4jRjJpF1e7" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -194,6 +210,7 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="settings.editor.splitter.proportion" value="0.23727088" />
@@ -355,6 +372,8 @@
       <workItem from="1587967382119" duration="2913000" />
       <workItem from="1587983835786" duration="662000" />
       <workItem from="1587986030225" duration="1783000" />
+      <workItem from="1588448856682" duration="1654000" />
+      <workItem from="1588452158641" duration="6867000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
@@ -563,13 +582,13 @@
     </state>
     <state x="0" y="0" key="IDE.errors.dialog/0.0.1440.900@0.0.1440.900" timestamp="1585526512968" />
     <state x="0" y="0" width="1680" height="1050" key="IDE.errors.dialog/0.0.1680.1050@0.0.1680.1050" timestamp="1585376473157" />
-    <state x="125" y="42" width="1142" height="722" key="SettingsEditor" timestamp="1588446902371">
-      <screen x="0" y="0" width="1440" height="860" />
+    <state x="190" y="129" width="1142" height="722" key="SettingsEditor" timestamp="1588453664667">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="125" y="42" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1588446902371" />
     <state x="214" y="100" width="1012" height="722" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1586360168987" />
     <state x="0" y="0" width="1680" height="1050" key="SettingsEditor/0.0.1680.1050@0.0.1680.1050" timestamp="1585380212419" />
-    <state x="190" y="129" width="1129" height="815" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1587396210796" />
+    <state x="190" y="129" width="1129" height="815" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1588453664667" />
     <state x="125" y="63" width="1142" height="722" key="SettingsEditor/0.23.1440.813@0.23.1440.813" timestamp="1587798501499" />
     <state x="0" y="23" width="1440" height="877" key="SettingsEditor/0.23.1440.877@0.23.1440.877" timestamp="1586103993117" />
     <state x="240" y="154" key="SettingsEditor/0.23.1680.1027@0.23.1680.1027" timestamp="1585217700264" />
@@ -603,18 +622,19 @@
     </state>
     <state x="453" y="248" key="refactoring.ChangeSignatureDialog/0.0.1440.900@0.0.1440.900" timestamp="1586360568766" />
     <state x="453" y="247" key="refactoring.ChangeSignatureDialog/0.23.1440.813@0.23.1440.813" timestamp="1587528359694" />
-    <state x="385" y="213" key="run.anything.popup" timestamp="1587795905326">
-      <screen x="0" y="23" width="1440" height="813" />
+    <state x="513" y="243" key="run.anything.popup" timestamp="1588454937062">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1585674031758" />
+    <state x="513" y="243" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1588454937062" />
     <state x="385" y="213" key="run.anything.popup/0.23.1440.813@0.23.1440.813" timestamp="1587795905326" />
-    <state x="386" y="188" width="672" height="647" key="search.everywhere.popup" timestamp="1588448354253">
-      <screen x="0" y="0" width="1440" height="860" />
+    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup" timestamp="1588453897450">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="386" y="188" width="672" height="647" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1588448354253" />
     <state x="385" y="196" width="671" height="677" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1587969701598" />
     <state x="449" y="229" width="782" height="789" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1585387662135" />
-    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1587395961989" />
+    <state x="513" y="226" width="895" height="783" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1588453897450" />
     <state x="385" y="200" width="672" height="613" key="search.everywhere.popup/0.23.1440.813@0.23.1440.813" timestamp="1587873971658" />
     <state x="385" y="214" width="671" height="660" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1586015786428" />
     <state x="449" y="233" width="784" height="727" key="search.everywhere.popup/0.23.1680.963@0.23.1680.963" timestamp="1587665806109" />

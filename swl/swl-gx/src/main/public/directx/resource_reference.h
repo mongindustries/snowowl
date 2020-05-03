@@ -5,7 +5,7 @@
 #include <d3d12.h>
 #include <winrt/base.h>
 
-#include "graphics_resource_reference.hpp"
+#include "resource_reference.hpp"
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
@@ -14,7 +14,7 @@ enum resource_reference_type {
   typeGPU
 };
 
-struct resource_reference final : graphics_resource_reference {
+struct resource_reference final : gx::resource_reference {
   
   union {
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle;

@@ -1,27 +1,28 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 set(HEADER_LIST
-        public/graphics_context.hpp
-        public/graphics_swap_chain.hpp
-        public/graphics_queue.hpp
-        public/graphics_render_pass.hpp
-        public/graphics_shader.hpp
-        public/graphics_buffer.hpp
-        public/graphics_sampler.hpp
-        public/graphics_render_pipeline.hpp
-        public/graphics_buffer_allocator.hpp 
-        public/graphics_render_block.hpp
-        public/graphics_resource_reference.hpp)
+        public/context.hpp
+        public/swap_chain.hpp
+        public/queue.hpp
+        public/render_pass.hpp
+        public/shader.hpp
+        public/buffer.hpp
+        public/sampler.hpp
+        public/render_pipeline.hpp
+        public/buffer_allocator.hpp
+        public/render_block.hpp
+        public/resource_reference.hpp
+        public/factory.hpp)
 
 set(PRIVATE_HEADER_LIST)
 
 set(SOURCE_LIST
-        cpp/graphics_context.cpp
-        cpp/graphics_swap_chain.cpp
-        cpp/graphics_render_pipeline.cpp
-        cpp/graphics_queue.cpp
-        cpp/graphics_render_pass.cpp cpp/graphics_buffer_allocator.cpp
-        cpp/graphics_render_block.cpp)
+        cpp/context.cpp
+        cpp/swap_chain.cpp
+        cpp/render_pipeline.cpp
+        cpp/queue.cpp
+        cpp/render_pass.cpp cpp/buffer_allocator.cpp
+        cpp/render_block.cpp)
 
 if(WIN32)
     set(PLATFORM_SOURCE_LIST
@@ -30,7 +31,7 @@ if(WIN32)
             "platform/windows/directx/swap_chain.cpp"
             "platform/windows/directx/pipeline.cpp"
             "platform/windows/directx/render_block.cpp"
-            "platform/windows/directx/resource_reference.cpp")
+            "platform/windows/directx/resource_reference.cpp" "platform/windows/directx/factory.cpp")
 
     set(PLATFORM_HEADER_LIST
             "public/directx/context.h"
@@ -38,7 +39,7 @@ if(WIN32)
             "public/directx/swap_chain.h"
             "public/directx/pipeline.h"
             "public/directx/render_block.h"
-            "public/directx/resource_reference.h")
+            "public/directx/resource_reference.h" "public/directx/factory.h")
 
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/cpp FILES ${PLATFORM_SOURCE_LIST})
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/hpp FILES ${PLATFORM_HEADER_LIST})

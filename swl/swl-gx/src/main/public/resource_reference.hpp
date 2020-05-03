@@ -4,7 +4,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-struct graphics_resource_reference {
+struct resource_reference {
 
 };
 
