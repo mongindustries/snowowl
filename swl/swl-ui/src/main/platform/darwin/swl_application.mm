@@ -1,7 +1,7 @@
 #import <tell.hpp>
 
-#include "swl_application.hxx"
-#include "application.hpp"
+#import "application.hpp"
+#import "swl_application.hxx"
 
 using namespace swl::ui;
 
@@ -12,10 +12,11 @@ application_delegate* app_delegate = [[application_delegate alloc] init];
 @implementation application_delegate
 
 - (void)applicationDidFinishLaunching:  (NSNotification *)notification {
+  __app->on_create  ();
 }
 
 - (void)applicationWillTerminate:       (NSNotification *)notification {
-	__app->on_destroy();
+  __app->on_destroy ();
 }
 
 @end
@@ -23,52 +24,58 @@ application_delegate* app_delegate = [[application_delegate alloc] init];
 
 int   application::run_loop(application &app) {
 
-	[[NSApplication sharedApplication] run];
-	return 0;
+  @autoreleasepool {
+    [[NSApplication sharedApplication] run];
+  }
+
+  return 0;
 }
 
 void  application::pre_heat(application &app) {
 
-	__app = &app;
+  __app = &app;
 
-	cx::tell<NSApplication>([NSApplication sharedApplication], [](const NSApplication *app) {
+  @autoreleasepool {
 
-		auto appMenu = [[NSMenuItem alloc] initWithTitle:@"Application" action:nil keyEquivalent:@""];
+    cx::tell<NSApplication>([NSApplication sharedApplication], [](const NSApplication *app) {
 
-		auto appsubMenu = [[NSMenu alloc] init];
-		appMenu.submenu = appsubMenu;
+      auto appMenu = [[NSMenuItem alloc] initWithTitle:@"Application" action:nil keyEquivalent:@""];
 
-		auto serviceMenu = [[NSMenu alloc] init];
-		app.servicesMenu = serviceMenu;
+      auto appsubMenu = [[NSMenu alloc] init];
+      appMenu.submenu = appsubMenu;
 
-		[appsubMenu addItemWithTitle:@"About" action:nil keyEquivalent:@""];
-		[appsubMenu addItem:NSMenuItem.separatorItem];
+      auto serviceMenu = [[NSMenu alloc] init];
+      app.servicesMenu = serviceMenu;
 
-		[appsubMenu addItemWithTitle:@"Console" action:nil keyEquivalent:@""];
-		[appsubMenu addItemWithTitle:@"Preferences" action:nil keyEquivalent:@""];
-		[appsubMenu addItemWithTitle:@"Services" action:nil keyEquivalent:@""].submenu = serviceMenu;
-		[appsubMenu addItem:NSMenuItem.separatorItem];
+      [appsubMenu addItemWithTitle:@"About" action:nil keyEquivalent:@""];
+      [appsubMenu addItem:NSMenuItem.separatorItem];
 
-		auto hideMenu = [appsubMenu addItemWithTitle:@"Hide" action:@selector(hide:) keyEquivalent:@"h"];
-		hideMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand;
+      [appsubMenu addItemWithTitle:@"Console" action:nil keyEquivalent:@""];
+      [appsubMenu addItemWithTitle:@"Preferences" action:nil keyEquivalent:@""];
+      [appsubMenu addItemWithTitle:@"Services" action:nil keyEquivalent:@""].submenu = serviceMenu;
+      [appsubMenu addItem:NSMenuItem.separatorItem];
 
-		auto hideAllMenu = [appsubMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
-		hideAllMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand | NSEventModifierFlagShift;
+      auto hideMenu = [appsubMenu addItemWithTitle:@"Hide" action:@selector(hide:) keyEquivalent:@"h"];
+      hideMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand;
 
-		[appsubMenu addItem:NSMenuItem.separatorItem];
-		[appsubMenu addItemWithTitle:@"Go Fullscreen" action:@selector(toggleFullScreen:) keyEquivalent:@""];
-		[appsubMenu addItem:NSMenuItem.separatorItem];
+      auto hideAllMenu = [appsubMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
+      hideAllMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand | NSEventModifierFlagShift;
 
-		auto quitMenu = [appsubMenu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
-		quitMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand;
+      [appsubMenu addItem:NSMenuItem.separatorItem];
+      [appsubMenu addItemWithTitle:@"Go Fullscreen" action:@selector(toggleFullScreen:) keyEquivalent:@""];
+      [appsubMenu addItem:NSMenuItem.separatorItem];
 
-		auto mainMenu = [[NSMenu alloc] init];
+      auto quitMenu = [appsubMenu addItemWithTitle:@"Quit" action:@selector(terminate:) keyEquivalent:@"q"];
+      quitMenu.keyEquivalentModifierMask = NSEventModifierFlagCommand;
 
-		[mainMenu addItem:appMenu];
+      auto mainMenu = [[NSMenu alloc] init];
 
-		app.mainMenu = mainMenu;
-		app.delegate = app_delegate;
+      [mainMenu addItem:appMenu];
 
-		app.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-	});
+      app.mainMenu = mainMenu;
+      app.delegate = app_delegate;
+
+      app.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
+    });
+  }
 }

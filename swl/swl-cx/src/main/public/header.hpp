@@ -13,6 +13,18 @@
 #define SWL_EXPORT
 #endif
 
+#if defined(__OBJC__)
+#define OBJC_OBJECT(type) type*
+#else
+#define OBJC_OBJECT(type) void*
+#endif
+
+#if defined(__OBJC__)
+#define OBJC_ID(type) id<type>
+#else
+#define OBJC_ID(type) void*
+#endif
+
 #define SWL_NO_CPY_CTOR(type) \
   type              (const type&) = delete; \
   type& operator=   (const type&) = delete;

@@ -5,6 +5,8 @@
 #include <application.hpp>
 #include <game_loop.hpp>
 
+#include <factory.hpp>
+
 #if defined(SWL_WIN32)
 #define _USE_MATH_DEFINES
 #include <directx/factory.h>
@@ -26,7 +28,7 @@ using ptr = cx::exp::ptr<c>;
 
 struct app_game_loop final : game_loop {
 
-  exp::ptr_ref<window>          window;
+  exp::ptr_ref<window>          window{ gx::dx::context() };
 
   gx::factory<gx::dx::context>  factory;
 
@@ -38,7 +40,6 @@ struct app_game_loop final : game_loop {
 
   app_game_loop    (ui::window& window): game_loop(60, 4),
     window      (&window),
-    factory     (gx::dx::context()),
 
     main_queue  (factory.queue        ()),
     swap_chain  (factory.swap_chain   (main_queue, window)),
@@ -89,16 +90,16 @@ struct app_game_loop final : game_loop {
 
 struct app final : application {
 
-  exp::ptr<window>        window;
+  exp::ptr_ref<window>    window;
   exp::ptr<app_game_loop> game_loop;
 
   explicit app    (void* instance): application(instance), window(nullptr), game_loop(nullptr) { }
 
   void on_create  () override {
 
-    window                    = exp::ptr<ui::window>{ new ui::window("[SnowOwl:] App", rect{ {100, 100}, {800, 480} }) };
+    window                    = get_main_window();
 
-    game_loop                 = exp::ptr<app_game_loop>{ new app_game_loop(exp::ptr_ref{ window }) };
+    game_loop                 = exp::ptr<app_game_loop>{ new app_game_loop(window) };
     game_loop->frame_callback = [&](auto fps) {
       window->set_title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str());
     };

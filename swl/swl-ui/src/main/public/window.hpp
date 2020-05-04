@@ -38,7 +38,7 @@ struct window_surface;
  *
  * To create a window, instantiate a window using any of the constructors of this object. Alternatively,
  * for platforms that requires a "main" window to be shown (in the case of Android, iOS, and UWP)
- * use the <code>swl::ui::application</code> <code>get_main_window</code> method.
+ * use the <code>swl::ui::application::get_main_window</code> method.
  *
  * To establish interactivity, bind a <code>swl::cx::game_loop</code> using the method
  * <code>bind_loop</code>. Take note that actions referring to the window inside the game

@@ -7,12 +7,17 @@
 
 #include <header.hpp>
 #include <ownership.hpp>
-
-#include <window.hpp>
+#include <point.hpp>
 
 #include "queue.hpp"
 #include "context.hpp"
 #include "resource_reference.hpp"
+
+SNOW_OWL_NAMESPACE(ui)
+
+struct window;
+
+SNOW_OWL_NAMESPACE_END
 
 SNOW_OWL_NAMESPACE(gx)
 

@@ -1,0 +1,25 @@
+targets:
+  gx:
+    type: library.static
+    platform: [ macOS, iOS ]
+    sources:
+      - path: cpp
+        group: gx
+      - path: headers
+        group: gx
+        buildPhase: headers
+        headerVisibility: project
+      - path: public
+        group: gx
+        excludes:
+          - directx/*.h
+        buildPhase: headers
+        headerVisibility: public
+      - path: platform/darwin
+        group: gx
+        name: mac
+    settings:
+      base:
+        CLANG_CXX_LANGUAGE_STANDARD: c++2a
+        HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-cx/src/main/public, ../../swl/swl-ui/src/main/public ]
+        USER_HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-gx/src/main/public, ../../swl/swl-gx/src/main/headers ]

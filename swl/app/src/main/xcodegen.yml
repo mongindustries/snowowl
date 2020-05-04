@@ -1,0 +1,25 @@
+targets:
+  app-macOS:
+    type: application
+    platform: macOS
+    sources:
+      - path: cpp
+        group: app
+      - path: headers
+        buildPhase: headers
+        headerVisibility: project
+        group: app
+      - path: platform/darwin
+        name: mac
+        group: app
+      - path: hlsl
+        group: app
+    settings:
+          base:
+            CLANG_CXX_LANGUAGE_STANDARD: c++2a
+            HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-cx/src/main/public, ../../swl/swl-gx/src/main/public, ../../swl/swl-ui/src/main/public, ../../swl/swl-rd/src/main/public ]
+    dependencies:
+      - target: cx_macOS
+      - target: gx_macOS
+      - target: ui_macOS
+      - target: rd_macOS

@@ -15,13 +15,13 @@ typedef swl::cx::vector<float, 4> float4;
 #endif
 
 struct vertex_input {
-		float4 pos;
-		float4 col;
+  float4 pos;
+  float4 col;
 };
 
 struct vertex_output {
-		float4 pos SV_POSITION;
-		float4 col;
+  float4 pos SV_POSITION;
+  float4 col;
 };
 
 #endif //SNOW_OWL_COMMON_H

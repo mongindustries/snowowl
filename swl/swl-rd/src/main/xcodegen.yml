@@ -1,0 +1,20 @@
+targets:
+  rd:
+    type: library.static
+    platform: [ macOS, iOS ]
+    sources:
+      - path: cpp
+        group: rd
+      - path: headers
+        group: rd
+        buildPhase: headers
+        headerVisibility: project
+      - path: public
+        group: rd
+        buildPhase: headers
+        headerVisibility: public
+    settings:
+      base:
+        CLANG_CXX_LANGUAGE_STANDARD: c++2a
+        HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-cx/src/main/public, ../../swl/swl-gx/src/main/public ]
+        USER_HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-rd/src/main/public, ../../swl/swl-rd/src/main/headers ]

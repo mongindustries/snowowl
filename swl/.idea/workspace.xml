@@ -23,18 +23,10 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="snow_owl" targetName="gtest_main" />
-      <config projectName="snow_owl" targetName="cx-test" />
-      <config projectName="snow_owl" targetName="gtest" />
-      <config projectName="snow_owl" targetName="rd" />
-      <config projectName="snow_owl" targetName="gmock" />
-      <config projectName="snow_owl" targetName="rd-test" />
-      <config projectName="snow_owl" targetName="app" />
-      <config projectName="snow_owl" targetName="gx" />
-      <config projectName="snow_owl" targetName="gx-test" />
-      <config projectName="snow_owl" targetName="gmock_main" />
-      <config projectName="snow_owl" targetName="ui" />
-      <config projectName="snow_owl" targetName="cx" />
+      <config projectName="Project" targetName="gtest_main" />
+      <config projectName="Project" targetName="gtest" />
+      <config projectName="Project" targetName="gmock" />
+      <config projectName="Project" targetName="gmock_main" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -44,47 +36,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9de56241-b033-470c-af95-79097ae1a0ab" name="Default Changelist" comment="Testing vulkan implem.">
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_block.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/swap_chain.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/buffer.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/buffer_allocator.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/factory.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_block.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/platform/darwin/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/xcodegen.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/context.mm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/queue.mm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/swap_chain.mm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/context.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/queue.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/swl-gx/src/main/public/metal/swap_chain.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/cpp/app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/hlsl/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/hlsl/common.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/hlsl/simple.frag" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/hlsl/simple.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/hlsl/simple.vert" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/hlsl/simple.vert" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/platform/darwin/Info.plist.in" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/lib" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googlemock/docs/cook_book.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/docs/advanced.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/include/gtest/internal/gtest-internal.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" beforeDir="false" afterPath="$PROJECT_DIR$/deps/googletest/lib/googletest/src/gtest-death-test.cc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/header.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/header.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-cx/src/main/public/ownership.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_buffer_allocator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/buffer_allocator.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_context.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/context.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_queue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/queue.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_block.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_pass.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_render_pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/cpp/render_pipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/cpp/graphics_swap_chain.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/context.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/context.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/pipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/queue.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/queue.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/render_block.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/render_block.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/swap_chain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/platform/windows/directx/swap_chain.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/context.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/context.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/pipeline.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/queue.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/render_block.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/render_block.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/resource_reference.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/resource_reference.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/directx/swap_chain.h" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/directx/swap_chain.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_buffer_allocator.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_context.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/context.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_queue.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/queue.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_block.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pass.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_pass.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_render_pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/render_pipeline.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_resource_reference.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/resource_reference.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_sampler.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/sampler.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_shader.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/shader.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/graphics_swap_chain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/swap_chain.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/public/graph_nodes/vertex.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_buffer.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_context.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_cpu_fence.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_queue.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_render_block.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_render_pipeline.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/platform/darwin/metal/mtl_swap_chain.mm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/buffer_allocator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/buffer_allocator.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_buffer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_context.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_cpu_fence.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_queue.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_block.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_pass.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_render_pipeline.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/metal/mtl_swap_chain.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-gx/src/main/public/swap_chain.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-gx/src/main/public/swap_chain.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/cpp/entity.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/cpp/entity.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-rd/src/main/cpp/world_renderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-rd/src/main/cpp/world_renderer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/cpp/window_surface.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/cpp/window_surface.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_application.mm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.hxx" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.hxx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/platform/darwin/swl_window.mm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/swl-ui/src/main/public/window.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,7 +89,6 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -225,7 +218,7 @@
       <recent name="$PROJECT_DIR$/app/src/main" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.ui">
+  <component name="RunManager">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -233,59 +226,6 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="cx-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="gx-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="gx-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="rd-test" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd-test" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="rd-test" TEST_MODE="SUITE_TEST">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-        <option name="BeforeTestRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="app" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="app" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="snow_owl" RUN_TARGET_NAME="app">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="cx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="cx" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="gx" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="gx" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="rd" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="rd" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ui" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="snow_owl" TARGET_NAME="ui" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="CMake Application.app" />
-      <item itemvalue="CMake Application.cx" />
-      <item itemvalue="CMake Application.gx" />
-      <item itemvalue="CMake Application.rd" />
-      <item itemvalue="CMake Application.ui" />
-      <item itemvalue="Google Test.cx-test" />
-      <item itemvalue="Google Test.gx-test" />
-      <item itemvalue="Google Test.rd-test" />
-    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -374,6 +314,7 @@
       <workItem from="1587986030225" duration="1783000" />
       <workItem from="1588448856682" duration="1654000" />
       <workItem from="1588452158641" duration="6867000" />
+      <workItem from="1588592231921" duration="245000" />
     </task>
     <task id="LOCAL-00001" summary="Add window definition.&#10;Add memory ownership.&#10;Add event contract.&#10;Basic implement vulkan on macOS.">
       <created>1585718442681</created>
