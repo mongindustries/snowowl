@@ -41,14 +41,14 @@ All objects are contained inside the `swl::gx` namespace.
     - `gx::dx::context` A DirectX 12 API context (for Windows and Xbox Platforms)
     - `gx::vk::context` A Vulkan API context
 
-```[C++]
+```C++
 #include <directx/factory.h>
 gx::factory<gx::dx::context> factory{ gx::dx::context() };
 ```
 
 2. Create a `gx::queue` to issue commands:
 
-```[C++]
+```C++
 #include <queue.hpp>
 cx::exp::ptr<gx::queue> queue{ factory.create_queue() };
 ```
@@ -57,7 +57,7 @@ Take note of the pointer `cx::exp::ptr<gx::queue>` usage since `create_queue` re
 
 3. Create a `gx::swap_chain` to present render commands to:
 
-```[C++]
+```C++
 #include <swap_chain.hpp>
 cx::exp::ptr<gx::swap_chain> swap_chain{ factory.create_swap_chain(queue, window) };
 ```
@@ -65,7 +65,7 @@ A target window is required. You can create a window by calling any of the const
 
 4. Begin queue execution block:
 
-```[C++]
+```C++
 queue->begin({ }); // Parameter in begin is a list of queues this queue will wait before beggining
 
 queue->submit({ }); // Parameter in submit is a list of render blocks to execute
@@ -73,7 +73,7 @@ queue->submit({ }); // Parameter in submit is a list of render blocks to execute
 
 5. To use the swap chain, use a `gx::swap_chain_boundary`:
 
-```[C++]
+```C++
 queue->begin({ }); {
     gx::swap_chain_boundary cur_frame{ cx::exp::ptr_ref{ swap_chain } }; {
 
@@ -88,13 +88,13 @@ Take note of the execution order of `gx::swap_chain_boundary`. It **must** be af
 
 7. Begin command submission to a `gx::queue` by creating a `gx::render_block`:
 
-```[C++]
+```C++
 #include <render_block.hpp>
 cx::exp::ptr<gx::render_block> block{ factory.create_render_block(queue) };
 ```
 8. Then create a `gx::block_boundary` to begin block execution:
 
-```[C++]
+```C++
 queue->begin({ }); {
     gx::swap_chain_boundary cur_frame{ cx::exp::ptr_ref{ swap_chain } }; {
         gx::block_boundary exec{ cx::exp::ptr_ref{ block }, render_pipeline }; {
