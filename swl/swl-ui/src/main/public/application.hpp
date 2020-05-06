@@ -93,8 +93,6 @@ private:
 
   void*                     native_instance = nullptr;
 
-  cx::exp::ptr<ui::window>  screen_window;
-
   static void
     pre_heat(application& app);
 

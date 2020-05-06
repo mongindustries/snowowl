@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 
+#include "swl_window_sink.hpp"
+
 using namespace std;
 
 using namespace swl::cx;
@@ -12,15 +14,22 @@ using namespace backend;
 
 window_backend* window_backend::instance = new window_backend();
 
+exp::ptr<window> __main_window = exp::ptr<window>{nullptr};
+
 void  window_backend::create        (window const* window) {
 
-  auto  win32Win            = new win32_window(GetModuleHandle(nullptr), window->get_title(), window->get_frame());
-        win32Win->reference = window;
-
-  ShowWindow    (win32Win->hwnd, SW_SHOW | SW_SHOWNORMAL);
-  UpdateWindow  (win32Win->hwnd);
+  win32_window* win32Win = new win32_window(GetModuleHandle(nullptr), window->get_title(), window->get_frame());
+  win32Win->reference = window;
 
   native_handles.emplace(window, win32Win);
+
+  if (window->get_size().components == window::fullscreen_size.components) {
+    const_cast<ui::window*>(window)->set_fullscreen(true);
+  } else {
+    ShowWindow(win32Win->hwnd, SW_SHOW | SW_SHOWNORMAL);
+  }
+
+  UpdateWindow  (win32Win->hwnd);
 }
 
 void  window_backend::update_title  (window const* window) {
@@ -34,7 +43,6 @@ void  window_backend::update_title  (window const* window) {
     MultiByteToWideChar(CP_UTF8, 0, window->get_title().c_str(), -1, newTitle.data(), titleSize);
 
     SetWindowText(handle, newTitle.c_str());
-
   }
   catch (const out_of_range&) {}
 }
@@ -76,15 +84,23 @@ void  window_backend::fullscreen    (window const* window) {
     return;
   }
 
-  auto win32 = static_cast<win32_window*>(result->second);
+  const auto win32 = static_cast<win32_window*>(result->second);
 
   if (window->get_fullscreen()) {
-    SetWindowLongPtr(win32->hwnd, GWL_STYLE, WS_POPUP | WS_SYSMENU | WS_MAXIMIZE);
+    SetWindowLongPtr(win32->hwnd, GWL_STYLE, WS_POPUP | WS_THICKFRAME | WS_SYSMENU | WS_MAXIMIZEBOX);
   } else {
     SetWindowLongPtr(win32->hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
   }
 
-  // todo: update size
+  SetWindowPos(win32->hwnd, HWND_TOP, 0, 0, 0, 0, SWP_ASYNCWINDOWPOS | SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE);
+  ShowWindow(win32->hwnd, SW_SHOWMAXIMIZED);
+
+  RECT newRect{};
+  GetClientRect(win32->hwnd, &newRect);
+  const_cast<ui::window*>(window)->get_sink()->frame(rect{
+                                                       {static_cast<float>(newRect.left), static_cast<float>(newRect.top)},
+                                                       {newRect.right - newRect.left, newRect.bottom - newRect.top}
+                                                     });
 }
 
 void* window_backend::surface       (window const* window) {
@@ -96,4 +112,13 @@ void* window_backend::surface       (window const* window) {
   }
 
   return nullptr;
+}
+
+exp::ptr_ref<window> window_backend::main_window() {
+ 
+  if (!__main_window) {
+    __main_window = exp::ptr<window>{ new window("Game Window", rect{{100, 100}, window::fullscreen_size}) };
+  }
+
+  return exp::ptr_ref{__main_window};
 }

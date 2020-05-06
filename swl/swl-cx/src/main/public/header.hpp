@@ -29,6 +29,10 @@
   type              (const type&) = delete; \
   type& operator=   (const type&) = delete;
 
+#define SWL_NO_MOVE_CTOR(type) \
+  type              (type&&) = delete; \
+  type& operator=   (type&&) = delete;
+
 #define SWL_MOVE_CTOR(type) \
   type              (type&&) noexcept; \
   type& operator=   (type&&) noexcept;

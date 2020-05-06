@@ -236,5 +236,5 @@ int   ui::application::run_loop         (application& app) {
 
 cx::exp::ptr_ref<ui::window>
       ui::application::get_main_window  () {
-  return cx::exp::ptr_ref<ui::window>{ nullptr };
+  return backend::window_backend::instance->main_window();
 }

@@ -12,10 +12,12 @@ using namespace std;
 using namespace chrono;
 using namespace swl::cx;
 
-game_loop::game_loop(uint16_t targetFramerate, uint16_t bailAmount)
-  : target_frame_time(1000 / targetFramerate),
-  target_update_count(bailAmount) {
-}
+game_loop::game_loop() noexcept: target_frame_time(1000ms / 60), target_update_count(4) { }
+
+game_loop::game_loop(uint16_t targetFramerate, uint16_t bailAmount): target_frame_time(1000ms / targetFramerate), target_update_count(bailAmount) { }
+
+game_loop::~game_loop() = default;
+
 
 void game_loop::open() {
 
@@ -53,7 +55,9 @@ void game_loop::open() {
       frames    += 1;
 
       if ((accu - tt) >= 1s) {
-        game_loop->frame_callback(frames);
+        if (game_loop->frame_callback) {
+          game_loop->frame_callback(frames);
+        }
 
         frames  = 0;
         tt      = accu;

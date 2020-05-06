@@ -15,11 +15,39 @@
 
 SNOW_OWL_NAMESPACE(cx)
 
-struct game_loop {
+/**
+ * A game loop construct.
+ *
+ * A game loop manages game/app execution by executing two functions,
+ * namely update and render on an infinite loop.
+ *
+ * A game loop has an update tick that is time-consistent given a
+ * <code>target_frame_rate</code> and a <code>bail_amount</code>. Bail
+ * amount is used in the off chance that a frame has been delayed far
+ * too long (due to the game loop's execution blocked by a long render
+ * operation or the game loop is waiting for the next frame to be notified
+ * by another thread.
+ *
+ * A game loop executes the two methods in a separate thread. This ensures
+ * that the event thread by the OS is not interfered in any way and event
+ * pumping is consistent. This helps with input latency by separately processing
+ * input stuff on another thread.
+ *
+ * To define a event loop like app loop, define an arbitrary frame rate and set
+ * bail amount to 1.
+ *
+ * A game loop's frame can also be manually executed by calling the <code>frame</code>
+ * method. But be sure to block the game thread first by setting <code>check_for_lock</code>
+ * to true.
+ *
+ * To start a game loop, call the <code>open</code> method. To close it, call the <code>close</code>
+ * method. Be sure to wait for game loop frame execution completion by doing a <code>wait</code>
+ * call on <code>target</code> lock.
+ *
+*/
+struct game_loop { SWL_NO_CPY_CTOR(game_loop) SWL_NO_MOVE_CTOR(game_loop) SWL_POLYMORPHIC(game_loop)
 
   game_loop(uint16_t targetFramerate, uint16_t bailAmount);
-
-  virtual ~game_loop() = default;
 
 
   void  open();

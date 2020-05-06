@@ -44,6 +44,11 @@ struct window_backend {
 
   void* surface       (window const* window);
 
+
+  cx::exp::ptr_ref<window>
+        main_window   ();
+
+
   friend struct ui::application;
 };
 
