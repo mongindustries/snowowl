@@ -1,7 +1,7 @@
 targets:
-  ui:
+  ui_macOS:
     type: library.static
-    platform: [ macOS, iOS ]
+    platform: macOS
     sources:
       - path: cpp
         group: ui
@@ -16,6 +16,28 @@ targets:
       - path: platform/darwin
         group: ui
         name: mac
+    settings:
+      base:
+        CLANG_CXX_LANGUAGE_STANDARD: c++2a
+        HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-cx/src/main/public, ../../swl/swl-gx/src/main/public ]
+        USER_HEADER_SEARCH_PATHS: [ $(INHERITED), ../../swl/swl-ui/src/main/public, ../../swl/swl-ui/src/main/headers ]
+  ui_iOS:
+    type: library.static
+    platform: iOS
+    sources:
+      - path: cpp
+        group: ui
+      - path: headers
+        group: ui
+        buildPhase: headers
+        headerVisibility: project
+      - path: public
+        group: ui
+        buildPhase: headers
+        headerVisibility: public
+      - path: platform/darwin-ios
+        group: ui
+        name: ios
     settings:
       base:
         CLANG_CXX_LANGUAGE_STANDARD: c++2a

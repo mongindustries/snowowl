@@ -40,7 +40,7 @@ SNOW_OWL_NAMESPACE(ui)
  * int main(char* const* args, int arg_count) {
  *   game::application_subclass app;
  *
- *   return __decltype(app)::run(app);
+ *   return application::run(app);
  * }
  *
  * @endcode
