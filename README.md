@@ -34,6 +34,13 @@ mong@snowowl> cd cmbuild
 mong@cmbuild> cmake ../swl -GNinja
 ```
 
+### Windows Runtime
+Open Command Prompt (not powershell as this will not work!) and do the command:
+
+```
+C:\<path to snow owl>\build\vs_uwp> "<path to visual studio cmake>\cmake.exe" -G"Visual Studio 16 2019" -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0
+```
+
 ### macOS and iOS
 There is a xcodegen configuration file located in build/xcodegen (to be added soon). Install xcodegen via homebrew:
 

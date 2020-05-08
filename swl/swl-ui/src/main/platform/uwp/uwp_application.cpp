@@ -1,57 +1,60 @@
-#include "application.hpp"
-
-#include <winrt/Windows.ApplicationModel.Core.h>
-#include <winrt/Windows.UI.Core.h>
+#include "uwp_application.hpp"
+#include "swl_window_backend.hpp"
 
 using namespace winrt;
 
-SNOW_OWL_NAMESPACE(ui)
+SNOW_OWL_NAMESPACE(ui::backend)
 
-using IFVS  = Windows::ApplicationModel::Core::IFrameworkViewSource;
-using IFV   = Windows::ApplicationModel::Core::IFrameworkView;
+ApplicationSource* ApplicationSource::instance = nullptr;
 
-struct ApplicationSource : implements<ApplicationSource, IFVS, IFV> {
+ApplicationSource::ApplicationSource  (const cx::exp::ptr_ref<ui::application> &app): app(app), _window() { }
 
-  // IFVS
+// IFVS
 
-  IFV CreateView      () {
-    return *this;
-  }
+IFV ApplicationSource::CreateView     () {
+  return *this;
+}
 
   // IFV
 
-  void Initialize     (Windows::ApplicationModel::Core::CoreApplicationView const& app) {
+void ApplicationSource::Initialize    (Windows::ApplicationModel::Core::CoreApplicationView const& app) {
 
-    app.Activated([&](Windows::ApplicationModel::Core::CoreApplicationView const& view, Windows::ApplicationModel::Activation::IActivatedEventArgs const&) {
-      Windows::UI::Core::CoreWindow::GetForCurrentThread().Activate();
-    });
-  }
+  app.Activated([&](Windows::ApplicationModel::Core::CoreApplicationView const& view, Windows::ApplicationModel::Activation::IActivatedEventArgs const&) {
+    Windows::UI::Core::CoreWindow::GetForCurrentThread().Activate();
+  });
+}
 
-  void Load           (hstring const&) {
+void ApplicationSource::Load          (hstring const&) {
 
-  }
+}
 
-  void Uninitialize   () {
+void ApplicationSource::Uninitialize  () {
 
-  }
+}
 
-  void SetWindow      (Windows::UI::Core::CoreWindow const& window) {
+void ApplicationSource::SetWindow     (Windows::UI::Core::CoreWindow const& window) {
 
-    _window = window;
+  _core_window = window;
 
-    window.SizeChanged([](Windows::UI::Core::CoreWindow const& window, Windows::UI::Core::WindowSizeChangedEventArgs const& args) {
-    });
-  }
+  void* native{ nullptr };
+  winrt::copy_to_abi(window, native);
 
-  void Run            () {
-    _window.get().Dispatcher().ProcessEvents(Windows::UI::Core::CoreProcessEventsOption::ProcessUntilQuit);
-  }
+  backend::window_backend::instance->create_native(_window.pointer(), native);
+}
 
-  agile_ref<Windows::UI::Core::CoreWindow> _window;
+void ApplicationSource::Run           () {
 
-private:
-};
+  app->on_create();
 
+  _core_window.get().Dispatcher().ProcessEvents(Windows::UI::Core::CoreProcessEventsOption::ProcessUntilQuit);
+
+  app->on_destroy();
+}
+
+SNOW_OWL_NAMESPACE_END
+
+
+SNOW_OWL_NAMESPACE(ui)
 
 void  application::pre_heat(application& app) {
 
@@ -59,9 +62,18 @@ void  application::pre_heat(application& app) {
 
 int   application::run_loop(application& app) {
 
-  Windows::ApplicationModel::Core::CoreApplication::Run(ApplicationSource());
+  winrt::init_apartment();
+
+  auto source                           = backend::ApplicationSource(cx::exp::ptr_ref{ &app });
+  backend::ApplicationSource::instance  = &source;
+
+  Windows::ApplicationModel::Core::CoreApplication::Run(source);
 
   return 0; // no run loop. handled by IFrameworkView::Run.
+}
+
+cx::exp::ptr_ref<ui::window> application::get_main_window() {
+  return cx::exp::ptr_ref{ backend::ApplicationSource::instance->_window };
 }
 
 SNOW_OWL_NAMESPACE_END

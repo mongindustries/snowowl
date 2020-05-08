@@ -13,6 +13,21 @@ set(APP_SOURCES
         )
 
 if(WIN32)
+
+  if(WINDOWS_STORE)
+
+    add_executable(app WIN32
+            ${APP_SOURCES})
+
+    target_link_libraries(app
+        "dwmapi"
+        "dxgi"
+        "d3d12")
+    
+    set_target_properties(app PROPERTIES VS_CPPWINRT true)
+
+  else()
+
     add_executable(app WIN32
             ${APP_SOURCES}
             platform/windows/app.rc
@@ -23,6 +38,8 @@ if(WIN32)
         "dxgi"
         "d3d12"
         "dcomp")
+
+  endif()
 
 endif()
 

@@ -32,6 +32,9 @@ struct window_backend {
 
   void  create        (window const* window);
 
+  void  create_native (window const* window, void* native);
+
+
   void  destroy       (window const* window);
 
   void  fullscreen    (window const* window);

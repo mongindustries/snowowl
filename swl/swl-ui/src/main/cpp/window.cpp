@@ -24,7 +24,12 @@ window::window  () = default;
 
 window::window  (string window_name, const rect & frame) :
   handle(cx::core::make_handle()), title(std::move(window_name)), frame(frame), sink(window_sink{ handle }) {
+
+#ifndef SWL_UWP && SWL_IOS
+  // block intentionally disabled because native
+  // window is created before window constructor
   window_backend::instance->create(this);
+#endif
 }
 
 window::~window () = default;

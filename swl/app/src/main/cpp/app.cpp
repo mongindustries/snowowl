@@ -160,10 +160,10 @@ struct app final : application {
       game_loop->open();
     }
 
-    window_aux = cx::exp::ptr<ui::window>{ new ui::window("SnowOwl: | Console", rect{ {100, 100}, {640, 480}}) }; {
+    /* window_aux = cx::exp::ptr<ui::window>{ new ui::window("SnowOwl: | Console", rect{ {100, 100}, {640, 480}}) }; {
       console_loop = exp::ptr<console_game_loop>{ new console_game_loop(window_aux) };
       console_loop->open();
-    }
+    } */
   }
 
   void on_destroy () override {

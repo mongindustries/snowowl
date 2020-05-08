@@ -19,9 +19,14 @@ set(SOURCE_LIST
 
 if(WIN32)
     if(WINDOWS_STORE)
+
       set(PLATFORM_SOURCE_LIST
               platform/uwp/uwp_application.cpp
               platform/uwp/uwp_window_backend.cpp)
+
+      set(PLATFORM_HEADER_LIST
+              platform/uwp/uwp_application.hpp)
+
     else()
       set(PLATFORM_SOURCE_LIST
               platform/windows/swl_win32_app.cpp

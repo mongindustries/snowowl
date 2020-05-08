@@ -33,13 +33,6 @@ struct buffer_allocator { SWL_REFERENCEABLE(buffer_allocator) SWL_POLYMORPHIC(bu
     size_t position;
     size_t allocated_size;
   };
-
-  buffer_allocator  (context& context, buffer_allocator_usage usage);
-
-
-  token allocate    (buffer_size size);
-
-  void  deallocate  (token reference);
 };
 
 SNOW_OWL_NAMESPACE_END

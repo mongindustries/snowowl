@@ -9,6 +9,15 @@
 #include <swl_window_backend.hpp>
 #include <../platform/windows/swl_win32_window.hpp>
 
+#ifdef SWL_UWP
+
+#include <Unknwn.h>
+#include <winrt/Windows.UI.Core.h>
+
+using namespace winrt;
+
+#endif
+
 SNOW_OWL_NAMESPACE(gx::dx)
 
 template<typename C>
@@ -43,7 +52,12 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   const void* window_handle = surface.cast<void>().pointer();
 
   winrt::com_ptr<IDXGISwapChain1> _pre_instance;
+
+#ifdef SWL_UWP
+  context.dxgi_factory->CreateSwapChainForCoreWindow(present_queue.command_queue.get(), (::IUnknown*) window_handle, &swap_chain_desc, nullptr, _pre_instance.put());
+#else
   context.dxgi_factory->CreateSwapChainForHwnd(present_queue.command_queue.get(), HWND(window_handle), &swap_chain_desc, nullptr, nullptr, _pre_instance.put());
+#endif
 
   _pre_instance->QueryInterface(__uuidof(IDXGISwapChain3), instance.put_void());
 
