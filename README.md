@@ -1,4 +1,6 @@
-# SnowOwl:
+
+# <img src="https://raw.githubusercontent.com/mongindustries/snowowl/master/logo.png" width=20/> SnowOwl:
+
 A 2D vector graphics game toolkit
 
 ## Introduction
