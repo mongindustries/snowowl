@@ -107,6 +107,15 @@ render_pass::render_pass  (dx::render_block& block, std::vector<gx::render_pass_
     case transitionShaderResource:
       state_from = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
       break;
+    case transitionSwapChainPresent:
+      state_from = D3D12_RESOURCE_STATE_PRESENT;
+      break;
+    case transitionCopySource:
+      state_from = D3D12_RESOURCE_STATE_COPY_SOURCE;
+      break;
+    case transitionCopyDestination:
+      state_from = D3D12_RESOURCE_STATE_COPY_DEST;
+      break;
     }
 
     switch (item.transition_during) {
@@ -118,6 +127,15 @@ render_pass::render_pass  (dx::render_block& block, std::vector<gx::render_pass_
       break;
     case transitionShaderResource:
       state_during = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+      break;
+    case transitionSwapChainPresent:
+      state_during = D3D12_RESOURCE_STATE_PRESENT;
+      break;
+    case transitionCopySource:
+      state_during = D3D12_RESOURCE_STATE_COPY_SOURCE;
+      break;
+    case transitionCopyDestination:
+      state_during = D3D12_RESOURCE_STATE_COPY_DEST;
       break;
     }
 
@@ -131,21 +149,30 @@ render_pass::render_pass  (dx::render_block& block, std::vector<gx::render_pass_
     case transitionShaderResource:
       state_to = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
       break;
+    case transitionSwapChainPresent:
+      state_to = D3D12_RESOURCE_STATE_PRESENT;
+      break;
+    case transitionCopySource:
+      state_to = D3D12_RESOURCE_STATE_COPY_SOURCE;
+      break;
+    case transitionCopyDestination:
+      state_to = D3D12_RESOURCE_STATE_COPY_DEST;
+      break;
     }
 
     D3D12_RESOURCE_BARRIER barrier_desc{};
 
     barrier_desc.Transition.StateBefore = state_from;
-    barrier_desc.Transition.StateAfter = state_during;
+    barrier_desc.Transition.StateAfter  = state_during;
 
-    barrier_desc.Transition.pResource = reference->resource.get();
+    barrier_desc.Transition.pResource   = reference->resource.get();
 
     rtv_barrier_from.emplace_back(barrier_desc);
 
     barrier_desc.Transition.StateBefore = state_during;
-    barrier_desc.Transition.StateAfter = state_to;
+    barrier_desc.Transition.StateAfter  = state_to;
 
-    barrier_desc.Transition.pResource = reference->resource.get();
+    barrier_desc.Transition.pResource   = reference->resource.get();
 
     rtv_barrier_to.emplace_back(barrier_desc);
   }
@@ -155,6 +182,9 @@ render_pass::render_pass  (dx::render_block& block, std::vector<gx::render_pass_
   command_list->ResourceBarrier(rtv_barrier_from.size(), rtv_barrier_from.data());
 
   command_list->BeginRenderPass(rtv_desc.size(), rtv_desc.data(), nullptr, D3D12_RENDER_PASS_FLAG_NONE);
+
+  command_list->SetPipelineState(nullptr);
+  command_list->SetGraphicsRootSignature(nullptr);
 }
 
 render_pass::~render_pass () {

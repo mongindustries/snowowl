@@ -35,8 +35,13 @@ enum render_pass_store_op {
 
 enum render_pass_transition {
   transitionInherit,
+
   transitionRenderTargetView,
-  transitionShaderResource
+  transitionShaderResource,
+  transitionSwapChainPresent,
+
+  transitionCopySource,
+  transitionCopyDestination,
 };
 
 struct render_pass_context {
@@ -52,7 +57,7 @@ struct render_pass_context {
   render_pass_transition  transition_after;
 };
 
-enum class render_pass_stage_binding {
+enum render_pass_stage_binding {
   bindingGraphicsVertex,
   bindingGraphicsFragment,
 };
@@ -73,23 +78,27 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
   virtual void
     set_scissor             (const cx::rect &value);
 
+  virtual void
+    set_topology            ();
+
 
   virtual void
-    bind_buffer             (render_pass_stage_binding binding, unsigned int index, const cx::exp::ptr_ref<buffer> &buffer);
+    bind_sampler            (render_pass_stage_binding binding, int slot, cx::exp::ptr_ref<sampler> const& sampler);
 
 
   virtual void
-    bind_fragment_texture   (unsigned int index, const cx::exp::ptr_ref<buffer> &texture);
+    bind_samplers           (render_pass_stage_binding binding, std::vector<cx::exp::ptr_ref<sampler>> const& samplers);
+
 
   virtual void
-    bind_fragment_sampler   (unsigned int index, const cx::exp::ptr_ref<sampler> &sampler);
+    bind_buffer             (render_pass_stage_binding binding, int slot, cx::exp::ptr_ref<resource_reference> const& reference);
+
+  virtual void
+    bind_buffers            (render_pass_stage_binding binding, std::vector<cx::exp::ptr_ref<resource_reference>> const& references);
 
 
   virtual void
     draw                    (const render_pass_draw_range &vertex_range);
-
-  virtual void
-    draw                    (const render_pass_draw_range &index_range, const cx::exp::ptr_ref<buffer> &buffer);
 };
 
 SNOW_OWL_NAMESPACE_END

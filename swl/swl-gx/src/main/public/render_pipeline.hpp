@@ -18,6 +18,8 @@ namespace pipeline {
 
   enum format {
 
+    format_unknown          = 0,
+
     // standard formats
 
     format_4_32_int         = 0x04'04'01,
@@ -85,12 +87,12 @@ namespace pipeline {
     format_4_8_int_u_norm_flipped = 0x02'B1'00
   };
 
-  enum class raster_fill_mode {
+  enum raster_fill_mode {
     modeWireFrame,
     modeFill
   };
 
-  enum class raster_cull_mode {
+  enum raster_cull_mode {
     modeNone,
     modeFront,
     modeBack
@@ -126,6 +128,7 @@ namespace pipeline {
 
   enum render_input_type {
     typeTexture,
+    typeConstant,
     typeBuffer
   };
 
@@ -204,6 +207,8 @@ namespace pipeline {
   struct render_input_item {
     format            format;
     render_input_type type;
+    int               count;
+
     int               location;
     int               region;
   };
@@ -215,20 +220,22 @@ namespace pipeline {
 
 struct render_pipeline { SWL_REFERENCEABLE(render_pipeline) SWL_POLYMORPHIC(render_pipeline)
 
-  render_pipeline(context& context);
+  explicit render_pipeline  (context& context);
 
-  std::array<shader, 2>                   shader_stages;
+  virtual void construct    ();
 
-  pipeline::raster                        raster;
-  pipeline::depth                         depth;
-  pipeline::stencil                       stencil;
-  pipeline::sample                        sample;
+  std::array<shader, 2>                   shader_stages{};
+
+  pipeline::raster                        raster{};
+  pipeline::depth                         depth{};
+  pipeline::stencil                       stencil{};
+  pipeline::sample                        sample{};
   pipeline::topology_type                 topology_type;
 
-  bool                                    independent_target_blend;
+  bool                                    independent_target_blend{};
 
   std::array<pipeline::render_input, 2>   render_inputs;
-  std::array<pipeline::render_output, 8>  render_outputs;
+  std::array<pipeline::render_output, 8>  render_outputs{};
 };
 
 SNOW_OWL_NAMESPACE_END

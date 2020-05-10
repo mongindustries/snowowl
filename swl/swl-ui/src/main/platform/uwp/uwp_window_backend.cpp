@@ -9,9 +9,9 @@
 #include <unknwn.h>
 #include <winrt/base.h>
 
-#include <winrt/windows.applicationmodel.core.h>
-#include <winrt/windows.ui.core.h>
-#include <winrt/windows.ui.viewmanagement.h>
+#include <winrt/Windows.ApplicationModel.Core.h>
+#include <winrt/Windows.UI.Core.h>
+#include <winrt/Windows.UI.ViewManagement.h>
 
 #include <swap_chain.hpp>
 
@@ -36,17 +36,18 @@ void  backend::window_backend::create         (window const* window) {
 void  backend::window_backend::create_native  (window const* window, void* native) {
 
   CoreWindow core_window{ nullptr };
-  ((::IUnknown*) native)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+  static_cast<::IUnknown*>(native)->QueryInterface(winrt::guid_of<CoreWindow>(), put_abi(core_window));
 
   native_handles.emplace(window, native);
 
-  if (auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()) {
+  if (const auto view = ViewManagement::ApplicationView::GetForCurrentView()) {
     view.SetPreferredMinSize({ 400, 400 });
 
-    auto& title_bar = view.TitleBar();
+    const auto title_bar = view.TitleBar();
 
-    title_bar.ButtonBackgroundColor (Colors::Transparent());
-    title_bar.BackgroundColor       (Colors::Transparent());
+    title_bar.ButtonBackgroundColor         (Colors::Transparent());
+    title_bar.BackgroundColor               (Colors::Transparent());
+    title_bar.ButtonInactiveBackgroundColor (Colors::Transparent());
   }
 
   update_title(window);
@@ -75,7 +76,7 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
 
   core_window.ResizeCompleted ([window](CoreWindow const& cw, IInspectable const&) {
 
-    auto bounds = cw.Bounds();
+    const auto bounds = cw.Bounds();
     window->get_sink()->frame(cx::rect{ {bounds.X, bounds.Y}, {(int)bounds.Width, (int)bounds.Height} });
 
     // resizing the swapchain one last time
@@ -102,9 +103,9 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
       // there is a resize drag going on.
       // the execution order is different since the frame locks are done at
       // the interactive resize begin/end.
-    bool interactive_resize = window->is_sizing();
+    const auto interactive_resize = window->is_sizing();
 
-    auto bounds = cw.Bounds();
+    const auto bounds = cw.Bounds();
     window->get_sink()->frame(cx::rect{ {bounds.X, bounds.Y}, {(int)bounds.Width, (int)bounds.Height} });
 
     // if this window is not interactively resizing (maximize, restore operations)
@@ -160,50 +161,45 @@ void  backend::window_backend::destroy        (window const* window) {
 
 void  backend::window_backend::fullscreen     (window const* window) {
 
-  auto handle = native_handles.find(window);
+  const auto handle = native_handles.find(window);
 
   if (handle == native_handles.end()) {
     return;
   }
 
   CoreWindow core_window{ nullptr };
-  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+  static_cast<::IUnknown*>(handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), put_abi(core_window));
 
-  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+  core_window.Dispatcher().RunAsync(CoreDispatcherPriority::Normal, [window]() {
 
-    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
-
-    if (window->get_fullscreen()) {
-      view.TryEnterFullScreenMode();
-    } else {
-      view.ExitFullScreenMode();
-    }
+    const auto view = ViewManagement::ApplicationView::GetForCurrentView();
+    window->get_fullscreen() ? view.TryEnterFullScreenMode() : view.ExitFullScreenMode();
   });
 }
 
 
 void  backend::window_backend::update_title   (window const* window) {
 
-  auto handle = native_handles.find(window);
+  const auto handle = native_handles.find(window);
 
   if (handle == native_handles.end()) {
     return;
   }
 
   CoreWindow core_window{ nullptr };
-  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+  static_cast<::IUnknown*>(handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), put_abi(core_window));
 
-  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+  core_window.Dispatcher().RunAsync(CoreDispatcherPriority::Normal, [window]() {
 
-    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+    const auto view = ViewManagement::ApplicationView::GetForCurrentView();
 
     if (!view) {
       return;
     }
 
 
-    auto &bstring = window->get_title();
-    auto wstrings = MultiByteToWideChar(CP_UTF8, 0, bstring.c_str(), -1, nullptr, 0);
+    const auto bstring = window->get_title();
+    const auto wstrings = MultiByteToWideChar(CP_UTF8, 0, bstring.c_str(), -1, nullptr, 0);
 
     std::wstring title;
     title.reserve(wstrings);
@@ -216,31 +212,31 @@ void  backend::window_backend::update_title   (window const* window) {
 
 void  backend::window_backend::update_frame   (window const* window) {
 
-  auto handle = native_handles.find(window);
+  const auto handle = native_handles.find(window);
 
   if (handle == native_handles.end()) {
     return;
   }
 
   CoreWindow core_window{ nullptr };
-  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+  static_cast<::IUnknown*>(handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), put_abi(core_window));
 
-  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+  core_window.Dispatcher().RunAsync(CoreDispatcherPriority::Normal, [window]() {
 
-    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+    const auto view = ViewManagement::ApplicationView::GetForCurrentView();
 
     if (!view) {
       return;
     }
 
-    auto& size = window->get_size();
-    view.TryResizeView({ (float) size.x(), (float) size.y() });
+    const auto size = window->get_size();
+    view.TryResizeView({ static_cast<float>(size.x()), static_cast<float>(size.y()) });
   });
 }
 
 
 void* backend::window_backend::surface        (window const* window) {
-  auto handle = native_handles.find(window);
+  const auto handle = native_handles.find(window);
 
   if (handle == native_handles.end()) {
     return nullptr;

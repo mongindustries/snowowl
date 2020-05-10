@@ -8,93 +8,95 @@ SNOW_OWL_NAMESPACE(gx::dx)
 constexpr DXGI_FORMAT
   gx_format     (const gx::pipeline::format &format) {
 
-  std::array _uxxx{
-    DXGI_FORMAT_UNKNOWN,
-    DXGI_FORMAT_UNKNOWN,
-    DXGI_FORMAT_UNKNOWN,
-    DXGI_FORMAT_UNKNOWN,
+  if (format == 0) {
+    return DXGI_FORMAT_UNKNOWN;
+  }
+
+  const std::array _uxxx{
+    DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN,
+    DXGI_FORMAT_UNKNOWN, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_UNKNOWN, };
 
-  std::array _32_4{
+  const std::array _32_4{
     DXGI_FORMAT_R32G32B32A32_SINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32B32A32_UINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32B32A32_FLOAT, };
 
-  std::array _32_3{
+  const std::array _32_3{
     DXGI_FORMAT_R32G32B32_SINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32B32_UINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32B32_FLOAT, };
 
-  std::array _32_2{
+  const std::array _32_2{
     DXGI_FORMAT_R32G32_SINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32_UINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32G32_FLOAT, };
 
-  std::array _32_1{
+  const std::array _32_1{
     DXGI_FORMAT_R32_SINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32_UINT, DXGI_FORMAT_UNKNOWN,
     DXGI_FORMAT_R32_FLOAT, };
 
-  std::array _16_4{
+  const std::array _16_4{
     DXGI_FORMAT_R16G16B16A16_SINT, DXGI_FORMAT_R16G16B16A16_SNORM,
     DXGI_FORMAT_R16G16B16A16_UINT, DXGI_FORMAT_R16G16B16A16_UNORM,
     DXGI_FORMAT_R16G16B16A16_FLOAT, };
 
-  std::array _16_2{
+  const std::array _16_2{
     DXGI_FORMAT_R16G16_SINT, DXGI_FORMAT_R16G16_SNORM,
     DXGI_FORMAT_R16G16_UINT, DXGI_FORMAT_R16G16_UNORM,
     DXGI_FORMAT_R16G16_FLOAT, };
 
-  std::array _16_1{
+  const std::array _16_1{
     DXGI_FORMAT_R16_SINT, DXGI_FORMAT_R16_SNORM,
     DXGI_FORMAT_R16_UINT, DXGI_FORMAT_R16_UNORM,
     DXGI_FORMAT_R16_FLOAT, };
 
-  std::array _8_4{
+  const std::array _8_4{
     DXGI_FORMAT_R8G8B8A8_SINT, DXGI_FORMAT_R8G8B8A8_SNORM,
     DXGI_FORMAT_R8G8B8A8_UINT, DXGI_FORMAT_R8G8B8A8_UNORM,
     DXGI_FORMAT_UNKNOWN };
 
-  std::array _8_2{
+  const std::array _8_2{
     DXGI_FORMAT_R8G8_SINT, DXGI_FORMAT_R8G8_SNORM,
     DXGI_FORMAT_R8G8_UINT, DXGI_FORMAT_R8G8_UNORM,
     DXGI_FORMAT_UNKNOWN };
 
-  std::array _8_1{
+  const std::array _8_1{
     DXGI_FORMAT_R8G8_SINT, DXGI_FORMAT_R8G8_SNORM,
     DXGI_FORMAT_R8G8_UINT, DXGI_FORMAT_R8G8_UNORM,
     DXGI_FORMAT_UNKNOWN };
 
-  std::array _depth{
+  const std::array _depth{
     DXGI_FORMAT_D32_FLOAT,
     DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
     DXGI_FORMAT_D24_UNORM_S8_UINT,
     DXGI_FORMAT_D16_UNORM, };
 
-  std::array _swapc{
+  const std::array _swapc{
     DXGI_FORMAT_B8G8R8A8_TYPELESS,
     DXGI_FORMAT_B8G8R8A8_UNORM, };
 
-  std::array component_4  {  _8_4, _16_4, _uxxx, _32_4 };
-  std::array component_3  { _uxxx, _uxxx, _uxxx, _32_3 };
-  std::array component_2  {  _8_2, _16_2, _uxxx, _32_2 };
-  std::array component_1  {  _8_1, _16_1, _uxxx, _32_1 };
+  const std::array component_4  {  _8_4, _16_4, _uxxx, _32_4 };
+  const std::array component_3  { _uxxx, _uxxx, _uxxx, _32_3 };
+  const std::array component_2  {  _8_2, _16_2, _uxxx, _32_2 };
+  const std::array component_1  {  _8_1, _16_1, _uxxx, _32_1 };
 
-  std::array components   { component_1, component_2, component_3, component_4 };
+  const std::array components   { component_1, component_2, component_3, component_4 };
 
   if (0x0000'D000 & format) {
-    auto index = (0x00FF'0000 & format) >> 16;
+    const int index = (0x00FF'0000 & format) >> 16;
     return _depth[index];
   }
 
   if (0x0000'B000 & format) {
-    auto index = (0x00FF'0000 & format) >> 16;
+    const int index = (0x00FF'0000 & format) >> 16;
     return _swapc[index];
   }
 
-  auto component  = (0x00FF'0000 & format >> 16) - 1;
-  auto byte       = (0x0000'FF00 & format >>  8) - 1;
-  auto type       = (0x0000'00FF & format);
+  const int component  = (0x00FF'0000 & format >> 16) - 1;
+  const int byte       = (0x0000'FF00 & format >>  8) - 1;
+  const int type       = (0x0000'00FF & format);
 
   return components[component][byte][type];
 }
@@ -102,11 +104,14 @@ constexpr DXGI_FORMAT
 constexpr D3D12_ROOT_PARAMETER_TYPE
   gx_param      (const gx::pipeline::render_input_type &type) {
   switch (type) {
-  case pipeline::typeBuffer:
+  case pipeline::typeConstant:
     return D3D12_ROOT_PARAMETER_TYPE_CBV;
+  case pipeline::typeBuffer:
   case pipeline::typeTexture:
     return D3D12_ROOT_PARAMETER_TYPE_SRV;
   }
+
+  return {};
 }
 
 constexpr D3D12_PRIMITIVE_TOPOLOGY_TYPE
@@ -119,28 +124,30 @@ constexpr D3D12_PRIMITIVE_TOPOLOGY_TYPE
   case pipeline::topologyTypeTriangle:
     return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
   }
+
+  return {};
 }
 
 constexpr D3D12_BLEND
   gx_blend      (const gx::pipeline::blend_type& type) {
 
-  std::array _s_c{ D3D12_BLEND_SRC_COLOR, D3D12_BLEND_INV_SRC_COLOR };
-  std::array _s_a{ D3D12_BLEND_SRC_ALPHA, D3D12_BLEND_INV_SRC_ALPHA };
+  const std::array _s_c{ D3D12_BLEND_SRC_COLOR, D3D12_BLEND_INV_SRC_COLOR };
+  const std::array _s_a{ D3D12_BLEND_SRC_ALPHA, D3D12_BLEND_INV_SRC_ALPHA };
 
-  std::array _d_c{ D3D12_BLEND_DEST_COLOR, D3D12_BLEND_INV_DEST_COLOR };
-  std::array _d_a{ D3D12_BLEND_DEST_ALPHA, D3D12_BLEND_INV_DEST_ALPHA };
+  const std::array _d_c{ D3D12_BLEND_DEST_COLOR, D3D12_BLEND_INV_DEST_COLOR };
+  const std::array _d_a{ D3D12_BLEND_DEST_ALPHA, D3D12_BLEND_INV_DEST_ALPHA };
 
-  std::array _b_x{ D3D12_BLEND_BLEND_FACTOR, D3D12_BLEND_INV_BLEND_FACTOR };
+  const std::array _b_x{ D3D12_BLEND_BLEND_FACTOR, D3D12_BLEND_INV_BLEND_FACTOR };
 
-  std::array _s_l{ _s_c, _s_a };
-  std::array _d_l{ _d_c, _d_a };
-  std::array _b_l{ _b_x, std::array{ D3D12_BLEND_ZERO, D3D12_BLEND_ZERO } };
+  const std::array _s_l{ _s_c, _s_a };
+  const std::array _d_l{ _d_c, _d_a };
+  const std::array _b_l{ _b_x, std::array{ D3D12_BLEND_ZERO, D3D12_BLEND_ZERO } };
 
   std::array list{ _s_l, _d_l, _b_l };
 
-  auto location   = ((0xFFFF'0000 & type) >> 16) - 1;
-  auto component  = ((0x0000'FF00 & type) >>  8) - 1;
-  auto kind       =  (0x0000'00FF & type)        - 1;
+  const int location   = ((0xFFFF'0000 & type) >> 16) - 1;
+  const int component  = ((0x0000'FF00 & type) >>  8) - 1;
+  const int kind       =  (0x0000'00FF & type)        - 1;
 
   return list[location][component][kind];
 }
@@ -179,7 +186,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
     for (const auto& binding : render_inputs[visibility.first].resource_binding) {
       parameters.emplace_back(cx::tell<D3D12_ROOT_PARAMETER>({}, [&binding, &visibility](D3D12_ROOT_PARAMETER& param) {
         param.ParameterType     = gx_param(binding.type);
-        param.Descriptor        = D3D12_ROOT_DESCRIPTOR{ (UINT) binding.location, (UINT) binding.region };
+        param.Descriptor        = D3D12_ROOT_DESCRIPTOR{ static_cast<UINT>(binding.location), static_cast<UINT>(binding.region) };
         param.ShaderVisibility  = visibility.second;
       }));
     }

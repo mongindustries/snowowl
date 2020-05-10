@@ -23,7 +23,7 @@ void ApplicationSource::Initialize    (Windows::ApplicationModel::Core::CoreAppl
 
   app.Activated([&](Windows::ApplicationModel::Core::CoreApplicationView const& view, Windows::ApplicationModel::Activation::IActivatedEventArgs const&) {
 
-    auto &title = view.TitleBar();
+    const auto title = view.TitleBar();
     title.ExtendViewIntoTitleBar(true);
 
     view.CoreWindow().Activate();
@@ -43,9 +43,9 @@ void ApplicationSource::SetWindow     (Windows::UI::Core::CoreWindow const& wind
   _core_window = window;
 
   void* native{ nullptr };
-  winrt::copy_to_abi(window, native);
+  copy_to_abi(window, native);
 
-  backend::window_backend::instance->create_native(_window.pointer(), native);
+  window_backend::instance->create_native(_window.pointer(), native);
 }
 
 void ApplicationSource::Run           () {
@@ -68,7 +68,7 @@ void  application::pre_heat(application& app) {
 
 int   application::run_loop(application& app) {
 
-  winrt::init_apartment();
+  init_apartment();
 
   auto source                           = backend::ApplicationSource(cx::exp::ptr_ref{ &app });
   backend::ApplicationSource::instance  = &source;

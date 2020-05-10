@@ -16,6 +16,8 @@ struct render_block;
 
 struct render_pipeline;
 
+struct buffer_staging;
+
 
 struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
 
@@ -27,6 +29,9 @@ struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
 
   virtual void
         submit    (std::vector<cx::exp::ptr_ref<render_block>> const& commands);
+
+  virtual void
+        transfer  (std::vector<cx::exp::ptr_ref<buffer_staging>> const& buffers);
 
 protected:
 

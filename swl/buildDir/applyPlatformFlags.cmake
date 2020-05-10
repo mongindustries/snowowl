@@ -10,10 +10,12 @@ function(apply_platform_flags)
     if (WIN32)
 
         if (WINDOWS_STORE)
+            message("Apply platform macros and compile options for Windows Store")
             add_compile_definitions(SWL_UWP)
+        else ()
+            message("Apply platform macros and compile options for Windows")
         endif()
 
-        message("Apply platform macros and compile options for Windows")
         set(SRC_OS "platform/windows")
 
         set(SWL_WIN32 PARENT_SCOPE)

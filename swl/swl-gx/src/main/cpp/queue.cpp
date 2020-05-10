@@ -30,9 +30,12 @@ queue&
 
 
 void
-  queue::begin  (const std::vector<ptr_ref<queue>> &dependencies) {}
+  queue::begin    (const std::vector<ptr_ref<queue>> &dependencies) {}
 
 void
-  queue::submit (const std::vector<ptr_ref<render_block>> &commands) {}
+  queue::submit   (const std::vector<ptr_ref<render_block>> &commands) {}
+
+void
+  queue::transfer (std::vector<cx::exp::ptr_ref<buffer_staging>> const& buffers) {}
 
 SNOW_OWL_NAMESPACE_END

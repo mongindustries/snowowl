@@ -20,4 +20,7 @@ Object tell(Object instance, std::function<void(Object&)> block) {
 	return instance;
 }
 
+#define TELL_O(Type, Block) cx::tell<Type>({},          [](Type &object) Block)
+#define TELL_P(Type, Block) cx::tell<Type>(new Type(),  [](Type *object) Block)
+
 SNOW_OWL_NAMESPACE_END

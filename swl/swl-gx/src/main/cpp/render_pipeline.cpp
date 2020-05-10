@@ -42,4 +42,7 @@ render_pipeline::~render_pipeline () { }
 render_pipeline&
   render_pipeline::operator=      (render_pipeline&&) noexcept { return *this; }
 
+void
+  render_pipeline::construct      () { }
+
 SNOW_OWL_NAMESPACE_END
