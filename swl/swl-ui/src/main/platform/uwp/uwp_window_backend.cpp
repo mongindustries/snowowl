@@ -1,11 +1,17 @@
 #include "swl_window_backend.hpp"
 #include "swl_window_sink.hpp"
 
-#include <Unknwn.h>
+#include <string>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <unknwn.h>
 #include <winrt/base.h>
 
-#include <winrt/Windows.ApplicationModel.Core.h>
-#include <winrt/Windows.UI.Core.h>
+#include <winrt/windows.applicationmodel.core.h>
+#include <winrt/windows.ui.core.h>
+#include <winrt/windows.ui.viewmanagement.h>
 
 #include <swap_chain.hpp>
 
@@ -13,15 +19,18 @@ using namespace winrt;
 using namespace Windows::Foundation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::UI::Core;
+using namespace Windows::UI;
 
 SNOW_OWL_NAMESPACE(ui)
+
+struct window_invalid_call: std::exception { };
 
 backend::window_backend* backend::window_backend::instance = new backend::window_backend();
 
 std::mutex proc_mutex;
 
 void  backend::window_backend::create         (window const* window) {
-  // fatal error, we can't create additional windows...
+  throw window_invalid_call();
 }
 
 void  backend::window_backend::create_native  (window const* window, void* native) {
@@ -29,7 +38,24 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
   CoreWindow core_window{ nullptr };
   ((::IUnknown*) native)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
 
-  core_window.ResizeStarted([window](CoreWindow const&, IInspectable const&) {
+  native_handles.emplace(window, native);
+
+  if (auto view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView()) {
+    view.SetPreferredMinSize({ 400, 400 });
+
+    auto& title_bar = view.TitleBar();
+
+    title_bar.ButtonBackgroundColor (Colors::Transparent());
+    title_bar.BackgroundColor       (Colors::Transparent());
+  }
+
+  update_title(window);
+
+  if (window->get_size().components == window::fullscreen_size.components) {
+    const_cast<ui::window*>(window)->set_fullscreen(true);
+  }
+
+  core_window.ResizeStarted   ([window](CoreWindow const&, IInspectable const&) {
     window->get_sink()->sizing(true);
 
     if (window->game_loop) {
@@ -47,7 +73,7 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
     }
   });
 
-  core_window.ResizeCompleted([window](CoreWindow const& cw, IInspectable const&) {
+  core_window.ResizeCompleted ([window](CoreWindow const& cw, IInspectable const&) {
 
     auto bounds = cw.Bounds();
     window->get_sink()->frame(cx::rect{ {bounds.X, bounds.Y}, {(int)bounds.Width, (int)bounds.Height} });
@@ -70,7 +96,7 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
     window->get_sink()->sizing(false);
   });
 
-  core_window.SizeChanged([window](CoreWindow const& cw, WindowSizeChangedEventArgs const& args) {
+  core_window.SizeChanged     ([window](CoreWindow const& cw, WindowSizeChangedEventArgs const& args) {
 
     // this flag is for when the window is interactively resized, that is, 
       // there is a resize drag going on.
@@ -113,22 +139,103 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
     }
   });
 
-  native_handles.emplace(window, native);
+  core_window.Closed          ([window](CoreWindow const&, CoreWindowEventArgs const& args) {
+
+    if (window->game_loop) {
+
+      // wait game loop frame complete...
+      std::unique_lock<std::mutex> lock{ proc_mutex };
+      window->game_loop->target_lock.wait(lock);
+      window->game_loop->close();
+    }
+
+    window->get_sink()->closed();
+
+    args.Handled(true);
+  });
 }
 
 void  backend::window_backend::destroy        (window const* window) {
 }
 
 void  backend::window_backend::fullscreen     (window const* window) {
+
+  auto handle = native_handles.find(window);
+
+  if (handle == native_handles.end()) {
+    return;
+  }
+
+  CoreWindow core_window{ nullptr };
+  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+
+  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+
+    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+
+    if (window->get_fullscreen()) {
+      view.TryEnterFullScreenMode();
+    } else {
+      view.ExitFullScreenMode();
+    }
+  });
 }
 
 
 void  backend::window_backend::update_title   (window const* window) {
-  // does nothing
+
+  auto handle = native_handles.find(window);
+
+  if (handle == native_handles.end()) {
+    return;
+  }
+
+  CoreWindow core_window{ nullptr };
+  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+
+  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+
+    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+
+    if (!view) {
+      return;
+    }
+
+
+    auto &bstring = window->get_title();
+    auto wstrings = MultiByteToWideChar(CP_UTF8, 0, bstring.c_str(), -1, nullptr, 0);
+
+    std::wstring title;
+    title.reserve(wstrings);
+
+    MultiByteToWideChar(CP_UTF8, 0, bstring.c_str(), -1, title.data(), wstrings);
+
+    view.Title(title.c_str());
+  });
 }
 
 void  backend::window_backend::update_frame   (window const* window) {
-  // does nothing
+
+  auto handle = native_handles.find(window);
+
+  if (handle == native_handles.end()) {
+    return;
+  }
+
+  CoreWindow core_window{ nullptr };
+  ((::IUnknown*) handle->second)->QueryInterface(winrt::guid_of<CoreWindow>(), winrt::put_abi(core_window));
+
+  core_window.Dispatcher().RunAsync(Windows::UI::Core::CoreDispatcherPriority::Normal, [window]() {
+
+    auto& view = Windows::UI::ViewManagement::ApplicationView::GetForCurrentView();
+
+    if (!view) {
+      return;
+    }
+
+    auto& size = window->get_size();
+    view.TryResizeView({ (float) size.x(), (float) size.y() });
+  });
 }
 
 

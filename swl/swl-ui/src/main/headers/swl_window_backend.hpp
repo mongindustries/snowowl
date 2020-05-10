@@ -30,8 +30,17 @@ struct window_backend {
   std::map< window const*, void* >    native_handles;
 
 
+  /**
+   * @brief Creates a native backing window.
+   * @param window A window construct to be created a native window.
+  */
   void  create        (window const* window);
 
+  /**
+   * @brief Links and configures a platform-created window.
+   * @param window A window construct to be linked by a native window.
+   * @param native The platform-created window.
+  */
   void  create_native (window const* window, void* native);
 
 

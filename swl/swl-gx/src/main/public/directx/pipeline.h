@@ -14,7 +14,7 @@ struct render_pipeline final : gx::render_pipeline {
 
   explicit render_pipeline(dx::context& context);
 
-
+  winrt::com_ptr<ID3D12RootSignature> root_signature;
   winrt::com_ptr<ID3D12PipelineState> pipeline_state;
 };
 

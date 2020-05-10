@@ -19,17 +19,25 @@ enum buffer_type {
   typeTexture3d
 };
 
-template<buffer_type BufferType>
-struct buffer { };
+struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
 
-template<>
-struct buffer<typeData> { SWL_REFERENCEABLE(buffer<typeData>) SWL_POLYMORPHIC(buffer<typeData>)
+  union size {
+    size_t        _data;
+    cx::size_2d   _2d;
+    cx::size_3d   _3d;
+  };
 
-};
+  struct staging { SWL_REFERENCEABLE(staging) SWL_POLYMORPHIC(staging)
 
-template<>
-struct buffer<typeTexture2d> { SWL_REFERENCEABLE(buffer<typeTexture2d>) SWL_POLYMORPHIC(buffer<typeTexture2d>)
+  };
 
+  cx::exp::ptr<staging>
+    update_data (size_t start, size_t size, std::vector<char> const& data);
+
+  size
+    get_size    () const;
+
+  buffer_type type;
 };
 
 SNOW_OWL_NAMESPACE_END

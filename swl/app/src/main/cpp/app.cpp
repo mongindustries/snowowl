@@ -60,14 +60,14 @@ struct console_game_loop final : game_loop {
           auto& frame = static_cast<gx::swap_chain::frame&>(frame_block);
           gx::render_pass_context frame_context;
 
-          frame_context.action_load = gx::loadOpClear;
-          frame_context.action_store = gx::storeOpStore;
+          frame_context.action_load   = gx::loadOpClear;
+          frame_context.action_store  = gx::storeOpStore;
 
-          frame_context.load_clear = std::array<float, 4>{ 0.94f, 0.94f, 0.94f, 1.0f };
+          frame_context.load_clear    = std::array<float, 4>{ 0.94f, 0.94f, 0.94f, 1.0f };
 
           frame_context.transition_before = gx::transitionInherit;
           frame_context.transition_during = gx::transitionRenderTargetView;
-          frame_context.transition_after = gx::transitionInherit;
+          frame_context.transition_after  = gx::transitionInherit;
 
           frame_context.reference = exp::ptr_ref{ frame.reference };
 
@@ -94,7 +94,7 @@ struct app_game_loop final : game_loop {
 
     main_queue  (factory.queue        ()),
     swap_chain  (factory.swap_chain   (main_queue, window)),
-    clear_block (factory.render_block (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{nullptr})) {
+    clear_block (factory.render_block (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr })) {
 
     window.bind_loop(cx::exp::ptr_ref<game_loop>{this});
   }
@@ -108,8 +108,8 @@ struct app_game_loop final : game_loop {
 
   void render    (float offset) override {
     main_queue->begin({ }); {
-      const gx::swap_chain_boundary frame_block{ cx::exp::ptr_ref{ swap_chain } }; {
-        gx::block_boundary block{ clear_block, cx::exp::ptr_ref<gx::render_pipeline>{nullptr } }; {
+      const gx::swap_chain_boundary frame_block{ swap_chain }; {
+        gx::block_boundary block{ clear_block, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr } }; {
 
           auto&                   frame = static_cast<gx::swap_chain::frame&>(frame_block);
           gx::render_pass_context frame_context;
@@ -129,7 +129,7 @@ struct app_game_loop final : game_loop {
           frame_context.transition_during = gx::transitionRenderTargetView;
           frame_context.transition_after  = gx::transitionInherit;
 
-          frame_context.reference         = exp::ptr_ref{ frame.reference };
+          frame_context.reference         = frame.reference;
 
           auto pass = factory.render_pass(clear_block, std::vector{ frame_context });
         }
@@ -152,7 +152,8 @@ struct app final : application {
   void on_create  () override {
 
     window     = get_main_window(); {
-      game_loop = exp::ptr<app_game_loop>{ new app_game_loop(window) };
+
+      game_loop                 = exp::make_ptr<app_game_loop>(window);
       game_loop->frame_callback = [&](auto fps) {
         window->set_title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str());
       };

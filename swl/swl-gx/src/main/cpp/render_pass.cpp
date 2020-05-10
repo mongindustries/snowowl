@@ -29,17 +29,12 @@ void
 
 
 void
-  render_pass::bind_buffer            (render_pass_stage_binding binding, unsigned int index, const ptr_ref<buffer<buffer_type::typeData>> &buffer) {
+  render_pass::bind_buffer            (render_pass_stage_binding binding, unsigned int index, const ptr_ref<buffer> &buffer) {
 
 }
 
 void
-  render_pass::bind_fragment_texture  (unsigned index, const ptr_ref<buffer<buffer_type::typeTexture2d>> &texture) {
-
-}
-
-void
-  render_pass::bind_fragment_texture  (unsigned index, const ptr_ref<buffer<buffer_type::typeTexture3d>> &texture) {
+  render_pass::bind_fragment_texture  (unsigned index, const ptr_ref<buffer> &texture) {
 
 }
 
@@ -55,7 +50,7 @@ void
 }
 
 void
-  render_pass::draw                   (const render_pass_draw_range &index_range, const ptr_ref<buffer<buffer_type::typeData>> &buffer) {
+  render_pass::draw                   (const render_pass_draw_range &index_range, const ptr_ref<buffer> &buffer) {
 
 }
 

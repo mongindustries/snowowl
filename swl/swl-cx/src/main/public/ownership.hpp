@@ -260,12 +260,18 @@ private:
 };
 
 
+template<typename Base, typename... Args>
+ptr<Base> make_ptr(Args&& ...args) {
+	return ptr<Base>{ new Base(std::forward<std::decay_t<Args...>>(args)...) };
+}
+
+
 template<typename ClassType>
 struct ptr_ref {
 
 	ptr_ref             (): _value(nullptr) { }
 
-	explicit ptr_ref    (std::nullptr_t null): _value(null) { }
+	ptr_ref             (std::nullptr_t null): _value(null) { }
 
 	template<typename Base>
 	explicit ptr_ref    (const ptr<Base, ClassType> &ref): _value(ref.pointer()) { }
@@ -311,6 +317,12 @@ struct ptr_ref {
         operator==    (const Anything& rhs) const {
     return *_value == rhs;
   }
+
+	ptr_ref&
+		operator=         (ptr<ClassType, void> const& own) {
+		_value = own.pointer();
+		return *this;
+	}
 
 private:
 

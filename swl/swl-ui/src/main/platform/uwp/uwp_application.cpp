@@ -1,6 +1,8 @@
 #include "uwp_application.hpp"
 #include "swl_window_backend.hpp"
 
+#include <winrt/windows.applicationmodel.core.h>
+
 using namespace winrt;
 
 SNOW_OWL_NAMESPACE(ui::backend)
@@ -20,7 +22,11 @@ IFV ApplicationSource::CreateView     () {
 void ApplicationSource::Initialize    (Windows::ApplicationModel::Core::CoreApplicationView const& app) {
 
   app.Activated([&](Windows::ApplicationModel::Core::CoreApplicationView const& view, Windows::ApplicationModel::Activation::IActivatedEventArgs const&) {
-    Windows::UI::Core::CoreWindow::GetForCurrentThread().Activate();
+
+    auto &title = view.TitleBar();
+    title.ExtendViewIntoTitleBar(true);
+
+    view.CoreWindow().Activate();
   });
 }
 

@@ -75,14 +75,11 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
 
 
   virtual void
-    bind_buffer             (render_pass_stage_binding binding, unsigned int index, const cx::exp::ptr_ref<buffer<buffer_type::typeData>> &buffer);
+    bind_buffer             (render_pass_stage_binding binding, unsigned int index, const cx::exp::ptr_ref<buffer> &buffer);
 
 
   virtual void
-    bind_fragment_texture   (unsigned int index, const cx::exp::ptr_ref<buffer<buffer_type::typeTexture2d>> &texture);
-
-  virtual void
-    bind_fragment_texture   (unsigned int index, const cx::exp::ptr_ref<buffer<buffer_type::typeTexture3d>> &texture);
+    bind_fragment_texture   (unsigned int index, const cx::exp::ptr_ref<buffer> &texture);
 
   virtual void
     bind_fragment_sampler   (unsigned int index, const cx::exp::ptr_ref<sampler> &sampler);
@@ -92,7 +89,7 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
     draw                    (const render_pass_draw_range &vertex_range);
 
   virtual void
-    draw                    (const render_pass_draw_range &index_range, const cx::exp::ptr_ref<buffer<buffer_type::typeData>> &buffer);
+    draw                    (const render_pass_draw_range &index_range, const cx::exp::ptr_ref<buffer> &buffer);
 };
 
 SNOW_OWL_NAMESPACE_END
