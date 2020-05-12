@@ -45,16 +45,19 @@ struct app_game_loop final : game_loop {
   float                   peg{0};
 
   app_game_loop    (ui::window& window): game_loop(60, 4),
-    window      (&window),
+    window        (&window),
 
-    allocator   (factory.buffer_allocator(gx::usageShared)),
+    allocator     (factory.buffer_allocator(gx::usageShared)),
 
-    main_queue  (factory.queue        ()),
-    swap_chain  (factory.swap_chain   (main_queue, window)),
-    clear_block (factory.render_block (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr })) {
+    buffer_vertex (nullptr),
+    buffer_index  (nullptr),
 
-    buffer_vertex   = allocator->create_data(sizeof(float) * 12);
-    buffer_index    = allocator->create_data(sizeof(uint16_t) * 6);
+    main_queue    (factory.queue        ()),
+    swap_chain    (factory.swap_chain   (main_queue, window)),
+    clear_block   (factory.render_block (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr })) {
+
+    buffer_vertex   = allocator->create_data<float,     12>();
+    buffer_index    = allocator->create_data<uint16_t,   6>();
 
     render_pipeline = cx::tell<ptr<gx::render_pipeline>>(factory.render_pipeline(), [&](ptr<gx::render_pipeline>& pipeline) {
 
@@ -73,29 +76,29 @@ struct app_game_loop final : game_loop {
       pipeline->render_inputs[gx::pipeline::shader_stage::vertex]   = TELL_O(gx::pipeline::render_input, {
 
         // vertex
-        object.resource_binding.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_4_32_float;
           object.location = 0;
           object.region   = 0;
-          object.count    = 0;
+          object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         }));
 
         // index
-        object.resource_binding.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_1_16_int_u;
           object.location = 1;
           object.region   = 0;
-          object.count    = 0;
+          object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         }));
 
         // matrices
-        object.resource_binding.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_unknown;
           object.location = 2;
           object.region   = 0;
-          object.count    = 0;
+          object.indirect = false;
           object.type     = gx::pipeline::typeConstant;
         }));
       });
@@ -105,12 +108,12 @@ struct app_game_loop final : game_loop {
 
     main_queue->begin({});
 
-    const std::vector<float>    data = {
+    std::vector<float>    data = {
       0.0f, 0.0f, 0.0f, 0.0f,
       0.0f, 0.0f, 0.0f, 0.0f,
       0.0f, 0.0f, 0.0f, 0.0f, };
 
-    const std::vector<uint16_t> idxs = {
+    std::vector<uint16_t> idxs = {
       0, 1, 2, 0, 2, 3 };
 
     const auto v_staging = buffer_vertex->update_data(0, data);

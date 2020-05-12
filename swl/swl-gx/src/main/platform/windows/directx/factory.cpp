@@ -33,7 +33,7 @@ cx::exp::ptr<render_pipeline>
 
 [[nodiscard]] cx::exp::ptr<buffer_allocator>
   factory<dx::context, 0>::buffer_allocator (buffer_allocator_usage usage) {
-  return cx::exp::ptr{ nullptr };
+  return cx::exp::ptr<gx::buffer_allocator>{ nullptr };
 }
 
 SNOW_OWL_NAMESPACE_END

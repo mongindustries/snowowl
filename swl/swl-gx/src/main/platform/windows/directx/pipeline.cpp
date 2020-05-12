@@ -108,6 +108,7 @@ constexpr D3D12_ROOT_PARAMETER_TYPE
     return D3D12_ROOT_PARAMETER_TYPE_CBV;
   case pipeline::typeBuffer:
   case pipeline::typeTexture:
+  case pipeline::typeBufferUser:
     return D3D12_ROOT_PARAMETER_TYPE_SRV;
   }
 
@@ -183,7 +184,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
 
   std::vector<D3D12_ROOT_PARAMETER> parameters{};
   for (auto& visibility : pipeline_resource_mapping) {
-    for (const auto& binding : render_inputs[visibility.first].resource_binding) {
+    for (const auto& binding : render_inputs[visibility.first].bindings) {
       parameters.emplace_back(cx::tell<D3D12_ROOT_PARAMETER>({}, [&binding, &visibility](D3D12_ROOT_PARAMETER& param) {
         param.ParameterType     = gx_param(binding.type);
         param.Descriptor        = D3D12_ROOT_DESCRIPTOR{ static_cast<UINT>(binding.location), static_cast<UINT>(binding.region) };

@@ -128,7 +128,8 @@ namespace pipeline {
   enum render_input_type {
     typeTexture,
     typeConstant,
-    typeBuffer
+    typeBuffer,
+    typeBufferUser
   };
 
   struct write_mask {
@@ -203,17 +204,42 @@ namespace pipeline {
     pipeline::blend blend;
   };
 
+  /**
+   *
+   * Encapsulates a shader input variable. A shader input is represented by
+   * a type, location, region, and indirection.
+   *
+   * An indirected shader input has a +1 cost to GPU memory access since
+   * input data is read from a separate memory location (in D3D12, see descriptor
+   * tables on the root signature). An advantage of an indirected shader input
+   * is the flexibility to assign a shader input as an array (not the same as a buffer).
+   *
+   * Specify the location and region parameters as defined in your HLSL shader code the
+   * register location and register scope.
+   *
+   * The format will be used to cross-verify on render_block execution the format of a
+   * resource_reference.
+   *
+   */
   struct render_input_item {
+    /// The format this shader input represents. Specify format::unknown for input
+    /// that has the buffer type typeConstant or typeBufferUser.
     format            format;
+    /// The shader input type. This specifies if the input is going to be a constant
+    /// buffer, a texture, or a dynamic buffer.
     render_input_type type;
-    int               count;
+    /// Specifying true for this shader input informs the shader to refer its shader input
+    /// on another location in memory. Only works with D3D12 (I think).
+    bool              indirect;
 
+    /// The shader register location.
     int               location;
+    /// The shader register scope.
     int               region;
   };
 
   struct render_input {
-    std::vector<render_input_item> resource_binding;
+    std::vector<render_input_item> bindings;
   };
 }
 

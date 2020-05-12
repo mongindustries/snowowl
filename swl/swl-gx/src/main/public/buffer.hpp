@@ -37,7 +37,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
 
   template<typename EntryType>
   cx::exp::ptr<buffer_staging>
-    update_data(size_t start, std::vector<EntryType> const& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
+    update_data(size_t start, std::vector<EntryType>& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
 
   /**
    * Method to update a CPU buffer. Returned data is an instruction on how

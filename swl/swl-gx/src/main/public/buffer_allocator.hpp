@@ -32,10 +32,14 @@ enum buffer_allocator_usage {
  */
 struct buffer_allocator { SWL_REFERENCEABLE(buffer_allocator) SWL_POLYMORPHIC(buffer_allocator)
 
-  buffer_allocator    (gx::context& context);
+  buffer_allocator    (gx::context& context, buffer_allocator_usage usage, size_t initial_size);
 
   cx::exp::ptr<buffer<typeData>>
     create_data       (size_t size);
+
+  template<typename Type, uint64_t Size = 1>
+  cx::exp::ptr<buffer<typeData>>
+    create_data       () { return create_data(sizeof(Type) * Size); }
 
   cx::exp::ptr<buffer<typeTexture2d>>
     create_texture2d  (cx::size_2d const& dimension, pipeline::format format);
