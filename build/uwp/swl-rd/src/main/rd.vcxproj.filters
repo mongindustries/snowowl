@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\world_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\graph_node_argument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\graph_nodes\vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\cpp\graph_nodes\diffuse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\world.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\layer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\entity.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\world_renderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\graph_node.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\graph_nodes\diffuse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\graph_node_argument.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\graph_node_effect.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\graph_nodes\vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\public\layer_camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-rd\src\main\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{24A8BB10-0A8F-3FA4-AB5A-80DBC17DCAED}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{8CB4D29D-8BD8-311B-BE8C-645A31F145C8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
