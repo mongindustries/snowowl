@@ -10,6 +10,7 @@
 #include <ownership.hpp>
 
 #include "context.hpp"
+
 #include "render_pipeline.hpp"
 #include "resource_reference.hpp"
 
@@ -17,6 +18,12 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct queue;
 
+/**
+ * A render block construct.
+ *
+ * A render block is an abstraction of a graphics command buffer. A render block
+ * builds commands from a <code>render_pass</code> and is executed by a <code>queue</code>.
+ */
 struct render_block { SWL_REFERENCEABLE(render_block) SWL_POLYMORPHIC(render_block)
 
   render_block (queue& queue, render_pipeline& pipeline);

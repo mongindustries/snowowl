@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <header.hpp>
+#include <ownership.hpp>
 #include <rect.hpp>
 
 #include "context.hpp"
@@ -23,7 +24,6 @@ enum buffer_type {
 
 struct buffer_staging {
   SWL_REFERENCEABLE(buffer_staging) SWL_POLYMORPHIC(buffer_staging)
-
 };
 
 /**
@@ -35,7 +35,6 @@ struct buffer_staging {
 template<buffer_type Type>
 struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
 
-
   template<typename EntryType>
   cx::exp::ptr<buffer_staging>
     update_data(size_t start, std::vector<EntryType> const& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
@@ -45,7 +44,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * this buffer will be updated to the GPU.
    */
   cx::exp::ptr<buffer_staging>
-    update_data (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr_ref{ nullptr }; }
+    update_data (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr<buffer_staging>{ nullptr }; }
 
   /**
    * Method to inform the data from CPU/GPU has changed. Returned data is an
@@ -63,7 +62,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * twice with dissimilar data will lead to undefined state.
    */
   cx::exp::ptr_ref<resource_reference>
-    reference   (int transition_props) { return cx::exp::ptr_ref{ nullptr }; }
+    reference   (int transition_props) { return cx::exp::ptr_ref<resource_reference>{ nullptr }; }
 
   /**
    * Invalidates a resource reference for this buffer. This finishes the transition

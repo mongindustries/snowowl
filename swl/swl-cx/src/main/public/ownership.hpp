@@ -192,22 +192,22 @@ struct ptr<Base, void> {
 	template<typename Derive>
 	std::enable_if_t<std::is_base_of_v<Base, Derive>, Derive>*
         reify_and_release () {
-		Derive* ptr = reify_pointer<Derive>(_value);
+		Derive* ptr = reify_pointer<Derive>();
 		_value = nullptr;
 		return ptr;
 	}
 
 	template<typename Derive>
 	std::enable_if_t<std::is_base_of_v<Base, Derive>, ptr<Base, Derive>>
-        reify             () const {
-		return ptr<Base, Derive>{ reify_and_release<Derive>(_value) };
+        reify             () {
+		return ptr<Base, Derive>{ reify_and_release<Derive>() };
 	}
 
 
 	template<typename Derive>
 	std::enable_if_t<std::is_base_of_v<Base, Derive>, ptr<Derive>>
-        cast              () const {
-		return ptr<Derive> { reify_and_release<Derive>(_value)._value };
+        cast              () {
+		return ptr<Derive> { reify_and_release<Derive>()._value };
 	}
 
 
@@ -262,7 +262,7 @@ private:
 
 template<typename Base, typename... Args>
 ptr<Base> make_ptr(Args&& ...args) {
-	return ptr<Base>{ new Base(std::forward<std::decay_t<Args...>>(args)...) };
+	return ptr<Base>{ new Base(std::forward<std::decay_t<Args>>(args)...) };
 }
 
 
@@ -331,6 +331,8 @@ private:
 
 template<>
 struct ptr_ref<void> {
+
+	explicit ptr_ref  (): _value(nullptr) { }
 
 	explicit ptr_ref  (std::nullptr_t null): _value(null) { }
 

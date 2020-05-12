@@ -1,21 +1,46 @@
 #import <tell.hpp>
+#import <ownership.hpp>
 
 #import "application.hpp"
 #import "swl_application.hxx"
 
+using namespace swl;
 using namespace swl::ui;
 
 application* __app = nullptr;
 
 application_delegate* app_delegate = [[application_delegate alloc] init];
 
-@implementation application_delegate
+@implementation application_delegate {
+  cx::exp::ptr<window> __main_window;
+}
 
-- (void)applicationDidFinishLaunching:  (NSNotification *)notification {
+- (instancetype)init {
+
+  if (self = [super init]) {
+    __main_window = cx::exp::ptr<window>{ nullptr };
+  }
+
+  return self;
+}
+
+- (swl::cx::exp::ptr_ref<swl::ui::window>)
+  get_window {
+  if (__main_window) {
+    return cx::exp::ptr_ref{ __main_window };
+  }
+  __main_window = cx::exp::ptr<ui::window>{ new ui::window{ "Main Window", cx::rect{{}, {400, 400}}} };
+  return cx::exp::ptr_ref{__main_window};
+}
+
+- (void)
+  applicationDidFinishLaunching:  (NSNotification *)notification {
+
   __app->on_create  ();
 }
 
-- (void)applicationWillTerminate:       (NSNotification *)notification {
+- (void)
+  applicationWillTerminate:       (NSNotification *)notification {
   __app->on_destroy ();
 }
 
@@ -78,4 +103,9 @@ void  application::pre_heat(application &app) {
       app.appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
     });
   }
+}
+
+cx::exp::ptr_ref<window>
+      application::get_main_window() {
+  return [app_delegate get_window];
 }

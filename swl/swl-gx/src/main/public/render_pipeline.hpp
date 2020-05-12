@@ -8,11 +8,10 @@
 
 #include <header.hpp>
 
+#include "context.hpp"
 #include "shader.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
-
-struct context;
 
 namespace pipeline {
 

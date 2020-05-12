@@ -24,6 +24,9 @@ struct queue: gx::queue {
   void
     submit        (std::vector<cx::exp::ptr_ref<gx::render_block>> const& commands) override;
 
+  void
+    transfer      (std::vector<cx::exp::ptr_ref<gx::buffer_staging>> const& bufers) override;
+
 
   OBJC_ID(MTLCommandQueue)  command_queue;
 

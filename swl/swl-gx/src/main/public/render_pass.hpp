@@ -8,14 +8,14 @@
 #include <header.hpp>
 #include <rect.hpp>
 
-#include "render_pipeline.hpp"
+#include "context.hpp"
+
 #include "buffer.hpp"
 #include "sampler.hpp"
 #include "resource_reference.hpp"
+#include "render_pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
-
-struct context;
 
 struct render_block;
 

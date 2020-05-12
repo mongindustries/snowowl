@@ -17,5 +17,4 @@ context::~context     () = default;
 context&
   context::operator=  (context &&) noexcept { return *this; }
 
-
 SNOW_OWL_NAMESPACE_END

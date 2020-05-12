@@ -9,8 +9,8 @@
 #include <ownership.hpp>
 #include <point.hpp>
 
-#include "queue.hpp"
 #include "context.hpp"
+#include "queue.hpp"
 #include "resource_reference.hpp"
 
 SNOW_OWL_NAMESPACE(ui)
