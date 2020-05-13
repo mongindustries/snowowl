@@ -24,7 +24,7 @@ using namespace ui;
 using namespace std::chrono;
 
 template<typename c>
-using ptr = cx::exp::ptr<c>;
+using ptr = exp::ptr<c>;
 
 gx::factory<gx::dx::context> factory{ gx::dx::context() };
 
@@ -42,19 +42,20 @@ struct app_game_loop final : game_loop {
   ptr<gx::buffer<gx::typeData>> buffer_vertex;
   ptr<gx::buffer<gx::typeData>> buffer_index;
 
-  float                   peg{0};
+  float                         peg{0};
 
   app_game_loop    (ui::window& window): game_loop(60, 4),
     window        (&window),
 
-    allocator     (factory.buffer_allocator(gx::usageShared)),
+    main_queue    (factory.queue            ()),
+
+    swap_chain    (factory.swap_chain       (main_queue, window)),
+    clear_block   (factory.render_block     (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr })),
+
+    allocator     (factory.buffer_allocator (gx::usageShared)),
 
     buffer_vertex (nullptr),
-    buffer_index  (nullptr),
-
-    main_queue    (factory.queue        ()),
-    swap_chain    (factory.swap_chain   (main_queue, window)),
-    clear_block   (factory.render_block (main_queue, cx::exp::ptr_ref<gx::render_pipeline>{ nullptr })) {
+    buffer_index  (nullptr) {
 
     buffer_vertex   = allocator->create_data<float,     12>();
     buffer_index    = allocator->create_data<uint16_t,   6>();
@@ -115,6 +116,10 @@ struct app_game_loop final : game_loop {
 
     main_queue->transfer({exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging}});
 
+
+
+
+
     window.bind_loop(cx::exp::ptr_ref<game_loop>{this});
   }
 
@@ -152,27 +157,26 @@ struct app_game_loop final : game_loop {
 
           auto pass = factory.render_pass(clear_block, std::vector{frame_context}); {
 
-            // three items: vertex, index, matrix
-            gx::buffer_boundary<gx::buffer_type::typeData>::input transitions{
-                { buffer_vertex.get(),  gx::viewTypeShader, { gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionInherit, gx::buffer_transition::transitionShaderView, gx::buffer_transition::transitionInherit } },
-                { buffer_index.get(),   gx::viewTypeShader, { gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionInherit, gx::buffer_transition::transitionShaderView, gx::buffer_transition::transitionInherit } }
-            };
+            const auto v_ref = std::make_pair(buffer_vertex ->reference(gx::viewTypeShader),
+              gx::buffer_transition{ gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView });
+            const auto i_ref = std::make_pair(buffer_index  ->reference(gx::viewTypeShader),
+              gx::buffer_transition{ gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView });
 
             const auto size = swap_chain->window->get_size();
-            gx::buffer_boundary<gx::buffer_type::typeData> resource_boundary(pass, transitions); {
 
-              pass->bind_buffers  (gx::bindingGraphicsVertex, resource_boundary);
+            gx::buffer_usage_block resource_block{exp::ptr_ref{pass}, {v_ref, i_ref}}; {
+
+              pass->bind_buffers  (gx::bindingGraphicsVertex, {get<0>(v_ref), get<0>(i_ref)});
 
               pass->set_viewport  (size);
               pass->set_scissor   (cx::rect{{}, size});
 
               pass->set_topology  (gx::render_pass::typeTriangleList);
-              pass->draw          (gx::render_pass_draw_range{ 0, 3 });
+              pass->draw          (gx::render_pass_draw_range{0, 3});
             }
           }
         }
-      }
-      main_queue->submit(std::vector{exp::ptr_ref{clear_block}});
+      } main_queue->submit(std::vector{exp::ptr_ref{clear_block}});
     }
   }
 };

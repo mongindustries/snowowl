@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/mong/Desktop/Code/SnowOwl/swl/swl-ui/src/main
+# Install script for directory: C:/Users/micha/Desktop/Code/snowowl/swl/swl-ui/src/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

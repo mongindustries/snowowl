@@ -34,7 +34,8 @@ if(WIN32)
             "platform/windows/directx/render_block.cpp"
             "platform/windows/directx/resource_reference.cpp"
             "platform/windows/directx/factory.cpp"
-            "platform/windows/directx/buffer.cpp")
+            "platform/windows/directx/buffer.cpp"
+            "platform/windows/directx/buffer_allocator.cpp")
 
     set(PLATFORM_HEADER_LIST
             "public/directx/context.h"
@@ -44,7 +45,8 @@ if(WIN32)
             "public/directx/render_block.h"
             "public/directx/resource_reference.h"
             "public/directx/factory.h"
-            "public/directx/buffer.h")
+            "public/directx/buffer.h"
+            "public/directx/buffer_allocator.h")
 
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/cpp FILES ${PLATFORM_SOURCE_LIST})
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX directx/hpp FILES ${PLATFORM_HEADER_LIST})

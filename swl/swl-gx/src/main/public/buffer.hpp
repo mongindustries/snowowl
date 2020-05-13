@@ -17,6 +17,8 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct resource_reference;
 
+struct render_pass;
+
 enum buffer_type {
   typeData,
   typeTexture2d,
@@ -48,9 +50,10 @@ struct buffer_transition {
 
   pipeline::shader_stage  stage;
 
-  transition_type         before;
   transition_type         during;
-  transition_type         after;
+
+  transition_type         before  {transitionInherit};
+  transition_type         after   {transitionInherit};
 };
 
 /**
@@ -64,14 +67,14 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
 
   template<typename EntryType>
   cx::exp::ptr<buffer_staging>
-    update_data(size_t start, std::vector<EntryType>& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
+    set_data    (size_t start, std::vector<EntryType>& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
 
   /**
    * Method to update a CPU buffer. Returned data is an instruction on how
    * this buffer will be updated to the GPU.
    */
   virtual cx::exp::ptr<buffer_staging>
-    update_data (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr<buffer_staging>{ nullptr }; }
+    set_data    (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr<buffer_staging>{ nullptr }; }
 
   /**
    * Method to inform the data from CPU/GPU has changed. Returned data is an
@@ -81,24 +84,12 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
     set_dirty   () { }
 
   /**
-   * Obtains a resource reference for this buffer. A resource reference configures
-   * a buffer transition alongside a handle to the CPU/GPU memory location for the
-   * buffer.
    *
-   * This method also mark this buffer's transition information, calling this method
-   * twice with dissimilar data will lead to undefined state.
+   * Obtains a resource reference for this buffer.
+   *
    */
   virtual cx::exp::ptr_ref<gx::resource_reference>
-    reference   (buffer_view_type view_type, buffer_transition const& transition_info) { return cx::exp::ptr_ref<gx::resource_reference>{ nullptr }; }
-
-  /**
-   * Invalidates a resource reference for this buffer. This finishes the transition
-   * for a buffer by reverting it into the state it was created.
-   *
-   * Any calls to <code>reference</code> should have balanced calls to <code>dereference</code>.
-   */
-  virtual void
-    dereference () { }
+    reference   (buffer_view_type view_type) { return cx::exp::ptr_ref<resource_reference>{ nullptr }; }
 };
 
 SNOW_OWL_NAMESPACE_END

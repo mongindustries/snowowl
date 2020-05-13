@@ -1,57 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\cpp\application.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\cpp\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\cpp\window.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\cpp\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\cpp\window_surface.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\cpp\window_surface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\headers\swl_window_sink.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\headers\swl_window_sink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\platform\uwp\uwp_application.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\platform\uwp\uwp_application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\platform\uwp\uwp_window_backend.cpp">
+    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\platform\uwp\uwp_window_backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\public\application.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\public\application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\public\event.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\public\event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\public\window.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\public\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\public\window_surface.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\public\window_surface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\headers\swl_window_backend.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\headers\swl_window_backend.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\headers\swl_window_sink.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\headers\swl_window_sink.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\platform\uwp\uwp_application.hpp">
+    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\platform\uwp\uwp_application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-ui\src\main\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-ui\src\main\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{5163C010-EF77-3015-BCD9-D4FCD29831B7}</UniqueIdentifier>
+      <UniqueIdentifier>{24A8BB10-0A8F-3FA4-AB5A-80DBC17DCAED}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{FCBBA5C6-DC93-3CD9-80A8-691F9C2C230A}</UniqueIdentifier>
+      <UniqueIdentifier>{8CB4D29D-8BD8-311B-BE8C-645A31F145C8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

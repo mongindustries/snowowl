@@ -276,7 +276,7 @@ struct ptr_ref {
 	template<typename Base>
 	explicit ptr_ref    (const ptr<Base, ClassType> &ref): _value(ref.pointer()) { }
 
-	explicit ptr_ref    (const ptr<ClassType> &ref): _value(ref.pointer()) { }
+	explicit ptr_ref    (const ptr<ClassType, void> &ref): _value(ref.pointer()) { }
 
 	explicit ptr_ref    (ClassType* ptr): _value(ptr) { }
 

@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/mong/Desktop/Code/SnowOwl/swl
+# Install script for directory: C:/Users/micha/Desktop/Code/snowowl/swl
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,27 +34,27 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/swl-cx/src/main/cmake_install.cmake")
+  include("C:/Users/micha/Desktop/Code/snowowl/build/uwp/swl-cx/src/main/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/swl-ui/src/main/cmake_install.cmake")
+  include("C:/Users/micha/Desktop/Code/snowowl/build/uwp/swl-ui/src/main/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/swl-gx/src/main/cmake_install.cmake")
+  include("C:/Users/micha/Desktop/Code/snowowl/build/uwp/swl-gx/src/main/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/swl-rd/src/main/cmake_install.cmake")
+  include("C:/Users/micha/Desktop/Code/snowowl/build/uwp/swl-rd/src/main/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/app/src/main/cmake_install.cmake")
+  include("C:/Users/micha/Desktop/Code/snowowl/build/uwp/app/src/main/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -65,5 +65,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/mong/Desktop/Code/SnowOwl/build/uwp/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/micha/Desktop/Code/snowowl/build/uwp/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -18,10 +18,10 @@ SNOW_OWL_NAMESPACE(gx)
 enum buffer_allocator_usage {
   /// Use for GPU only resources (textures). Memory resides in GPU. Buffer allocator will create
   /// another buffer for uploading updates from the CPU to the GPU.
-  usagePrivate,
+  usagePrivate  = 1,
   /// Use for GPU reads and CPU writes (vertex buffers, index buffers). Memory resides in CPU and
   /// possibly GPU. Buffer allocator will synchronize updates between CPU/GPU. 
-  usageShared
+  usageShared   = 2
 };
 
 /**
@@ -34,17 +34,17 @@ struct buffer_allocator { SWL_REFERENCEABLE(buffer_allocator) SWL_POLYMORPHIC(bu
 
   buffer_allocator    (gx::context& context, buffer_allocator_usage usage, size_t initial_size);
 
-  cx::exp::ptr<buffer<typeData>>
+  virtual cx::exp::ptr<buffer<typeData>>
     create_data       (size_t size);
 
   template<typename Type, uint64_t Size = 1>
   cx::exp::ptr<buffer<typeData>>
     create_data       () { return create_data(sizeof(Type) * Size); }
 
-  cx::exp::ptr<buffer<typeTexture2d>>
+  virtual cx::exp::ptr<buffer<typeTexture2d>>
     create_texture2d  (cx::size_2d const& dimension, pipeline::format format);
 
-  cx::exp::ptr<buffer<typeTexture3d>>
+  virtual cx::exp::ptr<buffer<typeTexture3d>>
     create_texture3d  (cx::size_3d const& dimension, pipeline::format format);
 };
 

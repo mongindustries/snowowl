@@ -44,6 +44,11 @@ enum render_pass_transition {
   transitionCopyDestination,
 };
 
+enum render_pass_stage_binding {
+  bindingGraphicsVertex,
+  bindingGraphicsFragment,
+};
+
 struct render_pass_context {
   cx::exp::ptr_ref<resource_reference> reference;
 
@@ -57,17 +62,17 @@ struct render_pass_context {
   render_pass_transition  transition_after;
 };
 
-enum render_pass_stage_binding {
-  bindingGraphicsVertex,
-  bindingGraphicsFragment,
-};
-
 struct render_pass_draw_range {
   unsigned int begin;
   unsigned int size;
 };
 
-struct render_pass { SWL_POLYMORPHIC(render_pass)
+struct transition_handle { SWL_POLYMORPHIC(transition_handle)
+
+  void release();
+};
+
+struct render_pass { SWL_REFERENCEABLE(render_pass) SWL_POLYMORPHIC(render_pass)
 
   enum topology_type {
     typeTriangleList,
@@ -92,6 +97,10 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
     set_topology            (topology_type type);
 
 
+  virtual cx::exp::ptr_ref<transition_handle>
+    buffer_boundary         (std::vector<std::pair<cx::exp::ptr_ref<resource_reference>, buffer_transition>> const& transitions);
+
+
   virtual void
     bind_sampler            (render_pass_stage_binding binding, int slot, cx::exp::ptr_ref<sampler> const& sampler);
 
@@ -111,39 +120,16 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
     draw                    (const render_pass_draw_range &vertex_range);
 };
 
-template<buffer_type Type>
-struct buffer_boundary {
 
-  typedef std::vector<std::tuple<buffer<Type>&, buffer_view_type, buffer_transition>> input;
+struct buffer_usage_block {
 
-  buffer_boundary(render_pass& pass, input const& buffers) : pass(pass) {
+  buffer_usage_block  (cx::exp::ptr_ref<render_pass> const& pass, std::vector<std::pair<cx::exp::ptr_ref<resource_reference>, buffer_transition>> const& transitions);
 
-    references    .reserve(buffers.size());
-    this->buffers .reserve(buffers.size());
+  ~buffer_usage_block ();
 
-    for (auto& buffer : buffers) {
-      references    .emplace_back( get<0>(buffer).reference(get<1>(buffer), get<2>(buffer)));
-      this->buffers .emplace_back(&get<0>(buffer));
-    }
-  }
 
-  ~buffer_boundary() {
-    for (auto buffer : buffers) {
-      buffer->dereference();
-    }
-  }
-
-  operator std::vector<cx::exp::ptr_ref<resource_reference>>() {
-    return references;
-  }
-
-private:
-
-  render_pass& pass;
-
-  std::vector<cx::exp::ptr_ref<buffer<Type>>> buffers;
-
-  std::vector<cx::exp::ptr_ref<resource_reference>> references;
+  cx::exp::ptr_ref<transition_handle> handle;
 };
+
 
 SNOW_OWL_NAMESPACE_END
