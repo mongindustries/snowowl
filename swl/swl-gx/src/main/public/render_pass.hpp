@@ -69,6 +69,16 @@ struct render_pass_draw_range {
 
 struct render_pass { SWL_POLYMORPHIC(render_pass)
 
+  enum topology_type {
+    typeTriangleList,
+    typeTriganleStrip,
+
+    typeLineList,
+    typeLineStrip,
+
+    typePointList
+  };
+
   render_pass               (context& context, render_block& render_block);
 
 
@@ -79,7 +89,7 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
     set_scissor             (const cx::rect &value);
 
   virtual void
-    set_topology            ();
+    set_topology            (topology_type type);
 
 
   virtual void
@@ -99,6 +109,41 @@ struct render_pass { SWL_POLYMORPHIC(render_pass)
 
   virtual void
     draw                    (const render_pass_draw_range &vertex_range);
+};
+
+template<buffer_type Type>
+struct buffer_boundary {
+
+  typedef std::vector<std::tuple<buffer<Type>&, buffer_view_type, buffer_transition>> input;
+
+  buffer_boundary(render_pass& pass, input const& buffers) : pass(pass) {
+
+    references    .reserve(buffers.size());
+    this->buffers .reserve(buffers.size());
+
+    for (auto& buffer : buffers) {
+      references    .emplace_back( get<0>(buffer).reference(get<1>(buffer), get<2>(buffer)));
+      this->buffers .emplace_back(&get<0>(buffer));
+    }
+  }
+
+  ~buffer_boundary() {
+    for (auto buffer : buffers) {
+      buffer->dereference();
+    }
+  }
+
+  operator std::vector<cx::exp::ptr_ref<resource_reference>>() {
+    return references;
+  }
+
+private:
+
+  render_pass& pass;
+
+  std::vector<cx::exp::ptr_ref<buffer<Type>>> buffers;
+
+  std::vector<cx::exp::ptr_ref<resource_reference>> references;
 };
 
 SNOW_OWL_NAMESPACE_END

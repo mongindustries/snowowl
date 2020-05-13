@@ -11,6 +11,7 @@
 
 #include "context.hpp"
 #include "queue.hpp"
+#include "render_pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
@@ -24,6 +25,32 @@ enum buffer_type {
 
 struct buffer_staging {
   SWL_REFERENCEABLE(buffer_staging) SWL_POLYMORPHIC(buffer_staging)
+};
+
+enum buffer_view_type {
+  viewTypeShader,
+  viewTypeConstant,
+  viewTypeTexture,
+  viewTypeRenderTarget
+};
+
+struct buffer_transition {
+
+  enum transition_type {
+    transitionInherit,
+
+    transitionShaderView,
+    transitionRenderTargetView,
+
+    transitionCopySource,
+    transitionCopyDestination,
+  };
+
+  pipeline::shader_stage  stage;
+
+  transition_type         before;
+  transition_type         during;
+  transition_type         after;
 };
 
 /**
@@ -43,14 +70,14 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * Method to update a CPU buffer. Returned data is an instruction on how
    * this buffer will be updated to the GPU.
    */
-  cx::exp::ptr<buffer_staging>
+  virtual cx::exp::ptr<buffer_staging>
     update_data (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr<buffer_staging>{ nullptr }; }
 
   /**
    * Method to inform the data from CPU/GPU has changed. Returned data is an
    * instruction on how this buffer will be synchronized.
    */
-  cx::exp::ptr<buffer_staging>
+  virtual cx::exp::ptr<buffer_staging>
     set_dirty   () { }
 
   /**
@@ -61,8 +88,8 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * This method also mark this buffer's transition information, calling this method
    * twice with dissimilar data will lead to undefined state.
    */
-  cx::exp::ptr_ref<resource_reference>
-    reference   (int transition_props) { return cx::exp::ptr_ref<resource_reference>{ nullptr }; }
+  virtual cx::exp::ptr_ref<gx::resource_reference>
+    reference   (buffer_view_type view_type, buffer_transition const& transition_info) { return cx::exp::ptr_ref<gx::resource_reference>{ nullptr }; }
 
   /**
    * Invalidates a resource reference for this buffer. This finishes the transition
@@ -70,7 +97,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    *
    * Any calls to <code>reference</code> should have balanced calls to <code>dereference</code>.
    */
-  void
+  virtual void
     dereference () { }
 };
 

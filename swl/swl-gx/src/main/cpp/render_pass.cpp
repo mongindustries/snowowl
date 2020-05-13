@@ -28,8 +28,7 @@ void
 }
 
 void
-  render_pass::set_topology   () {
-  
+  render_pass::set_topology(topology_type type) {
 }
 
 

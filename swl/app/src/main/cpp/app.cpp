@@ -76,37 +76,31 @@ struct app_game_loop final : game_loop {
       pipeline->render_inputs[gx::pipeline::shader_stage::vertex]   = TELL_O(gx::pipeline::render_input, {
 
         // vertex
-        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings[0] = TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_4_32_float;
-          object.location = 0;
-          object.region   = 0;
           object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
-        }));
+        });
 
         // index
-        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings[1] = TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_1_16_int_u;
-          object.location = 1;
-          object.region   = 0;
           object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
-        }));
+        });
 
         // matrices
-        object.bindings.emplace_back(TELL_O(gx::pipeline::render_input_item, {
+        object.bindings[2] = TELL_O(gx::pipeline::render_input_item, {
           object.format   = gx::pipeline::format_unknown;
-          object.location = 2;
-          object.region   = 0;
           object.indirect = false;
           object.type     = gx::pipeline::typeConstant;
-        }));
+        });
       });
 
       pipeline->construct();
     });
 
-    main_queue->begin({});
+    main_queue->begin({ });
 
     std::vector<float>    data = {
       0.0f, 0.0f, 0.0f, 0.0f,
@@ -157,19 +151,24 @@ struct app_game_loop final : game_loop {
           frame_context.reference         = frame.reference;
 
           auto pass = factory.render_pass(clear_block, std::vector{frame_context}); {
-            pass->bind_buffers(gx::bindingGraphicsVertex,   {
-              buffer_vertex-> reference(0),
-              buffer_index->  reference(0) }); // three items: vertex, index, matrix
+
+            // three items: vertex, index, matrix
+            gx::buffer_boundary<gx::buffer_type::typeData>::input transitions{
+                { buffer_vertex.get(),  gx::viewTypeShader, { gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionInherit, gx::buffer_transition::transitionShaderView, gx::buffer_transition::transitionInherit } },
+                { buffer_index.get(),   gx::viewTypeShader, { gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionInherit, gx::buffer_transition::transitionShaderView, gx::buffer_transition::transitionInherit } }
+            };
 
             const auto size = swap_chain->window->get_size();
-            pass->set_viewport  (size);
-            pass->set_scissor   (cx::rect{{}, size});
+            gx::buffer_boundary<gx::buffer_type::typeData> resource_boundary(pass, transitions); {
 
-            pass->set_topology  ();
-            pass->draw          (gx::render_pass_draw_range{ 0, 3 });
+              pass->bind_buffers  (gx::bindingGraphicsVertex, resource_boundary);
 
-            buffer_vertex-> dereference();
-            buffer_index->  dereference();
+              pass->set_viewport  (size);
+              pass->set_scissor   (cx::rect{{}, size});
+
+              pass->set_topology  (gx::render_pass::typeTriangleList);
+              pass->draw          (gx::render_pass_draw_range{ 0, 3 });
+            }
           }
         }
       }

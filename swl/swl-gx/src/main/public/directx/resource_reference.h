@@ -11,7 +11,9 @@ SNOW_OWL_NAMESPACE(gx::dx)
 
 enum resource_reference_type {
   typeCPU,
-  typeGPU
+  typeGPU,
+
+  typeAll
 };
 
 struct resource_reference final : gx::resource_reference {

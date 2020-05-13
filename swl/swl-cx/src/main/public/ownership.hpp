@@ -59,7 +59,7 @@ struct ptr {
 	 * instance. If it does, call <code>release</code> or <code>abstract_and_release</code> before passing
 	 * the pointer here.
 	 */
-	explicit ptr        (Derive* fast): _value(fast) { }
+	explicit ptr(Derive* fast);
 
 	/**
 	 * Creates a new <code>ptr</code> instance forward-declared from a <code>Derive</code> value.
@@ -358,5 +358,14 @@ private:
 
 	void* _value;
 };
+
+/**
+* Creates a new <code>ptr</code> instance from a previously declared pointer
+* @param fast The pointer created. Take note <code>fast</code> should not been made using another <code>ptr</code>
+* instance. If it does, call <code>release</code> or <code>abstract_and_release</code> before passing
+* the pointer here.
+*/
+template<typename Base, typename Derive>
+inline ptr<Base, Derive>::ptr(Derive* fast) : _value(fast) { }
 
 SNOW_OWL_NAMESPACE_END

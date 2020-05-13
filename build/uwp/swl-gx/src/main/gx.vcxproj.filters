@@ -1,141 +1,147 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\context.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\swap_chain.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\render_pipeline.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\render_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\queue.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\queue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\render_pass.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\render_pass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\buffer_allocator.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\buffer_allocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\cpp\render_block.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\cpp\render_block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\context.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\context.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\queue.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\queue.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\swap_chain.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\swap_chain.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\pipeline.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\pipeline.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\render_block.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\render_block.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\resource_reference.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\resource_reference.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\platform\windows\directx\factory.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\factory.cpp">
+      <Filter>directx\cpp\platform\windows\directx</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\platform\windows\directx\buffer.cpp">
       <Filter>directx\cpp\platform\windows\directx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\context.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\context.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\swap_chain.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\swap_chain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\queue.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\queue.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\render_pass.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\render_pass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\shader.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\shader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\buffer.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\buffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\sampler.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\render_pipeline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\render_pipeline.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\buffer_allocator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\buffer_allocator.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\render_block.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\render_block.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\resource_reference.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\resource_reference.hpp">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\factory.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\factory.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\context.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\context.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\queue.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\queue.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\swap_chain.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\swap_chain.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\pipeline.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\pipeline.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\render_block.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\render_block.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\resource_reference.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\resource_reference.h">
       <Filter>directx\hpp\public\directx</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\public\directx\factory.h">
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\factory.h">
       <Filter>directx\hpp\public\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\public\directx\buffer.h">
+      <Filter>directx\hpp\public\directx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\swl-gx\src\main\public\buffer_view.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\micha\Desktop\Code\snowowl\swl\swl-gx\src\main\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\swl-gx\src\main\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{24A8BB10-0A8F-3FA4-AB5A-80DBC17DCAED}</UniqueIdentifier>
+      <UniqueIdentifier>{5163C010-EF77-3015-BCD9-D4FCD29831B7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{8CB4D29D-8BD8-311B-BE8C-645A31F145C8}</UniqueIdentifier>
+      <UniqueIdentifier>{FCBBA5C6-DC93-3CD9-80A8-691F9C2C230A}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx">
-      <UniqueIdentifier>{BAFF88E3-2E54-3069-BA8E-70890AEF936C}</UniqueIdentifier>
+      <UniqueIdentifier>{47482A83-00A9-3ED6-9064-C968236F4E40}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\cpp">
-      <UniqueIdentifier>{E1D69368-009A-3100-9A9F-254219DE7E71}</UniqueIdentifier>
+      <UniqueIdentifier>{625D43F2-9CB8-3E7F-B493-FC3050CE4388}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\cpp\platform">
-      <UniqueIdentifier>{4EB78835-B48D-334E-A6E2-6724B22AFC03}</UniqueIdentifier>
+      <UniqueIdentifier>{4F9F5540-5BF3-3439-8186-041055700E8D}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\cpp\platform\windows">
-      <UniqueIdentifier>{12E7B7DC-5F75-3B40-A658-A04501660874}</UniqueIdentifier>
+      <UniqueIdentifier>{B8E1D0E2-674D-3FBE-96B4-A83D93C04A08}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\cpp\platform\windows\directx">
-      <UniqueIdentifier>{E35D0B2C-3AA1-392F-A38F-DFD5A7B561AD}</UniqueIdentifier>
+      <UniqueIdentifier>{FA51810C-CCCA-3785-B74C-F6F235240AB1}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\hpp">
-      <UniqueIdentifier>{0A2FB64A-8B1F-393F-B261-626811AAAFA2}</UniqueIdentifier>
+      <UniqueIdentifier>{DC40797A-83EE-37DD-9B9F-4937FD84E9A4}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\hpp\public">
-      <UniqueIdentifier>{63E65F44-3242-33D4-880C-D478818DD088}</UniqueIdentifier>
+      <UniqueIdentifier>{3AFC4C1C-F79B-3D18-905A-B1FEBE4B4D19}</UniqueIdentifier>
     </Filter>
     <Filter Include="directx\hpp\public\directx">
-      <UniqueIdentifier>{E505B83A-6751-30DA-9EBA-10DE8B049227}</UniqueIdentifier>
+      <UniqueIdentifier>{C83A8B7B-B852-31DA-8805-71B19D156B0B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

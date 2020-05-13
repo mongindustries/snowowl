@@ -4,8 +4,8 @@
 	xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
 	IgnorableNamespaces="uap mp">
 
-	<Identity Name="A16C89CB-7421-3178-A7FA-7E3E630EDC51" Publisher="CN=CMake" Version="1.0.0.0" />
-	<mp:PhoneIdentity PhoneProductId="A16C89CB-7421-3178-A7FA-7E3E630EDC51" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<Identity Name="CAB94E72-080C-3D36-90AB-83BADDF61C07" Publisher="CN=CMake" Version="1.0.0.0" />
+	<mp:PhoneIdentity PhoneProductId="CAB94E72-080C-3D36-90AB-83BADDF61C07" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 	<Properties>
 		<DisplayName>app</DisplayName>
 		<PublisherDisplayName>CMake</PublisherDisplayName>

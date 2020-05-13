@@ -120,16 +120,18 @@ namespace pipeline {
   };
 
   enum topology_type {
-    topologyTypePoint,
-    topologyTypeLine,
-    topologyTypeTriangle
+    topologyTypePoint     = 0,
+    topologyTypeLine      = 1,
+    topologyTypeTriangle  = 2
   };
 
   enum render_input_type {
+    typeNotUsed,
+
     typeTexture,
     typeConstant,
     typeBuffer,
-    typeBufferUser
+    typeBufferUser,
   };
 
   struct write_mask {
@@ -199,6 +201,24 @@ namespace pipeline {
     unsigned int quality;
   };
 
+  struct sampler {
+
+    int address_x;
+    int address_y;
+    int address_z;
+
+    int min_filter;
+    int mag_filter;
+    int mip_filter;
+
+    int max_anisotropy;
+
+    int comparison_func;
+
+    int min_lod;
+    int max_lod;
+  };
+
   struct render_output {
     format          format;
     pipeline::blend blend;
@@ -227,19 +247,15 @@ namespace pipeline {
     format            format;
     /// The shader input type. This specifies if the input is going to be a constant
     /// buffer, a texture, or a dynamic buffer.
-    render_input_type type;
+    render_input_type type{ typeNotUsed };
     /// Specifying true for this shader input informs the shader to refer its shader input
     /// on another location in memory. Only works with D3D12 (I think).
     bool              indirect;
-
-    /// The shader register location.
-    int               location;
-    /// The shader register scope.
-    int               region;
   };
 
   struct render_input {
-    std::vector<render_input_item> bindings;
+    std::array<render_input_item, 32> bindings;
+    std::array<sampler, 8>            samplers;
   };
 }
 

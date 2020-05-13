@@ -14,10 +14,6 @@ All objects are contained inside the `swl::gx` namespace.
      The graphics context. This creates the instance and device for a given rendering API.
 - `gx::queue`
      A wrapper for graphics submission operations.
-- `gx::render_block`
-     A wrapper for a particular graphics state.
-- `gx::render_pass`
-     A wrapper for graphics command execution.
 - `gx::swap_chain`
      A wrapper for a window's swap chain (a list of display buffers that are presented/swapped incrementally).
 - `gx::buffer<>`
@@ -28,9 +24,13 @@ All objects are contained inside the `swl::gx` namespace.
 - `gx::buffer_allocator`
      A wrapper that creates `gx::buffer<>` resources. Specifies the memory locality for a set of resources and synchronization operations.
 - `gx::resource_reference`
-     A reference made from a `gx::buffer<>` used in conjunction with `gx::render_pipeline` to define shader resource and barrier transition information.
+     A reference made from a `gx::buffer<>`. It defines a graphics API reference.
 - `gx::render_pipeline`
      A wrapper for a particular graphics configuration (eg: raster, depth, stencil, shader binding, etc.)
+- `gx::render_block`
+     A wrapper for a particular graphics state.
+- `gx::render_pass`
+     A wrapper for graphics command execution.
 - `gx::shader`
      A wrapper for a shader object.
 

@@ -115,6 +115,18 @@ constexpr D3D12_ROOT_PARAMETER_TYPE
   return {};
 }
 
+constexpr D3D12_DESCRIPTOR_RANGE_TYPE
+  gx_param_table(const gx::pipeline::render_input_type& type) {
+  switch (type) {
+  case pipeline::typeConstant:
+    return D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+  case pipeline::typeBuffer:
+  case pipeline::typeTexture:
+  case pipeline::typeBufferUser:
+    return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+  }
+}
+
 constexpr D3D12_PRIMITIVE_TOPOLOGY_TYPE
   gx_primitive  (const gx::pipeline::topology_type &type) {
   switch (type) {
@@ -184,39 +196,63 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
 
   std::vector<D3D12_ROOT_PARAMETER> parameters{};
   for (auto& visibility : pipeline_resource_mapping) {
+
+    uint16_t index = 0;
     for (const auto& binding : render_inputs[visibility.first].bindings) {
-      parameters.emplace_back(cx::tell<D3D12_ROOT_PARAMETER>({}, [&binding, &visibility](D3D12_ROOT_PARAMETER& param) {
-        param.ParameterType     = gx_param(binding.type);
-        param.Descriptor        = D3D12_ROOT_DESCRIPTOR{ static_cast<UINT>(binding.location), static_cast<UINT>(binding.region) };
-        param.ShaderVisibility  = visibility.second;
+      parameters.emplace_back(cx::tell<D3D12_ROOT_PARAMETER>({}, [index, &binding, &visibility](D3D12_ROOT_PARAMETER& param) {
+
+        if (binding.indirect) {
+          std::array ranges{
+            D3D12_DESCRIPTOR_RANGE{
+              gx_param_table(binding.type),
+              static_cast<UINT>(index),
+              D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
+            }
+          };
+
+          param.ParameterType   = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+          param.DescriptorTable = { ranges.size(), ranges.data() };
+        }
+        else {
+          param.ParameterType   = gx_param(binding.type);
+          param.Descriptor      = D3D12_ROOT_DESCRIPTOR{ static_cast<UINT>(index), 0 };
+        }
+        
+        param.ShaderVisibility = visibility.second;
       }));
+
+      index += 1;
     }
   }
 
-  std::vector<D3D12_SAMPLER_DESC> samplers{};
+  std::vector<D3D12_STATIC_SAMPLER_DESC> samplers{};
 
-  samplers.emplace_back(cx::tell<D3D12_SAMPLER_DESC>({}, [](D3D12_SAMPLER_DESC& desc) {
+  samplers.emplace_back(TELL_O(D3D12_STATIC_SAMPLER_DESC, {
 
-    desc.AddressU;
-    desc.AddressV;
-    desc.AddressW;
+    object.AddressU;
+    object.AddressV;
+    object.AddressW;
 
-    desc.Filter;
-    desc.MaxAnisotropy;
+    object.Filter;
+    
+    object.MaxAnisotropy;
 
-    desc.ComparisonFunc;
+    object.ComparisonFunc;
 
-    desc.MinLOD;
-    desc.MaxLOD;
-    desc.MipLODBias;
+    object.MinLOD;
+    object.MaxLOD;
+    object.MipLODBias;
   }));
 
   D3D12_ROOT_SIGNATURE_DESC rootDesc{};
 
-  rootDesc.Flags          = D3D12_ROOT_SIGNATURE_FLAG_NONE;
+  rootDesc.Flags              = D3D12_ROOT_SIGNATURE_FLAG_NONE;
 
-  rootDesc.pParameters    = parameters.data();
-  rootDesc.NumParameters  = parameters.size();
+  rootDesc.pParameters        = parameters.data();
+  rootDesc.NumParameters      = parameters.size();
+
+  rootDesc.pStaticSamplers    = samplers.data();
+  rootDesc.NumStaticSamplers  = samplers.size();
 
   winrt::com_ptr<ID3DBlob> result;
   D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);

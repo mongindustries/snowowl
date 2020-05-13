@@ -1,46 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\micha\Desktop\Code\snowowl\swl\app\src\main\cpp\app.cpp">
+    <ClCompile Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\app\src\main\cpp\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\micha\Desktop\Code\snowowl\swl\app\src\main\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\app\src\main\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\micha\Desktop\Code\snowowl\swl\app\src\main\hlsl\simple.frag" />
-    <None Include="C:\Users\micha\Desktop\Code\snowowl\swl\app\src\main\hlsl\simple.vert" />
+    <None Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\app\src\main\hlsl\simple.frag" />
+    <None Include="C:\Users\mong\Desktop\Code\SnowOwl\swl\app\src\main\hlsl\simple.vert" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\Windows_TemporaryKey.pfx">
+    <None Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\Windows_TemporaryKey.pfx">
       <Filter>Resource Files</Filter>
     </None>
-    <AppxManifest Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\package.appxManifest">
+    <AppxManifest Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\package.appxManifest">
       <Filter>Resource Files</Filter>
     </AppxManifest>
-    <Image Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\SmallLogo.png">
+    <Image Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\SmallLogo.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\SmallLogo44x44.png">
+    <Image Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\SmallLogo44x44.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\Logo.png">
+    <Image Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\Logo.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\StoreLogo.png">
+    <Image Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\StoreLogo.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="C:\Users\micha\Desktop\Code\snowowl\build\uwp\app\src\main\app.dir\SplashScreen.png">
+    <Image Include="C:\Users\mong\Desktop\Code\SnowOwl\build\uwp\app\src\main\app.dir\SplashScreen.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{8CB4D29D-8BD8-311B-BE8C-645A31F145C8}</UniqueIdentifier>
+      <UniqueIdentifier>{FCBBA5C6-DC93-3CD9-80A8-691F9C2C230A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{D14BE5AC-A78D-3A5A-B7EF-5ED7F9E57C2A}</UniqueIdentifier>
+      <UniqueIdentifier>{5BDDF268-369E-3127-880C-08D4E1571A83}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
