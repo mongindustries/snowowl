@@ -6,36 +6,64 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-struct buffer_data : buffer<gx::typeData> {
+struct buffer_data;
 
-  buffer_data   (dx::context& context);
+struct buffer_allocator;
+
+struct buffer_data_staging final : buffer_staging {
+
+  ~buffer_data_staging() override;
+
+  winrt::com_ptr < ID3D12Resource > buffer;
+  winrt::com_ptr < ID3D12Resource > buffer_staging;
+
+  cx::exp::ptr_ref < buffer_data > ref;
+
+  D3D12_RESOURCE_STATES source_state;
+  D3D12_RESOURCE_STATES target_state;
+
+  size_t alloc_pos;
+  size_t size;
+};
+
+struct buffer_data final : buffer < typeData > {
+
+  buffer_data();
 
   /**
    * Method to update a CPU buffer. Returned data is an instruction on how
    * this buffer will be updated to the GPU.
    */
-  cx::exp::ptr<buffer_staging>
-    set_data    (size_t start, size_t size, std::vector<char>::pointer data) override;
+  cx::exp::ptr < buffer_staging >
+    set_data(std::array < upload_desc, 8 > const &modifications) override;
 
-  cx::exp::ptr<buffer_staging>
-    set_dirty   () override;
+  cx::exp::ptr < buffer_staging >
+    set_dirty() override;
 
-  cx::exp::ptr_ref<gx::resource_reference>
-    reference   (buffer_view_type view_type) override;
+  cx::exp::ptr_ref < gx::resource_reference >
+    reference() override;
 
 
-  winrt::com_ptr<ID3D12Resource>        resource;
-  winrt::com_ptr<ID3D12Resource>        resource_upload;
+  winrt::com_ptr < ID3D12Resource > resource;
+  winrt::com_ptr < ID3D12Resource > resource_upload;
 
-  winrt::com_ptr<ID3D12DescriptorHeap>  descriptor;
+  winrt::com_ptr < ID3D12DescriptorHeap > descriptor;
 
+  friend struct buffer_allocator;
+  friend struct queue;
 
 private:
 
-  size_t                                buffer_size     {};
-  size_t                                buffer_stride   {};
+  buffer_view_type view_type;
 
-  bool                                  data_initialized{};
+  char *mapped_data;
+
+  size_t alloc_pos{};
+
+  size_t buffer_size{};
+  size_t buffer_stride{};
+
+  bool data_initialized{};
 };
 
 SNOW_OWL_NAMESPACE_END

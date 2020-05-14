@@ -8,7 +8,7 @@
 #define SNOW_OWL_NAMESPACE_END }
 
 #if defined(SWL_WIN32)
-#define SWL_EXPORT __declspec( dllexport )
+#define SWL_EXPORT
 #else
 #define SWL_EXPORT
 #endif

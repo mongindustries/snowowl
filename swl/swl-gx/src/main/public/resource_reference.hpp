@@ -16,8 +16,6 @@ SNOW_OWL_NAMESPACE(gx)
  * Resource references are managed by the object created them. Do not attempt to manage its
  * memory client side, it will lead to undefined behavior.
  */
-struct resource_reference {
-
-};
+struct resource_reference {};
 
 SNOW_OWL_NAMESPACE_END

@@ -125,6 +125,8 @@ constexpr D3D12_DESCRIPTOR_RANGE_TYPE
   case pipeline::typeBufferUser:
     return D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
   }
+
+  return {};
 }
 
 constexpr D3D12_PRIMITIVE_TOPOLOGY_TYPE
@@ -143,6 +145,14 @@ constexpr D3D12_PRIMITIVE_TOPOLOGY_TYPE
 
 constexpr D3D12_BLEND
   gx_blend      (const gx::pipeline::blend_type& type) {
+
+  if (type == pipeline::typeZero) {
+    return D3D12_BLEND_ZERO;
+  }
+
+  if (type == pipeline::typeOne) {
+    return D3D12_BLEND_ONE;
+  }
 
   const std::array _s_c{ D3D12_BLEND_SRC_COLOR, D3D12_BLEND_INV_SRC_COLOR };
   const std::array _s_a{ D3D12_BLEND_SRC_ALPHA, D3D12_BLEND_INV_SRC_ALPHA };
@@ -183,12 +193,16 @@ constexpr D3D12_BLEND_OP
 }
 
 
-render_pipeline::render_pipeline(): gx::render_pipeline() {
+render_pipeline::render_pipeline  (): gx::render_pipeline() {
 
 }
 
-render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
+render_pipeline::render_pipeline  (dx::context& context) : gx::render_pipeline(), device(context.device) {
 
+}
+
+void render_pipeline::construct   () {
+  
   std::array pipeline_resource_mapping{
     std::make_pair(pipeline::shader_stage::vertex,    D3D12_SHADER_VISIBILITY_VERTEX),
     std::make_pair(pipeline::shader_stage::fragment,  D3D12_SHADER_VISIBILITY_PIXEL ),
@@ -199,6 +213,12 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
 
     uint16_t index = 0;
     for (const auto& binding : render_inputs[visibility.first].bindings) {
+
+      if (binding.type == gx::pipeline::typeNotUsed) {
+        index += 1;
+        continue;
+      }
+
       parameters.emplace_back(cx::tell<D3D12_ROOT_PARAMETER>({}, [index, &binding, &visibility](D3D12_ROOT_PARAMETER& param) {
 
         if (binding.indirect) {
@@ -227,6 +247,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
 
   std::vector<D3D12_STATIC_SAMPLER_DESC> samplers{};
 
+  /*
   samplers.emplace_back(TELL_O(D3D12_STATIC_SAMPLER_DESC, {
 
     object.AddressU;
@@ -243,6 +264,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
     object.MaxLOD;
     object.MipLODBias;
   }));
+  */
 
   D3D12_ROOT_SIGNATURE_DESC rootDesc{};
 
@@ -257,7 +279,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
   winrt::com_ptr<ID3DBlob> result;
   D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);
 
-  context.device->CreateRootSignature(0, result.get(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), root_signature.put_void());
+  device->CreateRootSignature(0, result.get()->GetBufferPointer(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), root_signature.put_void());
 
   D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
 
@@ -324,7 +346,7 @@ render_pipeline::render_pipeline(dx::context& context) : gx::render_pipeline() {
     });
   }
 
-  context.device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
+  device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
 
 SNOW_OWL_NAMESPACE_END
