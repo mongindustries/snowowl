@@ -33,10 +33,10 @@ queue&
 
 
 void
-  queue::begin      (const std::vector<ptr_ref<queue>> &dependencies) {}
+  queue::begin      (const std::vector<std::reference_wrapper<queue>> &dependencies) {}
 
 void
-  queue::submit     (const std::vector<ptr_ref<render_block>> &commands) {}
+  queue::submit     (const std::vector<std::reference_wrapper<render_block>> &commands) {}
 
 void
   queue::transfer   (const std::vector<cx::exp::ptr_ref<buffer_staging>> &buffers) {}

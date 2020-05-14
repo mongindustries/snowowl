@@ -1,39 +1,25 @@
 #include "directx/factory.h"
-#include "directx/swap_chain.h"
-#include "directx/queue.h"
-#include "directx/render_block.h"
-
 
 SNOW_OWL_NAMESPACE(gx)
 
-cx::exp::ptr<queue>
-  factory<dx::context, 0>::queue            () {
-  return cx::exp::ptr<gx::queue>{ new dx::queue(instance) };
-}
+typedef factory < dx::context, 0 > fx;
 
-cx::exp::ptr<swap_chain>
-  factory<dx::context, 0>::swap_chain       (gx::queue& queue, ui::window& window) {
-  return cx::exp::ptr<gx::swap_chain>{ new dx::swap_chain(instance, dynamic_cast<dx::queue&>(queue), window) };
-}
+fx::t_queue
+  fx::queue() { return fx::t_queue(instance); }
 
-cx::exp::ptr<render_block>
-  factory<dx::context, 0>::render_block     (gx::queue& queue, gx::render_pipeline& pipeline) {
-  return cx::exp::ptr<gx::render_block>{ new dx::render_block(dynamic_cast<dx::queue&>(queue), dynamic_cast<dx::render_pipeline&>(pipeline)) };
-}
+fx::t_swap_chain
+  fx::swap_chain(fx::t_queue &queue, ui::window &window) { return fx::t_swap_chain(instance, queue, window); }
 
-cx::exp::ptr<gx::render_pass>
-  factory<dx::context, 0>::render_pass      (gx::render_block& block, std::vector<gx::render_pass_context> const& pass_context) {
-  return cx::exp::ptr<gx::render_pass>{ new dx::render_pass(dynamic_cast<dx::render_block&>(block), pass_context) };
-}
+fx::t_render_block
+  fx::render_block(t_queue &queue, t_render_pipeline *pipeline) { return fx::t_render_block(queue, pipeline); }
 
-cx::exp::ptr<render_pipeline>
-  factory<dx::context, 0>::render_pipeline  () {
-  return cx::exp::ptr<gx::render_pipeline>{ new dx::render_pipeline(dynamic_cast<dx::context&>(instance)) };
-}
+fx::t_render_pass
+  fx::render_pass(t_render_block &block, std::vector < gx::render_pass_context > const &pass_context) { return fx::t_render_pass(block, pass_context); }
 
-[[nodiscard]] cx::exp::ptr<buffer_allocator>
-  factory<dx::context, 0>::buffer_allocator (buffer_allocator_usage usage) {
-  return cx::exp::ptr{ nullptr };
-}
+fx::t_render_pipeline
+  fx::render_pipeline() { return t_render_pipeline(instance); }
+
+cx::exp::ptr < buffer_allocator >
+  fx::buffer_allocator(size_t initial_size) { return cx::exp::ptr < gx::buffer_allocator >{new dx::buffer_allocator(instance, initial_size)}; }
 
 SNOW_OWL_NAMESPACE_END

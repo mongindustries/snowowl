@@ -11,7 +11,7 @@ render_block::render_block      () noexcept = default;
 
 render_block::render_block      (render_block &&) noexcept = default;
 
-render_block::render_block      (queue& queue, render_pipeline& pipeline) {
+render_block::render_block      (queue& queue, render_pipeline* pipeline) {
 
 }
 

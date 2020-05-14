@@ -16,6 +16,7 @@ struct render_block;
 
 struct render_pipeline;
 
+
 struct buffer_staging;
 
 /**
@@ -31,9 +32,12 @@ struct buffer_staging;
  * <code>transfer</code> for updating/synchronizing resource buffers.
  *
  */
-struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
+struct queue {
+  SWL_REFERENCEABLE(queue)
+  SWL_POLYMORPHIC(queue)
 
-  explicit queue  (context& context);
+  explicit
+    queue(context &context);
 
   /**
    *
@@ -45,7 +49,7 @@ struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
    * wait).
    */
   virtual void
-        begin     (std::vector<cx::exp::ptr_ref<queue>> const& dependencies);
+    begin(std::vector < std::reference_wrapper < queue > > const &dependencies);
 
   /**
    *
@@ -55,7 +59,7 @@ struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
    * @param commands The list of <code>gx::render_block</code> to execute.
    */
   virtual void
-        submit    (std::vector<cx::exp::ptr_ref<render_block>> const& commands);
+    submit(std::vector < std::reference_wrapper < render_block > > const &commands);
 
   /**
    *
@@ -64,11 +68,11 @@ struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
    * @param buffers The list of <code>gx::buffer_staging</code> to execute.
    */
   virtual void
-        transfer  (std::vector<cx::exp::ptr_ref<buffer_staging>> const& buffers);
+    transfer(std::vector < cx::exp::ptr_ref < buffer_staging > > const &buffers);
 
 protected:
 
-  cx::exp::ptr_ref<context> context;
+  cx::exp::ptr_ref < context > context;
 };
 
 SNOW_OWL_NAMESPACE_END
