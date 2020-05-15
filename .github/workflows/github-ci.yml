@@ -14,4 +14,5 @@ jobs:
         submodules: true
     - name: Configure cmake project
       run: cmake -G"Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF -S swl -B build/ci-uwp
+      shell: cmd
       
