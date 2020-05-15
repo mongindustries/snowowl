@@ -1,17 +1,23 @@
-name: C/C++ CI
-
+name: swl build UWP
 on:
   push:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
-
 jobs:
   build:
-
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
+      name: Pull from repo
       with:
         submodules: true
+    - uses: lukka/run-cmake@v2.5
+      name: Configure cmake project
+      with:
+        cmakeListsTxtPath: swl
+        cmakeBuildType: Debug
+        cmakeGenerator: "Visual Studio 16 2019"
+        buildDirectory: build/ci-uwp
+        cmakeAppendedArgs: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF"
+        buildWithCmake: false
