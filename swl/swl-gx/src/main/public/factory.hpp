@@ -20,29 +20,45 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-template<typename context, std::enable_if_t<std::is_base_of_v<gx::context, context>, int> = 0>
+template < typename context, std::enable_if_t < std::is_base_of_v < gx::context, context >, int > = 0 >
 struct factory {
 
+  typedef gx::queue                t_queue;
+  typedef cx::exp::ptr < t_queue > p_queue;
+
+  typedef gx::swap_chain                t_swap_chain;
+  typedef cx::exp::ptr < t_swap_chain > p_swap_chain;
+
+  typedef gx::render_block                t_render_block;
+  typedef cx::exp::ptr < t_render_block > p_render_block;
+
+  typedef gx::render_pass                t_render_pass;
+  typedef cx::exp::ptr < t_render_pass > p_render_pass;
+
+  typedef gx::render_pipeline                t_render_pipeline;
+  typedef cx::exp::ptr < t_render_pipeline > p_render_pipeline;
+
   explicit
-    factory           (context &&instance): instance(instance) {}
+    factory(context &&instance)
+    : instance(instance) {}
 
-  [[nodiscard]] cx::exp::ptr<swap_chain>
-    swap_chain        (queue& queue, ui::window& window) { return cx::exp::ptr{nullptr}; }
+  [[nodiscard]] t_swap_chain
+    swap_chain(t_queue &queue, ui::window &window) { return t_swap_chain(instance, queue, window); }
 
-  [[nodiscard]] cx::exp::ptr<queue>
-    queue             () { return cx::exp::ptr{nullptr}; }
+  [[nodiscard]] t_queue
+    queue() { return t_queue(instance); }
 
-  [[nodiscard]] cx::exp::ptr<render_block>
-    render_block      () { return cx::exp::ptr{nullptr}; }
+  [[nodiscard]] t_render_block
+    render_block(t_queue &queue, t_render_pipeline *pipeline) { return t_render_block(queue, pipeline); }
 
-  [[nodiscard]] cx::exp::ptr<render_pass>
-    render_pass       (gx::render_block& block, std::vector<render_pass_context> const& pass_context) { return cx::exp::ptr{nullptr}; }
+  [[nodiscard]] t_render_pass
+    render_pass(t_render_block &block, std::vector < render_pass_context > const &pass_context) { return t_render_pass(isntance, block); }
 
-  [[nodiscard]] cx::exp::ptr<render_pipeline>
-    render_pipeline   () { return cx::exp::ptr{ nullptr }; }
+  [[nodiscard]] t_render_pipeline
+    render_pipeline() { return t_render_pipeline(instance); }
 
-  [[nodiscard]] cx::exp::ptr<buffer_allocator>
-    buffer_allocator  (buffer_allocator_usage usage) { return cx::exp::ptr{ nullptr }; }
+  [[nodiscard]] cx::exp::ptr < buffer_allocator >
+    buffer_allocator(size_t initial_size) { return cx::exp::ptr{nullptr}; }
 
 private:
 

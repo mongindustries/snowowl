@@ -1,16 +1,15 @@
-# `swl` SnowOwl: engine code
+# `swl` SnowOwl: low level engine code
 
-This directory contains the code for the core engine.
+This directory contains the code for the core engine. This does not expose high level stuff that is (ex: node graph, GUI)
 
 ## Contents
 
-Each module is defined as a Gradle Native component.
+Each module is defined as a cmake component.
 
-- `swl-cx` core components
+- `swl-cx` Core components
 - `swl-gx` Graphics components
-- `swl-io` Input/Output components (from keyboard/gamepad to file streaming)
-- `swl-sx` Sound components
-- `swl-ui` User Interface components
+- `swl-rd` Rendercore components
+- `swl-ui` Window/App system components
 
 In each module the project directory configuration is laid out like this:
 
@@ -21,10 +20,7 @@ In each module the project directory configuration is laid out like this:
             - `cpp`: C++ source files
             - `headers`: Private header files
             - `public`: Public header files
+          `CMakeLists.txt`: Build configuration file
         - `platform`: Platfrom-specific files
-            - `darwin`: macOS/iOS
-            - `windows`: Windows
-            - `linux`: Linux/Android
         - `test`: Unit test
             - `cpp`: Unit test cases
-    - `build.gradle.kts`: Build configuration file

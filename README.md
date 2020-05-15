@@ -8,7 +8,7 @@ A 2D vector graphics game toolkit
 | `macOS` | [![Build status](https://build.appcenter.ms/v0.1/apps/d06f9807-c0c9-4dbb-bf81-26e80c0aa595/branches/builds%2Fmacos/badge)](https://appcenter.ms) |
 | `iOS` | N/A |
 | `win32` | |
-| `UWP` | |
+| `UWP` | ![Build status](https://github.com/mongindustries/snowowl/workflows/swl%20build%20UWP/badge.svg?branch=develop) |
 | `Android` | N/A |
 
 ## Introduction

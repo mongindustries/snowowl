@@ -7,14 +7,14 @@
 
 #include <header.hpp>
 #include <ownership.hpp>
-#include <rect.hpp>
 
-#include "context.hpp"
-#include "queue.hpp"
+#include "render_pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
 struct resource_reference;
+
+struct render_pass;
 
 enum buffer_type {
   typeData,
@@ -23,7 +23,35 @@ enum buffer_type {
 };
 
 struct buffer_staging {
-  SWL_REFERENCEABLE(buffer_staging) SWL_POLYMORPHIC(buffer_staging)
+  SWL_REFERENCEABLE(buffer_staging)
+  SWL_POLYMORPHIC(buffer_staging)
+};
+
+enum buffer_view_type {
+  viewTypeShader,
+  viewTypeConstant,
+  viewTypeTexture,
+  viewTypeRenderTarget
+};
+
+struct buffer_transition {
+
+  enum transition_type {
+
+    transitionInherit,
+
+    transitionShaderView,
+    transitionConstantView,
+
+    transitionRenderTargetView,
+  };
+
+  pipeline::shader_stage stage{0xff};
+
+  transition_type during{transitionInherit};
+
+  transition_type before{transitionInherit};
+  transition_type after{transitionInherit};
 };
 
 /**
@@ -32,46 +60,53 @@ struct buffer_staging {
  * Instances of this object are created from a <code>swl::gx::buffer_allocator</code>.
  *
  */
-template<buffer_type Type>
-struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
+template < buffer_type Type >
+struct buffer {
+  SWL_REFERENCEABLE(buffer)
+  SWL_POLYMORPHIC(buffer)
 
-  template<typename EntryType>
-  cx::exp::ptr<buffer_staging>
-    update_data(size_t start, std::vector<EntryType> const& items) { return update_data(start, sizeof(EntryType) * items.size(), reinterpret_cast<char*>(items.data())); }
+  struct upload_desc {
+
+    size_t start;
+    size_t size;
+
+    std::vector < char >::pointer data; // fancier version of char* :P
+  };
+
+  template < typename EntryType >
+  cx::exp::ptr < buffer_staging >
+    set_data(size_t start, std::vector < EntryType > &items) { return set_data(upload_desc{start, sizeof(EntryType) * items.size(), reinterpret_cast < char * >(items.data())}); }
 
   /**
-   * Method to update a CPU buffer. Returned data is an instruction on how
-   * this buffer will be updated to the GPU.
+   * Method to encode fresh data to the GPU. Returns an instruction
+   * on how a <code>queue</code> will synchronize the data.
    */
-  cx::exp::ptr<buffer_staging>
-    update_data (size_t start, size_t size, std::vector<char>::pointer data) { return cx::exp::ptr<buffer_staging>{ nullptr }; }
+  cx::exp::ptr < buffer_staging >
+    set_data(upload_desc const &upload) { return set_data(std::array < upload_desc, 8 >{upload}); }
+
+  virtual cx::exp::ptr < buffer_staging >
+    set_data(std::array < upload_desc, 8 > const &modifications) { return cx::exp::ptr < buffer_staging >{nullptr}; }
 
   /**
-   * Method to inform the data from CPU/GPU has changed. Returned data is an
-   * instruction on how this buffer will be synchronized.
+   * Method to obtain fresh data from the GPU. Returns an instruction
+   * on how a <code>queue</code> will synchronize the data.
    */
-  cx::exp::ptr<buffer_staging>
-    set_dirty   () { }
+  virtual cx::exp::ptr < buffer_staging >
+    set_dirty() { return cx::exp::ptr < buffer_staging >{nullptr}; }
 
   /**
-   * Obtains a resource reference for this buffer. A resource reference configures
-   * a buffer transition alongside a handle to the CPU/GPU memory location for the
-   * buffer.
    *
-   * This method also mark this buffer's transition information, calling this method
-   * twice with dissimilar data will lead to undefined state.
-   */
-  cx::exp::ptr_ref<resource_reference>
-    reference   (int transition_props) { return cx::exp::ptr_ref<resource_reference>{ nullptr }; }
-
-  /**
-   * Invalidates a resource reference for this buffer. This finishes the transition
-   * for a buffer by reverting it into the state it was created.
+   * Obtains a resource reference for this buffer.
    *
-   * Any calls to <code>reference</code> should have balanced calls to <code>dereference</code>.
    */
-  void
-    dereference () { }
+  virtual cx::exp::ptr_ref < resource_reference >
+    reference() { return cx::exp::ptr_ref < resource_reference >{nullptr}; }
 };
+
+template < buffer_type Type >
+buffer < Type >::buffer() noexcept = default;
+
+template < buffer_type Type >
+buffer < Type >::~buffer() = default;
 
 SNOW_OWL_NAMESPACE_END

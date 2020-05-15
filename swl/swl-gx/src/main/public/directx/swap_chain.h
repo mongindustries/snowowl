@@ -13,36 +13,36 @@ struct render_block;
 
 struct swap_chain : gx::swap_chain {
 
-  swap_chain    (dx::context& context, dx::queue& present_queue, ui::window& window);
+  swap_chain(dx::context &context, dx::queue &present_queue, ui::window &window);
 
 
-  cx::exp::ptr_ref<frame>
-    next_frame  () override;
-
-  void
-    present     (std::vector<cx::exp::ptr_ref<gx::queue>> const& dependencies) override;
-
+  cx::exp::ptr_ref < frame >
+    next_frame() override;
 
   void
-    resize      (cx::size_2d const& new_size) override;
+    present(std::vector < cx::exp::ptr_ref < gx::queue > > const &dependencies) override;
 
 
-  HANDLE                                    event_wait;
+  void
+    resize(cx::size_2d const &new_size) override;
 
 
-  uint64_t                                  current_frame;
-
-  winrt::com_ptr<ID3D12Fence>               frame_fence;
-
-  bool                                      needs_resize{ false };
+  HANDLE event_wait;
 
 
-  cx::exp::ptr_ref<dx::queue>               present_queue;
+  uint64_t current_frame;
+
+  winrt::com_ptr < ID3D12Fence > frame_fence;
+
+  bool needs_resize{false};
 
 
-  winrt::com_ptr<IDXGISwapChain3>           instance;
+  cx::exp::ptr_ref < dx::queue > present_queue;
 
-  winrt::com_ptr<ID3D12DescriptorHeap>      frame_heap;
+
+  winrt::com_ptr < IDXGISwapChain3 > instance;
+
+  winrt::com_ptr < ID3D12DescriptorHeap > frame_heap;
 };
 
 SNOW_OWL_NAMESPACE_END
