@@ -1,0 +1,20 @@
+name: swl build macOS
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: Pull from repo
+      with:
+        submodules: true
+    - uses: xavierLowmiller/xcodegen-action@1.1.0
+      name: Generate xcodeproj
+      with:
+        project: buid/xcodegen
+    - name: Build Project
+      run: xcodebuild -target app-macOS
