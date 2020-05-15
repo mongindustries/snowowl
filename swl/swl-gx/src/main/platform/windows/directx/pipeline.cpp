@@ -199,6 +199,18 @@ constexpr D3D12_BLEND_OP
   return D3D12_BLEND_OP{};
 }
 
+constexpr D3D12_TEXTURE_ADDRESS_MODE
+gx_address_mode(const gx::pipeline::address_mode& mode) {
+  switch (mode) {
+  case pipeline::modeClamp:
+    return D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+  case pipeline::modeWrap:
+    return D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+  case pipeline::modeMirror:
+    return D3D12_TEXTURE_ADDRESS_MODE_MIRROR;
+  }
+}
+
 
 render_pipeline::render_pipeline()
   : gx::render_pipeline() {}
@@ -216,6 +228,8 @@ void
   };
 
   std::vector < D3D12_ROOT_PARAMETER > parameters{};
+  std::vector < D3D12_STATIC_SAMPLER_DESC > samplers{};
+
   for (auto &visibility : pipeline_resource_mapping) {
     uint16_t index = 0;
     for (const auto &binding : render_inputs[visibility.first].bindings) {
@@ -247,28 +261,27 @@ void
 
       index += 1;
     }
+
+    index = 0;
+    for (const auto& sampler : render_inputs[visibility.first].samplers) {
+
+      samplers.emplace_back(cx::tell< D3D12_STATIC_SAMPLER_DESC >({}, [index, &sampler, &visibility](D3D12_STATIC_SAMPLER_DESC &object) {
+
+        object.AddressU = gx_address_mode(sampler.address_x);
+        object.AddressV = gx_address_mode(sampler.address_y);
+        object.AddressW = gx_address_mode(sampler.address_z);
+
+        object.Filter;
+
+        object.MaxAnisotropy = sampler.max_anisotropy;
+
+        object.ComparisonFunc;
+
+        object.MinLOD = sampler.min_lod;
+        object.MaxLOD = sampler.max_lod;
+      }));
+    }
   }
-
-  std::vector < D3D12_STATIC_SAMPLER_DESC > samplers{};
-
-  /*
-  samplers.emplace_back(TELL_O(D3D12_STATIC_SAMPLER_DESC, {
-
-    object.AddressU;
-    object.AddressV;
-    object.AddressW;
-
-    object.Filter;
-    
-    object.MaxAnisotropy;
-
-    object.ComparisonFunc;
-
-    object.MinLOD;
-    object.MaxLOD;
-    object.MipLODBias;
-  }));
-  */
 
   D3D12_ROOT_SIGNATURE_DESC rootDesc{};
 

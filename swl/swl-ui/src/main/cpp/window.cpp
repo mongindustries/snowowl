@@ -22,6 +22,9 @@ cx::size_2d window::fullscreen_size = cx::size_2d{ -2, -2 };
 
 window::window  () = default;
 
+window::window(std::nullptr_t): handle(std::numeric_limits<unsigned long long>::max()), title("null window"), sink(nullptr) {
+}
+
 window::window  (string window_name, const rect & frame) :
   handle(cx::core::make_handle()), title(std::move(window_name)), frame(frame), sink(window_sink{ handle }) {
 

@@ -28,12 +28,19 @@ queue::queue(dx::context &context)
   auto &device = context.device;
 
   device->CreateCommandQueue(&queue_desc, __uuidof(ID3D12CommandQueue), command_queue.put_void());
+
   device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), command_allocator.put_void());
+  device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, __uuidof(ID3D12CommandAllocator), transfer_allocator.put_void());
 
   device->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence), fence.put_void());
 
-  device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, command_allocator.get(), nullptr, __uuidof(ID3D12GraphicsCommandList), command_list_transfer.put_void());
+  device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, transfer_allocator.get(), nullptr, __uuidof(ID3D12GraphicsCommandList), command_list_transfer.put_void());
   command_list_transfer->Close();
+}
+
+queue::~queue() {
+
+  begin({ }); // one last dance
 }
 
 void
@@ -68,7 +75,8 @@ void
 
   if (!fence) { return; }
 
-  command_list_transfer->Reset(command_allocator.get(), nullptr);
+  transfer_allocator->Reset();
+  command_list_transfer->Reset(transfer_allocator.get(), nullptr);
 
   std::vector < D3D12_RESOURCE_BARRIER > barriers_in;
   std::vector < D3D12_RESOURCE_BARRIER > barriers_out;

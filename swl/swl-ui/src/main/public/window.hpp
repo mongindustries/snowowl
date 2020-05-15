@@ -48,7 +48,7 @@ struct window_surface;
  * <code>swl:gx::swap_chain</code> instance is linked to this window
  * when created from a <code>swl::gx::factory</code>.
  */
-struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
+struct SWL_EXPORT window final {
 
   static cx::size_2d fullscreen_size;
 
@@ -60,6 +60,12 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
   };
 
   /**
+   * @brief Creates a new instance with the default settings.
+   * @return A new swl::ui::window instance.
+  */
+  window  ();
+
+  /**
    * @brief Creates a new instance with a starting title and frame.
    * @param window_name The title of the window.
    * @param frame The frame of the window.
@@ -67,11 +73,7 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
   */
   window  (std::string window_name, cx::rect const& frame);
 
-  /**
-   * @brief Creates a new instance with the default settings.
-   * @return A new swl::ui::window instance.
-  */
-  window  ();
+  window  (std::nullptr_t);
 
   ~window ();
 
@@ -83,6 +85,24 @@ struct SWL_EXPORT window final { SWL_REFERENCEABLE(window)
    * @remarks The game loop runs in a separate thread. TODO: add a dispatcher for window.
    */
   void  bind_loop       (cx::exp::ptr_ref<cx::game_loop> const& game_loop);
+
+
+  std::string
+    title() const;
+  void
+    title(std::string const& value);
+
+  cx::rect
+    frame() const;
+  void
+    frame(cx::rect const& value);
+
+  
+
+  bool
+    full_screen() const;
+  void
+    full_screen(bool value);
 
   /**
    * Updates the title of the window.
@@ -174,8 +194,7 @@ private:
 
   bool                      full_screen{ false };
 
-
-  cx::exp::ptr<window_sink> sink;
+  cx::exp::ptr_ref<window_sink> sink;
 
   friend struct window_sink;
   friend struct window_surface;

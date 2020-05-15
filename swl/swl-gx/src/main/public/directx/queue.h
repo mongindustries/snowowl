@@ -16,7 +16,7 @@ struct queue final : gx::queue {
   explicit
     queue(dx::context &context);
 
-  ~queue() override = default;
+  ~queue() override;
 
 
   void
@@ -37,6 +37,7 @@ struct queue final : gx::queue {
   winrt::com_ptr < ID3D12CommandQueue > command_queue;
 
   winrt::com_ptr < ID3D12CommandAllocator > command_allocator;
+  winrt::com_ptr < ID3D12CommandAllocator > transfer_allocator;
 
   winrt::com_ptr < ID3D12GraphicsCommandList > command_list_transfer;
 

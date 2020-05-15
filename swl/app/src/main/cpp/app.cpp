@@ -32,7 +32,7 @@ typedef gx::factory < gx::dx::context > Factory;
 
 struct app_game_loop final : game_loop {
 
-  exp::ptr_ref < window > window;
+  window& window;
 
   Factory::t_queue           main_queue;
   Factory::t_swap_chain      swap_chain;
@@ -48,7 +48,7 @@ struct app_game_loop final : game_loop {
 
   app_game_loop(ui::window &window)
     : game_loop(60, 4)
-    , window(&window)
+    , window(window)
     , main_queue(factory.queue())
     , swap_chain(factory.swap_chain(main_queue, window))
     , clear_block(factory.render_block(main_queue, nullptr))
@@ -101,6 +101,17 @@ struct app_game_loop final : game_loop {
 
     window.bind_loop(cx::exp::ptr_ref < game_loop >{this});
   }
+
+  app_game_loop(app_game_loop&& mov)
+    : window(mov.window)
+    , main_queue(std::move(mov.main_queue))
+    , swap_chain(std::move(mov.swap_chain))
+    , clear_block(std::move(mov.clear_block))
+    , render_pipeline(std::move(mov.render_pipeline))
+    , allocator(std::move(mov.allocator))
+    , buffer_vertex(std::move(mov.buffer_vertex))
+    , buffer_index(std::move(mov.buffer_index))
+    , peg(mov.peg) { }
 
   void
     create() override {
@@ -161,7 +172,7 @@ struct app_game_loop final : game_loop {
             const auto i_ref = std::make_pair(buffer_index->reference(),
                                               gx::buffer_transition{gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView});
 
-            const auto size = swap_chain.window->get_size();
+            const auto size = window.get_size();
 
             gx::buffer_usage_block resource_block{pass, {v_ref, i_ref}};
             {
@@ -184,29 +195,31 @@ struct app_game_loop final : game_loop {
 
 struct app final : application {
 
-  exp::ptr_ref < window >    window;
-  exp::ptr < app_game_loop > game_loop;
+  std::optional<window>         window;
+  std::optional<app_game_loop>  game_loop;
 
   explicit
     app(void *instance)
-    : application(instance)
-    , window(nullptr)
-    , game_loop(nullptr) { }
+    : application(instance) { }
 
   void
     on_create() override {
 
-    window = get_main_window();
+    window = std::make_optional(get_main_window());
     {
-      game_loop                 = exp::make_ptr < app_game_loop >(window);
-      game_loop->frame_callback = [&](auto fps) { window->set_title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str()); };
+      game_loop.emplace(*window);
 
+      game_loop->frame_callback  = [&](auto fps) { window->set_title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str()); };
       game_loop->open();
     }
   }
 
   void
-    on_destroy() override { }
+    on_destroy() override { 
+      if (game_loop) {
+
+      }
+    }
 };
 
 #if defined(SWL_WIN32)
