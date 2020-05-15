@@ -17,7 +17,7 @@ jobs:
       with:
         project: buid/xcodegen
     - name: Build Project
-      run: xcodebuild -target app-macOS
+      run: cd build/xcodegen && xcodebuild -target app-macOS
   build-uwp:
     runs-on: windows-latest
     steps:
