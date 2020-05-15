@@ -17,7 +17,6 @@ jobs:
       with:
         cmakeListsTxtPath: swl
         cmakeBuildType: Debug
-        cmakeGenerator: "Visual Studio 16 2019"
         buildDirectory: build/ci-uwp
         cmakeAppendedArgs: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF"
         buildWithCmake: false
