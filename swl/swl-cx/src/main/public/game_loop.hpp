@@ -45,7 +45,7 @@ SNOW_OWL_NAMESPACE(cx)
  * call on <code>target</code> lock.
  *
 */
-struct game_loop { SWL_NO_CPY_CTOR(game_loop) SWL_NO_MOVE_CTOR(game_loop) SWL_POLYMORPHIC(game_loop)
+struct game_loop { SWL_NO_CPY_CTOR(game_loop) SWL_POLYMORPHIC(game_loop)
 
   game_loop(uint16_t targetFramerate, uint16_t bailAmount);
 

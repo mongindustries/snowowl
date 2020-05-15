@@ -8,11 +8,7 @@
 #include <swl_window_backend.hpp>
 #include <../platform/windows/swl_win32_window.hpp>
 
-#ifdef SWL_UWP
-
 using namespace winrt;
-
-#endif
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
@@ -53,7 +49,8 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   context.dxgi_factory->CreateSwapChainForCoreWindow(present_queue.command_queue.get(), window_handle, &swap_chain_desc,
                                                      nullptr, pre_instance.put());
 #else
-  context.dxgi_factory->CreateSwapChainForHwnd(present_queue.command_queue.get(), HWND(window_handle), &swap_chain_desc, nullptr, nullptr, _pre_instance.put());
+  const auto window_handle = surface.cast < HWND__ >().pointer();
+  context.dxgi_factory->CreateSwapChainForHwnd(present_queue.command_queue.get(), window_handle, &swap_chain_desc, nullptr, nullptr, pre_instance.put());
 #endif
 
   pre_instance->QueryInterface(__uuidof(IDXGISwapChain3), instance.put_void());
@@ -125,7 +122,7 @@ cx::exp::ptr_ref < swap_chain::frame >
     const auto new_size = window->get_size();
     instance->ResizeBuffers(0, new_size.x(), new_size.y(), DXGI_FORMAT_UNKNOWN, 0);
 
-    com_ptr < ID3D12Device > device;
+    winrt::com_ptr < ID3D12Device > device;
     instance->GetDevice(__uuidof(ID3D12Device), device.put_void());
 
     const SIZE_T offset_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);

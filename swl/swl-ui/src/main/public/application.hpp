@@ -60,7 +60,7 @@ struct SWL_EXPORT application { SWL_REFERENCEABLE(application) SWL_POLYMORPHIC(a
    * Obtains the main window object.
    * @return An unowned reference to the main window.
    */
-  cx::exp::ptr_ref<window>
+  window
     get_main_window ();
 
   // hooks

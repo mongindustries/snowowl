@@ -5,13 +5,14 @@
 
 #include <array>
 #include <vector>
+#include <numeric>
 
 #include <header.hpp>
 
 #include "context.hpp"
 #include "shader.hpp"
 
-SNOW_OWL_NAMESPACE(gx)namespace pipeline {
+SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
     enum format {
 
@@ -95,6 +96,18 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
       modeBack
     };
 
+    enum address_mode {
+      modeWrap,
+      modeClamp,
+      modeMirror
+    };
+
+    enum filter_mode {
+      modePoint,
+      modeLiner,
+      modeAnisotropic
+    };
+
     enum blend_type {
       typeZero = 0x0000'0000,
       typeOne = 0x0000'0001,
@@ -117,10 +130,15 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
       opMax
     };
 
-    enum topology_type {
-      topologyTypePoint = 0,
-      topologyTypeLine = 1,
-      topologyTypeTriangle = 2
+    enum comparison_type {
+      typeNever,
+      typeLess,
+      typeMore,
+      typeSame,
+      typeNotTheSame,
+      typeSameOrMore,
+      typeSameOrLess,
+      typeAlways
     };
 
     enum render_input_type {
@@ -131,6 +149,13 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
       typeBuffer,
       typeBufferUser,
     };
+
+    enum topology_type {
+      topologyTypePoint = 0,
+      topologyTypeLine = 1,
+      topologyTypeTriangle = 2
+    };
+
 
     struct write_mask {
 
@@ -160,62 +185,60 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
 
     struct raster {
 
-      raster_fill_mode fill_mode;
-      raster_cull_mode cull_mode;
+      raster_fill_mode fill_mode{modeFill};
+      raster_cull_mode cull_mode{modeBack};
 
-      bool render_counter_clockwise;
+      bool render_counter_clockwise{false};
     };
 
     struct blend {
 
-      bool enabled;
+      bool enabled{false};
 
-      blend_type source_blend;
-      blend_type source_alpha_blend;
+      blend_type source_blend{typeOne};
+      blend_type source_alpha_blend{typeOne};
 
-      blend_type destination_blend;
-      blend_type destination_alpha_blend;
+      blend_type destination_blend{typeOne};
+      blend_type destination_alpha_blend{typeOne};
 
-      bool op_enabled;
+      bool op_enabled{false};
 
-      blend_op blend_operation;
-      blend_op blend_alpha_operation;
+      blend_op blend_operation{opAdd};
+      blend_op blend_alpha_operation{opAdd};
 
-      blend_op logic_op;
-
-      write_mask write_mask;
+      write_mask write_mask{0b1111};
     };
 
     struct depth {
-      bool   enabled;
-      format format;
+      bool   enabled{false};
+      format format{format_2_32_float_8_uint};
     };
 
     struct stencil {
-      bool enabled;
+      bool enabled{false};
     };
 
     struct sample {
-      unsigned int count;
-      unsigned int quality;
+      unsigned int count{1};
+      unsigned int quality{0};
     };
 
     struct sampler {
 
-      int address_x;
-      int address_y;
-      int address_z;
+      address_mode address_x{modeClamp};
+      address_mode address_y{modeClamp};
+      address_mode address_z{modeClamp};
 
-      int min_filter;
-      int mag_filter;
-      int mip_filter;
+      filter_mode min_filter{modePoint};
+      filter_mode mag_filter{modePoint};
+      filter_mode mip_filter{modePoint};
 
-      int max_anisotropy;
+      int max_anisotropy{1};
 
-      int comparison_func;
+      comparison_type comparison_func{typeAlways};
 
-      int min_lod;
-      int max_lod;
+      float min_lod{0};
+      float max_lod{std::numeric_limits<float>::max()};
     };
 
     struct render_output {
@@ -243,18 +266,18 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
     struct render_input_item {
       /// The format this shader input represents. Specify format::unknown for input
       /// that has the buffer type typeConstant or typeBufferUser.
-      format format;
+      format format{format_unknown};
       /// The shader input type. This specifies if the input is going to be a constant
       /// buffer, a texture, or a dynamic buffer.
       render_input_type type{typeNotUsed};
       /// Specifying true for this shader input informs the shader to refer its shader input
       /// on another location in memory. Only works with D3D12 (I think).
-      bool indirect;
+      bool indirect{false};
     };
 
     struct render_input {
       std::array < render_input_item, 16 > bindings;
-      std::array < sampler, 8 >            samplers;
+      std::array < sampler, 16 >           samplers;
     };
   }
 
@@ -274,11 +297,11 @@ SNOW_OWL_NAMESPACE(gx)namespace pipeline {
     pipeline::depth         depth{};
     pipeline::stencil       stencil{};
     pipeline::sample        sample{};
-    pipeline::topology_type topology_type;
+    pipeline::topology_type topology_type{topologyTypeTriangle};
 
-    bool independent_target_blend{};
+    bool independent_target_blend{true};
 
-    std::array < pipeline::render_input, 2 >  render_inputs;
+    std::array < pipeline::render_input, 2 >  render_inputs{};
     std::array < pipeline::render_output, 8 > render_outputs{};
   };
 

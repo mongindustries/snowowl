@@ -1,7 +1,11 @@
+#undef _USE_MATH_DEFINES
+#define NOMINMAX
+
 #include "swl_window_backend.hpp"
 #include "swl_win32_window.hpp"
 
 #include <stdexcept>
+#include <limits>
 
 #include "swl_window_sink.hpp"
 
@@ -14,7 +18,7 @@ using namespace backend;
 
 window_backend* window_backend::instance = new window_backend();
 
-exp::ptr<window> __main_window = exp::ptr<window>{nullptr};
+window __main_window = window{nullptr};
 
 void  window_backend::create        (window const* window) {
 
@@ -114,11 +118,11 @@ void* window_backend::surface       (window const* window) {
   return nullptr;
 }
 
-exp::ptr_ref<window> window_backend::main_window() {
+window window_backend::main_window() {
  
-  if (!__main_window) {
-    __main_window = exp::ptr<window>{ new window("Game Window", rect{{100, 100}, window::fullscreen_size}) };
+  if (__main_window.get_handle() == std::numeric_limits<cx::driver_handle>::max()) {
+    __main_window = window("Game Window", rect{{100, 100}, {800, 600}});
   }
 
-  return exp::ptr_ref{__main_window};
+  return __main_window;
 }
