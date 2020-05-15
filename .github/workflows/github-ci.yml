@@ -12,12 +12,6 @@ jobs:
       name: Pull from repo
       with:
         submodules: true
-    - uses: lukka/run-cmake@v2.5
-      name: Configure cmake project
-      with:
-        cmakeListsTxtPath: ${{ github.workspace }}/swl/CMakeLists.txt
-        cmakeBuildType: Debug
-        cmakeGenerator: 'Visual Studio 16 2019'
-        buildDirectory: ${{ runner.workspace }}/build/ci-uwp
-        cmakeAppendedArgs: "-DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF"
-        buildWithCmake: false
+    - name: Configure cmake project
+      run: cmake -G"Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF -S swl -B build/ci-uwp
+      
