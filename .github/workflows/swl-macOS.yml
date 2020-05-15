@@ -3,10 +3,10 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ builds/macos ]
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
       name: Pull from repo
