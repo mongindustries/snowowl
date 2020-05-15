@@ -5,7 +5,20 @@ on:
   pull_request:
     branches: [ builds/uwp ]
 jobs:
-  build:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+      name: Pull from repo
+      with:
+        submodules: true
+    - uses: xavierLowmiller/xcodegen-action@1.1.0
+      name: Generate xcodeproj
+      with:
+        project: buid/xcodegen
+    - name: Build Project
+      run: xcodebuild -target app-macOS
+  build-uwp:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
