@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <filesystem>
 #include <type_traits>
 
 #include <header.hpp>
@@ -59,6 +60,9 @@ struct factory {
 
   [[nodiscard]] cx::exp::ptr < buffer_allocator >
     buffer_allocator(size_t initial_size) { return cx::exp::ptr{nullptr}; }
+
+  shader
+    shader(std::filesystem::path const& location) { return shader{}; }
 
 private:
 
