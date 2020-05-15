@@ -3,7 +3,7 @@ on:
   push:
     branches: [ develop ]
   pull_request:
-    branches: [ develop ]
+    branches: [ builds/uwp ]
 jobs:
   build:
     runs-on: windows-latest
