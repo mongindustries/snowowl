@@ -1,4 +1,4 @@
-name: swl build UWP
+name: swl build
 on:
   push:
     branches: [ develop ]
