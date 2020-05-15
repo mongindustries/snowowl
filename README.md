@@ -1,6 +1,6 @@
 
 # <img src="https://raw.githubusercontent.com/mongindustries/snowowl/master/logo.png" width=20/> SnowOwl:
-![Build status](https://github.com/mongindustries/snowowl/workflows/swl%20build%20UWP/badge.svg?branch=develop)
+![Build Status](https://github.com/mongindustries/snowowl/workflows/swl%20build/badge.svg?branch=develop)
 
 A 2D vector graphics game toolkit
 
