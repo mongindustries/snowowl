@@ -5,10 +5,10 @@ targets:
     sources:
       - path: cpp
         group: app
-      - path: headers
-        buildPhase: headers
-        headerVisibility: project
-        group: app
+    # - path: headers
+    #   buildPhase: headers
+    #   headerVisibility: project
+    #   group: app
       - path: platform/darwin
         name: mac
         group: app

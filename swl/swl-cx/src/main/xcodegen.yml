@@ -5,10 +5,10 @@ targets:
     sources:
       - path: cpp
         group: cx
-      - path: headers
-        group: cx
-        buildPhase: headers
-        headerVisibility: project
+    # - path: headers
+    #   group: cx
+    #   buildPhase: headers
+    #   headerVisibility: project
       - path: public
         group: cx
         buildPhase: headers
