@@ -12,7 +12,10 @@ jobs:
       name: Pull from repo
       with:
         submodules: true
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
     - name: Configure cmake project
       run: cmake -G"Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DPACKAGE_TESTS=OFF -S swl -B build/ci-uwp
       shell: cmd
-      
+    - name: Build Release Config
+      run: msbuild build/ci-uwp/snow_owl.sln -m -v:normal
