@@ -6,8 +6,6 @@ Defines the rendering abstraction infrastructure.
 
 All objects are contained inside the `swl::gx` namespace.
 
-#### Core Components
-
 - `gx::factory`
      Factory to create rendering objects given a rendering context (see below)
 - `gx::context`
@@ -34,77 +32,30 @@ All objects are contained inside the `swl::gx` namespace.
 - `gx::shader`
      A wrapper for a shader object.
 
-### Usage
+### Motivation
 
-1. Create a `gx::factory` with your intended context. Available contexts are:
-    - `gx::mtl::context` A Metal API context (for Apple Platforms)
-    - `gx::dx::context` A DirectX 12 API context (for Windows and Xbox Platforms)
-    - `gx::vk::context` A Vulkan API context
+Even if modern graphics API are mostly consistent on their goals, namely, treating the GPU as an independent execution machine, specifics for each platform sometimes does not directly translate from one API to another. Additionally, to support the full breadth of features available on a graphics API, one must create platform-specific code for that specific graphics API.. which is time consuming and maintenance prone. To solve this, this module is an opinionated take on how SnowOwl: would at large issue API commands to the GPU. There are some restrictions in terms of buffer submission, queue task scheduling, and resource binding that will be discussed below.
 
-```C++
-#include <directx/factory.h>
-gx::factory<gx::dx::context> factory{ gx::dx::context() };
-```
+#### Buffer submission
 
-2. Create a `gx::queue` to issue commands:
+To make the API as consistent as possible, `buffer_allocator`s have their memory locality set to the graphics device RAM. An additional buffer is created pro-bono on `create_*` calls for staging data from the GPU or reading back data from the GPU.
 
-```C++
-#include <queue.hpp>
-cx::exp::ptr<gx::queue> queue{ factory.create_queue() };
-```
+This ensures that when resources are used on draw calls, the data is not in a state that the GPU will cause cache flushing or stalls because a buffer region is dirty. Additionally, this adds a design thinking that updating any kind of resource on the GPU is expensive and should be done at the same time, as much as possible (see `gx::queue`'s `transfer` method).
 
-Take note of the pointer `cx::exp::ptr<gx::queue>` usage since `create_queue` returns a polymorphic instance of `gx::queue`.
+#### Queue task scheduling
 
-3. Create a `gx::swap_chain` to present render commands to:
+Some graphics API (Vulkan) uses an explicit type (`vkSemaphore`, `vkFence`) to denote GPU or CPU dependencies, while other graphics API (Direct3D 12, Metal) uses an event handling procedure to denote CPU dependencies, and an explicit type (`MTLEvent`, `ID3D12Fence`) for GPU dependencies with the later also applicable for CPU dependencies.
 
-```C++
-#include <swap_chain.hpp>
-cx::exp::ptr<gx::swap_chain> swap_chain{ factory.create_swap_chain(queue, window) };
-```
-A target window is required. You can create a window by calling any of the constructor of `ui::window` or get the default window of an application by calling `application::get_main_window()`.
+This makes it hard to reason execution graph without making GPU command submission in-order and deterministic. Therefore, on `gx::queue`'s `begin` method, the queue explicitly CPU-waits for its own execution completion before giving control back to the application.
 
-4. Begin queue execution block:
+In addition, a `dependencies` parameter exists in `begin` to let the queue know which `queue`s it will CPU-wait on. This might change in the future to have a flag whether it will CPU wait for GPU wait.
 
-```C++
-queue->begin({ }); // Parameter in begin is a list of queues this queue will wait before beggining
+#### Resource binding
 
-queue->submit({ }); // Parameter in submit is a list of render blocks to execute
-```
+Resource binding of vulkan, d3d12, and metal are distantly similar. Direct3D and Vulkan has a concept of descriptor tables and descriptor heaps wherein any resource bound to the pipeline will be slotted into those descriptor information, while in Metal direct references to `MTLBuffer`s or `MTLTexture`s are used.
 
-5. To use the swap chain, use a `gx::swap_chain_boundary`:
+To alleviate this, an opaque object `gx::resource_reference` is used for getting a handle from a `buffer`. The actual implementation for `resource_reference`s varies from one API to another. In Direct3D, it contains the descriptor handle and a reference to its original state for resource barrier transition. In Metal, this just contains a `__weak` reference to a `MTLBuffer` or `MTLTexture`.
 
-```C++
-queue->begin({ }); {
-    gx::swap_chain_boundary cur_frame{ cx::exp::ptr_ref{ swap_chain } }; {
+#### Shader authoring
 
-    } 
-    queue->submit({ });
-}
-```
-
-Take note of the execution order of `gx::swap_chain_boundary`. It **must** be after a queue's `begin` call but `gx::swap_chain_boundary`'s scope must be ended before a `submit` call is executed. This is so that the queue can wait for GPU execution completion before obtaining the next frame.
-
-6. Create a `gx::render_pipeline`:
-
-7. Begin command submission to a `gx::queue` by creating a `gx::render_block`:
-
-```C++
-#include <render_block.hpp>
-cx::exp::ptr<gx::render_block> block{ factory.create_render_block(queue) };
-```
-8. Then create a `gx::block_boundary` to begin block execution:
-
-```C++
-queue->begin({ }); {
-    gx::swap_chain_boundary cur_frame{ cx::exp::ptr_ref{ swap_chain } }; {
-        gx::block_boundary exec{ cx::exp::ptr_ref{ block }, render_pipeline }; {
-
-        }
-    } 
-    queue->submit({ cx::exp::ptr_ref{ block } }); // Add the block here for execution!
-}
-```
-
-9. And then create a `gx::render_pass` to bind input/output objects:
-
-_TBD..._
+`gx` will consistently use HLSL as its shading language by default, when the need arise, platform specific shading code will be used and be exported as a c/c++ header file containing the compiled DXIL, SPIR, or MetalIR code.
