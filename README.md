@@ -1,15 +1,9 @@
 
 # <img src="https://raw.githubusercontent.com/mongindustries/snowowl/master/logo.png" width=20/> SnowOwl:
+![Build status](https://github.com/mongindustries/snowowl/workflows/swl%20build%20UWP/badge.svg?branch=develop)
 
 A 2D vector graphics game toolkit
 
-| Platform | Build Status |
-|----|----|
-| `macOS` | [![Build status](https://build.appcenter.ms/v0.1/apps/d06f9807-c0c9-4dbb-bf81-26e80c0aa595/branches/builds%2Fmacos/badge)](https://appcenter.ms) |
-| `iOS` | N/A |
-| `win32` | |
-| `UWP` | ![Build status](https://github.com/mongindustries/snowowl/workflows/swl%20build%20UWP/badge.svg?branch=develop) |
-| `Android` | N/A |
 
 ## Introduction
 I'm building this toolkit as a way to explore modern graphics rendering through DX12, Vulkan, and Metal. In addition, since I have too much free time because of working at home (let's not talk why im doing WFH...) why not revive a project that is in hiatus for 5 years!
