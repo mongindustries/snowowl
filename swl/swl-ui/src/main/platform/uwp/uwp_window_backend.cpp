@@ -52,8 +52,8 @@ void  backend::window_backend::create_native  (window const* window, void* nativ
 
   update_title(window);
 
-  if (window->get_size().components == window::fullscreen_size.components) {
-    const_cast<ui::window*>(window)->set_fullscreen(true);
+  if (window->size().components == window::fullscreen_size.components) {
+    const_cast<ui::window*>(window)->full_screen(true);
   }
 
   core_window.ResizeStarted   ([window](CoreWindow const&, IInspectable const&) {

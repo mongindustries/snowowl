@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#undef _USE_MATH_DEFINES
+
 #include <array>
 #include <vector>
 #include <numeric>
@@ -238,7 +240,7 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
       comparison_type comparison_func{typeAlways};
 
       float min_lod{0};
-      float max_lod{std::numeric_limits<float>::max()};
+      float max_lod{FLT_MAX};
     };
 
     struct render_output {
@@ -297,7 +299,7 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
     pipeline::depth         depth{};
     pipeline::stencil       stencil{};
     pipeline::sample        sample{};
-    pipeline::topology_type topology_type{topologyTypeTriangle};
+    pipeline::topology_type topology_type{pipeline::topologyTypeTriangle};
 
     bool independent_target_blend{true};
 

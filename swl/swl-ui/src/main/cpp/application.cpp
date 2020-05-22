@@ -3,7 +3,6 @@
 //
 #include "application.hpp"
 
-#include "swl_window_backend.hpp"
 #include "window.hpp"
 
 using namespace std;
@@ -16,7 +15,6 @@ using namespace backend;
 application::application  () noexcept { }
 
 application::application  (void* native_instance) : native_instance(native_instance) {
-  window_backend::instance->application = this;
 }
 
 application::~application () = default;

@@ -3,19 +3,13 @@ cmake_minimum_required(VERSION 3.16.0)
 set(HEADER_LIST
         public/application.hpp
         public/event.hpp
-        public/window.hpp
-        public/window_surface.hpp)
+        public/window.hpp)
 
-set(PRIVATE_HEADER_LIST
-        headers/swl_window_backend.hpp
-        headers/swl_window_sink.hpp)
+set(PRIVATE_HEADER_LIST)
 
 set(SOURCE_LIST
         cpp/application.cpp
-        cpp/window.cpp
-        cpp/window_surface.cpp
-
-        headers/swl_window_sink.cpp)
+    )
 
 if(WIN32)
     if(WINDOWS_STORE)
@@ -29,12 +23,11 @@ if(WIN32)
 
     else()
       set(PLATFORM_SOURCE_LIST
-              platform/windows/swl_win32_app.cpp
-              platform/windows/swl_win32_window.cpp
-              platform/windows/swl_window_backend.cpp)
+          platform/windows/swl_application.cpp
+              platform/windows/swl_window.cpp
+          )
 
-      set(PLATFORM_HEADER_LIST
-              platform/windows/swl_win32_window.hpp)
+      set(PLATFORM_HEADER_LIST platform/windows/swl_internal_state.h)
     endif()
 endif()
 
