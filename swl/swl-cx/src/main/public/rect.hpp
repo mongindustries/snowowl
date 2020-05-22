@@ -18,3 +18,10 @@ struct SWL_EXPORT edge {
 };
 
 SNOW_OWL_NAMESPACE_END
+
+inline swl::cx::rect scaled(swl::cx::rect const& input, const float scale) {
+  return swl::cx::rect{
+      swl::cx::point_2d(input.origin.x() * scale, input.origin.y() * scale),
+      swl::cx::size_2d((int) ((float) input.size.x() * scale), (int) ((float) input.size.y() * scale))
+  };
+}

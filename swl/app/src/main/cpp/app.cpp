@@ -98,20 +98,7 @@ struct app_game_loop final : game_loop {
 
       // pipeline.construct();
     });
-
-    window.bind_loop(cx::exp::ptr_ref < game_loop >{this});
   }
-
-  app_game_loop(app_game_loop&& mov)
-    : window(mov.window)
-    , main_queue(std::move(mov.main_queue))
-    , swap_chain(std::move(mov.swap_chain))
-    , clear_block(std::move(mov.clear_block))
-    , render_pipeline(std::move(mov.render_pipeline))
-    , allocator(std::move(mov.allocator))
-    , buffer_vertex(std::move(mov.buffer_vertex))
-    , buffer_index(std::move(mov.buffer_index))
-    , peg(mov.peg) { }
 
   void
     create() override {
@@ -129,7 +116,7 @@ struct app_game_loop final : game_loop {
     };
 
     const auto v_staging = buffer_vertex->set_data(0, data);
-    const auto i_staging = buffer_index->set_data(0, indices);
+    const auto i_staging = buffer_index ->set_data(0, indices);
 
     main_queue.transfer({exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging}});
   }
@@ -172,7 +159,7 @@ struct app_game_loop final : game_loop {
             const auto i_ref = std::make_pair(buffer_index->reference(),
                                               gx::buffer_transition{gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView});
 
-            const auto size = window.get_size();
+            const auto size = window.size();
 
             gx::buffer_usage_block resource_block{pass, {v_ref, i_ref}};
             {
@@ -195,9 +182,6 @@ struct app_game_loop final : game_loop {
 
 struct app final : application {
 
-  std::optional<window>         window;
-  std::optional<app_game_loop>  game_loop;
-
   explicit
     app(void *instance)
     : application(instance) { }
@@ -205,20 +189,22 @@ struct app final : application {
   void
     on_create() override {
 
-    window = std::make_optional(get_main_window());
+    auto &window = main_window().get();
     {
-      game_loop.emplace(*window);
+      window.game_loop(exp::ptr<game_loop, app_game_loop>{new app_game_loop(window)}.abstract());
 
-      game_loop->frame_callback  = [&](auto fps) { window->set_title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str()); };
-      game_loop->open();
+      auto &loop = window.game_loop();
+
+      loop.frame_callback = [&window](auto fps) {
+        window.title((std::stringstream() << "[SnowOwl: | " << fps << "FPS] App").str());
+      };
+
+      loop.open();
     }
   }
 
   void
     on_destroy() override { 
-      if (game_loop) {
-
-      }
     }
 };
 

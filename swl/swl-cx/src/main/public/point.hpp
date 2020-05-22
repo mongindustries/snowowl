@@ -36,7 +36,7 @@ struct vector<ComponentType, 2> {
 
 	vector          (ComponentType _1, ComponentType _2): components({_1, _2 }) { }
 
-	explicit vector (const std::array<ComponentType, 2> &values) noexcept: components(values) { }
+	explicit vector (long values) noexcept: components(values) { }
 
 
 	[[nodiscard]] constexpr uint16_t

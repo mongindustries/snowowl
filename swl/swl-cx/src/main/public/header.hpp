@@ -37,10 +37,14 @@
   type              (type&&) noexcept; \
   type& operator=   (type&&) noexcept;
 
+#define SWL_COPY_CTOR(type) \
+  type              (type const&) noexcept; \
+  type& operator=   (type const&) noexcept;
+
 #define SWL_BLOCK_CONTEXT(type) \
   type(const type&) = delete; \
-  type(type&&) = delete; \
   type& operator= (const type&) = delete; \
+  type(type&&) = delete; \
   type& operator= (type&&) = delete; 
 
 /**

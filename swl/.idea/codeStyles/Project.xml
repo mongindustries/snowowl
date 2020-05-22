@@ -6,14 +6,39 @@
         <option name="TAB_SIZE" value="2" />
       </value>
     </option>
+    <CMakeCodeStyleSettings>
+      <option name="FORCE_COMMANDS_CASE" value="0" />
+    </CMakeCodeStyleSettings>
     <Objective-C>
       <option name="INDENT_NAMESPACE_MEMBERS" value="0" />
       <option name="INDENT_C_STRUCT_MEMBERS" value="2" />
       <option name="INDENT_CLASS_MEMBERS" value="2" />
       <option name="INDENT_INSIDE_CODE_BLOCK" value="2" />
       <option name="INDENT_DIRECTIVE_AS_CODE" value="true" />
+      <option name="SPACE_BEFORE_TEMPLATE_DECLARATION_LT" value="true" />
+      <option name="SPACE_WITHIN_TEMPLATE_DECLARATION_LTGT" value="true" />
+      <option name="SPACE_WITHIN_EMPTY_TEMPLATE_DECLARATION_LTGT" value="true" />
+      <option name="SPACE_WITHIN_EMPTY_BRACES" value="true" />
     </Objective-C>
+    <Objective-C-extensions>
+      <extensions>
+        <pair source="cpp" header="hpp" fileNamingConvention="SNAKE_CASE" />
+        <pair source="c" header="h" fileNamingConvention="NONE" />
+        <pair source="cu" header="cuh" fileNamingConvention="NONE" />
+        <pair source="mm" header="h" fileNamingConvention="SNAKE_CASE" />
+      </extensions>
+    </Objective-C-extensions>
+    <codeStyleSettings language="CMake">
+      <indentOptions>
+        <option name="INDENT_SIZE" value="2" />
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+        <option name="TAB_SIZE" value="2" />
+      </indentOptions>
+    </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
+      <option name="RIGHT_MARGIN" value="240" />
+      <option name="SPACE_WITHIN_ARRAY_INITIALIZER_BRACES" value="true" />
+      <option name="SPACE_WITHIN_EMPTY_ARRAY_INITIALIZER_BRACES" value="true" />
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />
         <option name="CONTINUATION_INDENT_SIZE" value="2" />

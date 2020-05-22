@@ -3,10 +3,8 @@
 
 #include <sstream>
 
-#include <window_surface.hpp>
-
-#include <swl_window_backend.hpp>
-#include <../platform/windows/swl_win32_window.hpp>
+#include <window.hpp>
+#include "../../../../swl-ui/src/main/platform/windows/swl_internal_state.h"
 
 using namespace winrt;
 
@@ -21,12 +19,14 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   , current_frame(0)
   , present_queue(&present_queue) {
 
-  window.swap_chain = ptr_ref < gx::swap_chain >{this};
+  assert(!window.state()->swap_chain);
+
+  window.state()->swap_chain = cx::exp::ptr_ref<gx::swap_chain>{ this };
 
   DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};
 
-  swap_chain_desc.Width  = window.get_size().x();
-  swap_chain_desc.Height = window.get_size().y();
+  swap_chain_desc.Width  = window.size().x();
+  swap_chain_desc.Height = window.size().y();
 
   swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
@@ -41,7 +41,6 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   swap_chain_desc.SampleDesc.Count   = 1;
   swap_chain_desc.SampleDesc.Quality = 0;
 
-  const ui::window_surface    surface{cx::exp::ptr_ref < ui::window >{&window}};
   com_ptr < IDXGISwapChain1 > pre_instance;
 
 #ifdef SWL_UWP
@@ -49,7 +48,7 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   context.dxgi_factory->CreateSwapChainForCoreWindow(present_queue.command_queue.get(), window_handle, &swap_chain_desc,
                                                      nullptr, pre_instance.put());
 #else
-  const auto window_handle = surface.cast < HWND__ >().pointer();
+  const auto window_handle = window.state()->handle;
   context.dxgi_factory->CreateSwapChainForHwnd(present_queue.command_queue.get(), window_handle, &swap_chain_desc, nullptr, nullptr, pre_instance.put());
 #endif
 
@@ -119,7 +118,7 @@ cx::exp::ptr_ref < swap_chain::frame >
       if (auto resource = ref->resource.detach()) { resource->Release(); }
     }
 
-    const auto new_size = window->get_size();
+    const auto new_size = window->size();
     instance->ResizeBuffers(0, new_size.x(), new_size.y(), DXGI_FORMAT_UNKNOWN, 0);
 
     winrt::com_ptr < ID3D12Device > device;

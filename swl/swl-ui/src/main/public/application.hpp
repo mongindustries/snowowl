@@ -3,12 +3,10 @@
 //
 #pragma once
 
-#include <string>
-#include <vector>
 #include <type_traits>
+#include <functional>
 
 #include <header.hpp>
-#include <ownership.hpp>
 
 #include "window.hpp"
 
@@ -58,10 +56,10 @@ struct SWL_EXPORT application { SWL_REFERENCEABLE(application) SWL_POLYMORPHIC(a
 
   /**
    * Obtains the main window object.
-   * @return An unowned reference to the main window.
+   * @return A reference to the main window.
    */
-  window
-    get_main_window ();
+  static std::reference_wrapper<window>
+    main_window ();
 
   // hooks
 
@@ -91,7 +89,7 @@ struct SWL_EXPORT application { SWL_REFERENCEABLE(application) SWL_POLYMORPHIC(a
 
 private:
 
-  void*                     native_instance = nullptr;
+  void* native_instance = nullptr;
 
   static void
     pre_heat(application& app);
