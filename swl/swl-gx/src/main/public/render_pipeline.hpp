@@ -158,6 +158,27 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
       topologyTypeTriangle = 2
     };
 
+    enum comparison_type {
+      comparisonNever,
+      comparisonAlways,
+      comparisonLess,
+      comparisonLessEqual,
+      comparisonMore,
+      comparisonMoreEqual,
+      comparisonEqual,
+      comparisonNotEqual
+    };
+
+    enum stencil_op {
+      opKeep,
+      opZero,
+      opReplace,
+      opSatIncrease,
+      opSatDecrease,
+      opInvert,
+      opIncrease,
+      opDecrease
+    };
 
     struct write_mask {
 
@@ -214,10 +235,19 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
     struct depth {
       bool   enabled{false};
       format format{format_2_32_float_8_uint};
+
+      comparison_type comparison;
     };
 
     struct stencil {
       bool enabled{false};
+
+      stencil_op pass;
+      stencil_op fail;
+
+      stencil_op depthFail;
+
+      comparison_type comparison;
     };
 
     struct sample {
@@ -244,7 +274,7 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
     };
 
     struct render_output {
-      format          format;
+      format          format{format_unknown};
       pipeline::blend blend;
     };
 
@@ -297,7 +327,8 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
     pipeline::raster        raster{};
     pipeline::depth         depth{};
-    pipeline::stencil       stencil{};
+    pipeline::stencil       stencil_front{};
+    pipeline::stencil       stencil_back{};
     pipeline::sample        sample{};
     pipeline::topology_type topology_type{pipeline::topologyTypeTriangle};
 

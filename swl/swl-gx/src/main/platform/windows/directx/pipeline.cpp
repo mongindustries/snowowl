@@ -211,6 +211,35 @@ gx_address_mode(const gx::pipeline::address_mode& mode) {
   }
 }
 
+constexpr D3D12_COMPARISON_FUNC
+gx_comparison_func(gx::pipeline::comparison_type const& type) {
+  switch (type) {
+  case pipeline::comparison_type::typeAlways:
+    return D3D12_COMPARISON_FUNC_ALWAYS;
+  case pipeline::comparison_type::typeNever:
+    return D3D12_COMPARISON_FUNC_NEVER;
+  case pipeline::comparison_type::typeSame:
+    return D3D12_COMPARISON_FUNC_EQUAL;
+  case pipeline::comparison_type::typeNotTheSame:
+    return D3D12_COMPARISON_FUNC_NOT_EQUAL;
+  case pipeline::comparison_type::typeLess:
+    return D3D12_COMPARISON_FUNC_LESS;
+  case pipeline::comparison_type::typeSameOrLess:
+    return D3D12_COMPARISON_FUNC_LESS_EQUAL;
+  case pipeline::comparison_type::typeMore:
+    return D3D12_COMPARISON_FUNC_GREATER;
+  case pipeline::comparison_type::typeSameOrMore:
+    return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+  }
+}
+
+constexpr D3D12_STENCIL_OP
+gx_stencil_op(gx::pipeline::stencil_op const& type) {
+  switch (type) {
+  }
+
+}
+
 
 render_pipeline::render_pipeline()
   : gx::render_pipeline() {}
@@ -300,22 +329,40 @@ void
 
   D3D12_GRAPHICS_PIPELINE_STATE_DESC desc{};
 
-  desc.RasterizerState = cx::tell < D3D12_RASTERIZER_DESC >({}, [](D3D12_RASTERIZER_DESC &desc) {
-    (void) desc.CullMode;
-    (void) desc.FillMode;
-    (void) desc.FrontCounterClockwise;
+  desc.RasterizerState = cx::tell < D3D12_RASTERIZER_DESC >({}, [&](D3D12_RASTERIZER_DESC &desc) {
+
+    switch (raster.cull_mode) {
+    case pipeline::modeBack:
+      desc.CullMode = D3D12_CULL_MODE_BACK;
+      break;
+    case pipeline::modeFront:
+      desc.CullMode = D3D12_CULL_MODE_FRONT;
+      break;
+    case pipeline::modeNone:
+      desc.CullMode = D3D12_CULL_MODE_NONE;
+      break;
+    }
+
+    switch (raster.fill_mode) {
+    case pipeline::modeFill:
+      desc.FillMode = D3D12_FILL_MODE_SOLID;
+      break;
+    case pipeline::modeWireFrame:
+      desc.FillMode = D3D12_FILL_MODE_WIREFRAME;
+      break;
+    }
 
     (void) desc.DepthBias;
     (void) desc.DepthBiasClamp;
     (void) desc.DepthClipEnable;
   });
-  desc.DepthStencilState = cx::tell < D3D12_DEPTH_STENCIL_DESC >({}, [](D3D12_DEPTH_STENCIL_DESC &desc) {
+  desc.DepthStencilState = cx::tell < D3D12_DEPTH_STENCIL_DESC >({}, [&](D3D12_DEPTH_STENCIL_DESC &desc) {
     (void) desc.BackFace;
     (void) desc.FrontFace;
 
-    (void) desc.DepthEnable;
+    desc.DepthEnable = depth.enabled;
     (void) desc.DepthFunc;
-    (void) desc.DepthWriteMask;
+    desc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 
     (void) desc.StencilEnable;
     (void) desc.StencilReadMask;
@@ -323,10 +370,7 @@ void
   });
 
   desc.DSVFormat = gx_format(pipeline::format_1_32_float_depth);
-
-  desc.pRootSignature   = root_signature.get();
-  desc.NumRenderTargets = render_outputs.size();
-
+  desc.pRootSignature = root_signature.get();
   desc.PrimitiveTopologyType = gx_primitive(topology_type);
 
   desc.DS = D3D12_SHADER_BYTECODE{};
@@ -336,9 +380,15 @@ void
   desc.VS = D3D12_SHADER_BYTECODE{};
   desc.PS = D3D12_SHADER_BYTECODE{};
 
+  auto numRTVs = 0u;
   for (auto i = 0u; i < render_outputs.size(); i += 1) {
     pipeline::render_output &output = render_outputs[i];
 
+    if (output.format == pipeline::format_unknown) {
+      continue;
+    }
+
+    numRTVs += 1;
     desc.RTVFormats[i] = gx_format(output.format);
 
     desc.BlendState.RenderTarget[i] = cx::tell < D3D12_RENDER_TARGET_BLEND_DESC >({}, [&output](D3D12_RENDER_TARGET_BLEND_DESC &blend) {
@@ -358,6 +408,8 @@ void
       blend.RenderTargetWriteMask = output.blend.write_mask;
     });
   }
+
+  desc.NumRenderTargets = numRTVs;
 
   device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
