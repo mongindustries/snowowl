@@ -9,8 +9,7 @@ set(FRAGMENT_SOURCES
 set(APP_SOURCES
     ${FRAGMENT_SOURCES}
     ${VERTEX_SOURCES}
-    cpp/app.cpp
-        )
+    cpp/app.cpp)
 
 if(WIN32)
 
@@ -41,6 +40,8 @@ if(WIN32)
 
   endif()
 
+  get_shader_files(app)
+
 endif()
 
 if(APPLE)
@@ -63,10 +64,6 @@ if(APPLE)
             "-framework Metal"
             "-framework IOKit"
             "-framework IOSurface")
-endif()
-
-if(DEFINED ${VULKAN_SDK})
-    get_shader_files(app)
 endif()
 
 target_include_directories(app

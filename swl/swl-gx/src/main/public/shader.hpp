@@ -9,7 +9,8 @@ SNOW_OWL_NAMESPACE(gx)
 
 struct shader {
 
-  char* byte_code;
+  char*   byte_code;
+  size_t  byte_size;
 };
 
 SNOW_OWL_NAMESPACE_END
