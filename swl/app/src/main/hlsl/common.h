@@ -10,8 +10,10 @@
 #include <point.hpp>
 typedef swl::cx::vector<float, 4> float4;
 #define SV_POSITION
+#define COLOR0
 #else
 #define SV_POSITION : SV_Position
+#define COLOR0 : COLOR0
 #endif
 
 struct vertex_input {
@@ -21,7 +23,7 @@ struct vertex_input {
 
 struct vertex_output {
   float4 pos SV_POSITION;
-  float4 col;
+  float4 col COLOR0;
 };
 
 #endif //SNOW_OWL_COMMON_H

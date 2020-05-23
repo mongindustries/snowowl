@@ -76,15 +76,15 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
       // depth and stencil
 
-      format_1_32_float_depth = 0x01'D4'00,
-      format_2_32_float_8_uint = 0x02'D4'00,
-      format_3_24_int_u_8_uint = 0x03'D4'00,
-      format_1_16_int_u_depth = 0x04'D4'00,
+      format_1_32_float_depth   = 0x01'D4'00,
+      format_2_32_float_8_uint  = 0x02'D4'00,
+      format_3_24_int_u_8_uint  = 0x03'D4'00,
+      format_1_16_int_u_depth   = 0x04'D4'00,
 
       // swapchain
 
-      format_4_8_int_flipped = 0x01'B1'00,
-      format_4_8_int_u_norm_flipped = 0x02'B1'00
+      format_4_8_int_flipped        = 0x0001'B100,
+      format_4_8_int_u_norm_flipped = 0x0002'B100
     };
 
     enum raster_fill_mode {
@@ -130,17 +130,6 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
       opSubtract,
       opMin,
       opMax
-    };
-
-    enum comparison_type {
-      typeNever,
-      typeLess,
-      typeMore,
-      typeSame,
-      typeNotTheSame,
-      typeSameOrMore,
-      typeSameOrLess,
-      typeAlways
     };
 
     enum render_input_type {
@@ -242,12 +231,19 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
     struct stencil {
       bool enabled{false};
 
-      stencil_op pass;
-      stencil_op fail;
+      stencil_op front_pass;
+      stencil_op front_fail;
 
-      stencil_op depthFail;
+      stencil_op front_depthFail;
 
-      comparison_type comparison;
+      comparison_type front_comparison;
+
+      stencil_op back_pass;
+      stencil_op back_fail;
+
+      stencil_op back_depthFail;
+
+      comparison_type back_comparison;
     };
 
     struct sample {
@@ -267,7 +263,7 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
       int max_anisotropy{1};
 
-      comparison_type comparison_func{typeAlways};
+      comparison_type comparison_func{comparisonAlways};
 
       float min_lod{0};
       float max_lod{FLT_MAX};
@@ -327,8 +323,7 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
     pipeline::raster        raster{};
     pipeline::depth         depth{};
-    pipeline::stencil       stencil_front{};
-    pipeline::stencil       stencil_back{};
+    pipeline::stencil       stencil{};
     pipeline::sample        sample{};
     pipeline::topology_type topology_type{pipeline::topologyTypeTriangle};
 

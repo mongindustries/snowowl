@@ -95,14 +95,14 @@ constexpr DXGI_FORMAT
 
   const std::array components{component_1, component_2, component_3, component_4};
 
-  if (0x0000'D000 & format) {
-    const int index = (0x00FF'0000 & format) >> 16;
-    return _depth[index];
+  if ((0x0000'B100 & format) == 0xB100) {
+    const int index = ((0x00FF'0000 & format) >> 16) - 1;
+    return _swapc[index];
   }
 
-  if (0x0000'B000 & format) {
-    const int index = (0x00FF'0000 & format) >> 16;
-    return _swapc[index];
+  if ((0x0000'D400 & format) == 0xD400) {
+    const int index = ((0x00FF'0000 & format) >> 16) - 1;
+    return _depth[index];
   }
 
   const int component = (0x00FF'0000 & format >> 16) - 1;
@@ -214,21 +214,21 @@ gx_address_mode(const gx::pipeline::address_mode& mode) {
 constexpr D3D12_COMPARISON_FUNC
 gx_comparison_func(gx::pipeline::comparison_type const& type) {
   switch (type) {
-  case pipeline::comparison_type::typeAlways:
+  case pipeline::comparisonAlways:
     return D3D12_COMPARISON_FUNC_ALWAYS;
-  case pipeline::comparison_type::typeNever:
+  case pipeline::comparisonNever:
     return D3D12_COMPARISON_FUNC_NEVER;
-  case pipeline::comparison_type::typeSame:
+  case pipeline::comparisonEqual:
     return D3D12_COMPARISON_FUNC_EQUAL;
-  case pipeline::comparison_type::typeNotTheSame:
+  case pipeline::comparisonNotEqual:
     return D3D12_COMPARISON_FUNC_NOT_EQUAL;
-  case pipeline::comparison_type::typeLess:
+  case pipeline::comparisonLess:
     return D3D12_COMPARISON_FUNC_LESS;
-  case pipeline::comparison_type::typeSameOrLess:
+  case pipeline::comparisonLessEqual:
     return D3D12_COMPARISON_FUNC_LESS_EQUAL;
-  case pipeline::comparison_type::typeMore:
+  case pipeline::comparisonMore:
     return D3D12_COMPARISON_FUNC_GREATER;
-  case pipeline::comparison_type::typeSameOrMore:
+  case pipeline::comparisonMoreEqual:
     return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
   }
 }
@@ -236,8 +236,23 @@ gx_comparison_func(gx::pipeline::comparison_type const& type) {
 constexpr D3D12_STENCIL_OP
 gx_stencil_op(gx::pipeline::stencil_op const& type) {
   switch (type) {
+  case pipeline::opKeep:
+    return D3D12_STENCIL_OP_KEEP;
+  case pipeline::opReplace:
+    return D3D12_STENCIL_OP_REPLACE;
+  case pipeline::opZero:
+    return D3D12_STENCIL_OP_ZERO;
+  case pipeline::opSatIncrease:
+    return D3D12_STENCIL_OP_INCR_SAT;
+  case pipeline::opSatDecrease:
+    return D3D12_STENCIL_OP_DECR_SAT;
+  case pipeline::opInvert:
+    return D3D12_STENCIL_OP_INVERT;
+  case pipeline::opIncrease:
+    return D3D12_STENCIL_OP_INCR;
+  case pipeline::opDecrease:
+    return D3D12_STENCIL_OP_DECR;
   }
-
 }
 
 
@@ -304,7 +319,7 @@ void
 
         object.MaxAnisotropy = sampler.max_anisotropy;
 
-        object.ComparisonFunc;
+        object.ComparisonFunc = gx_comparison_func(sampler.comparison_func);
 
         object.MinLOD = sampler.min_lod;
         object.MaxLOD = sampler.max_lod;
@@ -319,9 +334,10 @@ void
   rootDesc.pParameters   = parameters.data();
   rootDesc.NumParameters = parameters.size();
 
+  /*
   rootDesc.pStaticSamplers   = samplers.data();
   rootDesc.NumStaticSamplers = samplers.size();
-
+  */
   winrt::com_ptr < ID3DBlob > result;
   D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);
 
@@ -351,22 +367,29 @@ void
       desc.FillMode = D3D12_FILL_MODE_WIREFRAME;
       break;
     }
-
-    (void) desc.DepthBias;
-    (void) desc.DepthBiasClamp;
-    (void) desc.DepthClipEnable;
   });
+
+  desc.SampleDesc.Count = 1;
+  desc.SampleDesc.Quality = 0;
+
   desc.DepthStencilState = cx::tell < D3D12_DEPTH_STENCIL_DESC >({}, [&](D3D12_DEPTH_STENCIL_DESC &desc) {
-    (void) desc.BackFace;
-    (void) desc.FrontFace;
+    desc.BackFace.StencilFunc = gx_comparison_func(stencil.back_comparison);
+    desc.BackFace.StencilPassOp = gx_stencil_op(stencil.back_pass);
+    desc.BackFace.StencilFailOp = gx_stencil_op(stencil.back_fail);
+    desc.BackFace.StencilDepthFailOp = gx_stencil_op(stencil.back_depthFail);
+
+    desc.FrontFace.StencilFunc = gx_comparison_func(stencil.front_comparison);
+    desc.FrontFace.StencilPassOp = gx_stencil_op(stencil.front_pass);
+    desc.FrontFace.StencilFailOp = gx_stencil_op(stencil.front_fail);
+    desc.FrontFace.StencilDepthFailOp = gx_stencil_op(stencil.front_depthFail);
 
     desc.DepthEnable = depth.enabled;
-    (void) desc.DepthFunc;
+    desc.DepthFunc = gx_comparison_func(depth.comparison);
     desc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 
-    (void) desc.StencilEnable;
-    (void) desc.StencilReadMask;
-    (void) desc.StencilWriteMask;
+    desc.StencilEnable = stencil.enabled;
+    desc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+    desc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
   });
 
   desc.DSVFormat = gx_format(pipeline::format_1_32_float_depth);
@@ -377,8 +400,11 @@ void
   desc.HS = D3D12_SHADER_BYTECODE{};
   desc.GS = D3D12_SHADER_BYTECODE{};
 
-  desc.VS = D3D12_SHADER_BYTECODE{};
-  desc.PS = D3D12_SHADER_BYTECODE{};
+  auto& vs_stage = shader_stages[pipeline::shader_stage::vertex];
+  auto& ps_stage = shader_stages[pipeline::shader_stage::fragment];
+
+  desc.VS = D3D12_SHADER_BYTECODE{ vs_stage.byte_code, vs_stage.byte_size };
+  desc.PS = D3D12_SHADER_BYTECODE{ ps_stage.byte_code, ps_stage.byte_size };
 
   auto numRTVs = 0u;
   for (auto i = 0u; i < render_outputs.size(); i += 1) {

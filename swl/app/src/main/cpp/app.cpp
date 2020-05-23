@@ -23,6 +23,11 @@ using ptr = exp::ptr < c >;
 #define _USE_MATH_DEFINES
 #include <directx/factory.h>
 
+namespace shaders::simple {
+#include <simple-frag.shader>
+#include <simple-vert.shader>
+}
+
 gx::factory < gx::dx::context >         factory{gx::dx::context()};
 typedef gx::factory < gx::dx::context > Factory;
 
@@ -66,12 +71,18 @@ struct app_game_loop final : game_loop {
       pipeline.raster.fill_mode                = gx::pipeline::modeFill;
       pipeline.raster.render_counter_clockwise = false;
 
+      const unsigned char *vert_prog = shaders::simple::vert_prog;
+      const unsigned char *frag_prog = shaders::simple::frag_prog;
+
+      pipeline.shader_stages[gx::pipeline::shader_stage::vertex] = gx::shader{
+        .byte_code = (char*) vert_prog, .byte_size = sizeof(shaders::simple::vert_prog) };
+
+      pipeline.shader_stages[gx::pipeline::shader_stage::fragment] = gx::shader{
+        .byte_code = (char*) frag_prog, .byte_size = sizeof(shaders::simple::frag_prog) };
+
       pipeline.render_outputs[0].format        = gx::pipeline::format_4_8_int_u_norm_flipped;
       pipeline.render_outputs[0].blend.enabled = false;
 
-      pipeline.shader_stages[gx::pipeline::shader_stage::fragment] = gx::shader{};
-
-      pipeline.shader_stages[gx::pipeline::shader_stage::vertex] = gx::shader{};
       pipeline.render_inputs[gx::pipeline::shader_stage::vertex] = cx::tell < gx::pipeline::render_input >({}, [](auto &object) {
 
         // vertex
@@ -96,7 +107,7 @@ struct app_game_loop final : game_loop {
         });
       });
 
-      // pipeline.construct();
+      pipeline.construct();
     });
   }
 

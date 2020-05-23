@@ -6,7 +6,7 @@ static vertex_input vertex[3] = {
   { { -1,  1, 1, 1 }, { 0, 0, 1, 1 } }
 };
 
-vertex_output main(int index : SV_VertexID) {
+vertex_output main(unsigned int index : SV_VertexID) {
 
   vertex_output output;
 

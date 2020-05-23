@@ -97,6 +97,11 @@ render_block::render_block(dx::queue &queue, dx::render_pipeline *pipeline)
                             D3D12_COMMAND_LIST_TYPE_DIRECT, allocator.get(), nullptr,
                             __uuidof(ID3D12GraphicsCommandList4), command_list.put_void());
 
+  if (pipeline != nullptr) {
+    command_list->SetPipelineState(pipeline->pipeline_state.get());
+    command_list->SetGraphicsRootSignature(pipeline->root_signature.get());
+  }
+
   command_list->Close();
 }
 
@@ -104,7 +109,14 @@ void
   render_block::close() { command_list->Close(); }
 
 void
-  render_block::reset(gx::render_pipeline &pipeline) { command_list->Reset(allocator.get(), nullptr); }
+  render_block::reset(gx::render_pipeline &pipeline) {
+  command_list->Reset(allocator.get(), nullptr);
+
+  auto &dx_pipeline = dynamic_cast<dx::render_pipeline&>(pipeline);
+
+  command_list->SetPipelineState(dx_pipeline.pipeline_state.get());
+  command_list->SetGraphicsRootSignature(dx_pipeline.root_signature.get());
+}
 
 
 render_pass::render_pass(dx::render_block &block, std::vector < gx::render_pass_context > const &context)
@@ -259,10 +271,6 @@ render_pass::render_pass(dx::render_block &block, std::vector < gx::render_pass_
   command_list->ResourceBarrier(rtv_barrier_from.size(), rtv_barrier_from.data());
 
   command_list->BeginRenderPass(rtv_desc.size(), rtv_desc.data(), nullptr, D3D12_RENDER_PASS_FLAG_NONE);
-
-  /*
-  command_list->SetPipelineState(nullptr);
-  command_list->SetGraphicsRootSignature(nullptr);*/
 }
 
 render_pass::~render_pass() {
@@ -273,13 +281,46 @@ render_pass::~render_pass() {
 }
 
 void
-  render_pass::set_viewport(const cx::size_2d &value) {}
+  render_pass::set_viewport(const cx::size_2d &value) {
+
+  std::array<D3D12_VIEWPORT, 1> viewports{ D3D12_VIEWPORT{ 0, 0, (FLOAT) value.x(), (FLOAT) value.y(), 0.1f, 100.f } };
+  command_list->RSSetViewports(viewports.size(), viewports.data());
+}
 
 void
-  render_pass::set_scissor(const cx::rect &value) {}
+  render_pass::set_scissor(const cx::rect &value) {
+  std::array<D3D12_RECT, 1> scissors{
+    D3D12_RECT{
+      (LONG) value.origin.x(), (LONG) value.origin.y(),
+      value.size.x() + (LONG) value.origin.x(), value.size.y() + (LONG) value.origin.y() } };
+  command_list->RSSetScissorRects(scissors.size(), scissors.data());
+}
 
 void
-  render_pass::set_topology(topology_type type) {}
+  render_pass::set_topology(topology_type type) {
+
+  D3D_PRIMITIVE_TOPOLOGY dx_type = {};
+
+  switch (type) {
+  case typeTriangleList:
+    dx_type = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    break;
+  case typeTriganleStrip:
+    dx_type = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    break;
+  case typeLineList:
+    dx_type = D3D10_PRIMITIVE_TOPOLOGY_LINELIST;
+    break;
+  case typeLineStrip:
+    dx_type = D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP;
+    break;
+  case typePointList:
+    dx_type = D3D10_PRIMITIVE_TOPOLOGY_POINTLIST;
+    break;
+  }
+
+  command_list->IASetPrimitiveTopology(dx_type);
+}
 
 cx::exp::ptr < transition_handle >
   render_pass::buffer_boundary(
@@ -292,6 +333,8 @@ void
   render_pass::bind_buffers(render_pass_stage_binding binding, std::array < cx::exp::ptr_ref < gx::resource_reference >, 16 > const &references) { }
 
 void
-  render_pass::draw(const render_pass_draw_range &vertex_range) {}
+  render_pass::draw(const render_pass_draw_range &vertex_range) {
+  command_list->DrawInstanced(vertex_range.size, 1, vertex_range.begin, 0);
+}
 
 SNOW_OWL_NAMESPACE_END
