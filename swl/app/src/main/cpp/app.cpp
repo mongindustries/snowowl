@@ -24,8 +24,13 @@ using ptr = exp::ptr < c >;
 #include <directx/factory.h>
 
 namespace shaders::simple {
+
+#define CPP_SHADER
+
 #include <simple-frag.shader>
 #include <simple-vert.shader>
+
+#include "hlsl/common.h"
 }
 
 gx::factory < gx::dx::context >         factory{gx::dx::context()};
@@ -61,13 +66,13 @@ struct app_game_loop final : game_loop {
     , buffer_vertex(nullptr)
     , buffer_index(nullptr) {
 
-    buffer_vertex = allocator->create_data < float, 12 >(gx::dataUsagePrivate, gx::viewTypeShader, 0);
-    buffer_index  = allocator->create_data < uint16_t, 6 >(gx::dataUsagePrivate, gx::viewTypeShader, sizeof(float) * 12);
+    buffer_vertex = allocator->create_data < shaders::simple::vertex_input, 4 >(gx::dataUsagePrivate, gx::viewTypeShader, 0);
+    buffer_index  = allocator->create_data < uint32_t, 6 >(gx::dataUsagePrivate, gx::viewTypeShader, sizeof(shaders::simple::vertex_input) * 4);
 
     render_pipeline = cx::tell < Factory::t_render_pipeline >(factory.render_pipeline(), [&](Factory::t_render_pipeline &pipeline) {
       pipeline.topology_type = gx::pipeline::topologyTypeTriangle;
 
-      pipeline.raster.cull_mode                = gx::pipeline::modeBack;
+      pipeline.raster.cull_mode                = gx::pipeline::modeNone;
       pipeline.raster.fill_mode                = gx::pipeline::modeFill;
       pipeline.raster.render_counter_clockwise = false;
 
@@ -84,7 +89,6 @@ struct app_game_loop final : game_loop {
       pipeline.render_outputs[0].blend.enabled = false;
 
       pipeline.render_inputs[gx::pipeline::shader_stage::vertex] = cx::tell < gx::pipeline::render_input >({}, [](auto &object) {
-
         // vertex
         object.bindings[0] = cx::tell < gx::pipeline::render_input_item >({}, [](auto &object) {
           object.format   = gx::pipeline::format_4_32_float;
@@ -98,13 +102,6 @@ struct app_game_loop final : game_loop {
           object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         });
-
-        // matrices
-        object.bindings[2] = cx::tell < gx::pipeline::render_input_item >({}, [](auto &object) {
-          object.format   = gx::pipeline::format_unknown;
-          object.indirect = false;
-          object.type     = gx::pipeline::typeConstant;
-        });
       });
 
       pipeline.construct();
@@ -116,20 +113,21 @@ struct app_game_loop final : game_loop {
 
     main_queue.begin({});
 
-    std::vector < float > data = {
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f,
+    std::vector < shaders::simple::vertex_input > data = {
+        shaders::simple::vertex_input{ { -0.5,  0.5, 0.5, 1 }, { 1, 1, 1, 1 } },
+        shaders::simple::vertex_input{ {  0.5,  0.5, 0.5, 1 }, { 1, 1, 1, 1 } },
+        shaders::simple::vertex_input{ {  0.5, -0.5, 0.5, 1 }, { 0, 1, 1, 1 } },
+        shaders::simple::vertex_input{ { -0.5, -0.5, 0.5, 1 }, { 1, 0, 1, 1 } },
     };
 
-    std::vector < uint16_t > indices = {
+    std::vector < uint32_t > indices = {
         0, 1, 2, 0, 2, 3
     };
 
     const auto v_staging = buffer_vertex->set_data(0, data);
-    const auto i_staging = buffer_index ->set_data(0, indices);
+    const auto i_staging = buffer_index->set_data(0, indices);
 
-    main_queue.transfer({exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging}});
+    main_queue.transfer({ exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging} });
   }
 
   void
@@ -180,7 +178,7 @@ struct app_game_loop final : game_loop {
               pass.set_scissor(cx::rect{{}, size});
 
               pass.set_topology(gx::render_pass::typeTriangleList);
-              pass.draw(gx::render_pass_draw_range{0, 3});
+              pass.draw(gx::render_pass_draw_range{0, 6});
             }
           }
         }

@@ -12,7 +12,7 @@ SNOW_OWL_NAMESPACE(gx::dx)
 
 struct queue;
 
-struct render_block final : gx::render_block {
+struct render_block final : public gx::render_block {
 
   render_block(dx::queue &queue, dx::render_pipeline *pipeline);
 
@@ -27,6 +27,8 @@ struct render_block final : gx::render_block {
   winrt::com_ptr < ID3D12CommandAllocator > allocator;
 
   winrt::com_ptr < ID3D12GraphicsCommandList4 > command_list;
+
+  cx::exp::ptr_ref < dx::render_pipeline > current_pipeline;
 };
 
 struct render_pass final : gx::render_pass {
@@ -61,6 +63,8 @@ struct render_pass final : gx::render_pass {
   winrt::com_ptr < ID3D12GraphicsCommandList4 > command_list;
 
   std::vector < D3D12_RESOURCE_BARRIER > to_barriers;
+
+  cx::exp::ptr_ref< dx::render_pipeline > pipeline;
 };
 
 SNOW_OWL_NAMESPACE_END

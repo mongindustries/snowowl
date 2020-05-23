@@ -27,8 +27,11 @@ buffer_allocator::buffer_allocator(context& context, size_t initial_size)
 buffer_allocator::~buffer_allocator() { }
 
 cx::exp::ptr<buffer<typeData>>
-  buffer_allocator::create_data(buffer_usage usage, buffer_view_type view_type, size_t allocator_offset, size_t size,
-                                size_t       stride) {
+  buffer_allocator::create_data(buffer_usage      usage,
+                                buffer_view_type  view_type,
+                                size_t            allocator_offset,
+                                size_t            size,
+                                size_t            stride) {
 
   cx::exp::ptr<buffer<typeData>, dx::buffer_data> instance;
 
@@ -95,7 +98,7 @@ cx::exp::ptr<buffer<typeData>>
 
   descriptor_heap_desc.NumDescriptors = 1;
   descriptor_heap_desc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-  descriptor_heap_desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+  descriptor_heap_desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
   device->CreateDescriptorHeap(&descriptor_heap_desc,
     __uuidof(ID3D12DescriptorHeap), instance->descriptor.put_void());

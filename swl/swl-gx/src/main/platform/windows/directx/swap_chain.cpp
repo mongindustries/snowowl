@@ -66,7 +66,7 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   device->CreateDescriptorHeap(&frame_heap_desc, __uuidof(ID3D12DescriptorHeap), frame_heap.put_void());
 
   const SIZE_T offset_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-  auto         heap_start  = frame_heap->GetCPUDescriptorHandleForHeapStart();
+  size_t heap_start  = 0;
 
   for (auto i = 0U; i < swap_chain_desc.BufferCount; i += 1) {
     swap_chain::frame frame{};
@@ -76,13 +76,15 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
 
     resource_reference ref;
 
-    ref.handle.cpu_handle = heap_start;
-    ref.type              = typeCPU;
+    ref.heap              = frame_heap;
+    ref.heap_offset       = heap_start;
+
+    ref.resource_type     = resource_type::typeRTV;
     ref.created_state     = D3D12_RESOURCE_STATE_PRESENT;
     ref.format            = swap_chain_desc.Format;
 
     pre_instance->GetBuffer(i, __uuidof(ID3D12Resource), ref.resource.put_void());
-    device->CreateRenderTargetView(ref.resource.get(), nullptr, heap_start);
+    device->CreateRenderTargetView(ref.resource.get(), nullptr, { frame_heap->GetCPUDescriptorHandleForHeapStart().ptr + heap_start });
 
     ref.resource->SetName((std::wstringstream() << L"Swap chain back buffer index " << i).str().c_str());
 
@@ -90,7 +92,7 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
 
     frames.emplace_back(std::move(frame));
 
-    heap_start = D3D12_CPU_DESCRIPTOR_HANDLE{heap_start.ptr + offset_size};
+    heap_start += offset_size;
   }
 }
 
@@ -113,7 +115,7 @@ cx::exp::ptr_ref < swap_chain::frame >
     for (auto &frame : frames) {
       auto ref = cx::exp::ptr_ref{frame->reference}.cast < dx::resource_reference >();
 
-      ref->handle.cpu_handle = {};
+      ref->heap = nullptr;
 
       if (auto resource = ref->resource.detach()) { resource->Release(); }
     }
@@ -125,7 +127,7 @@ cx::exp::ptr_ref < swap_chain::frame >
     instance->GetDevice(__uuidof(ID3D12Device), device.put_void());
 
     const SIZE_T offset_size = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    auto         heap_start  = frame_heap->GetCPUDescriptorHandleForHeapStart();
+    size_t heap_start  = 0;
 
     for (auto i = 0U; i < frames.size(); i += 1) {
       auto reference = cx::exp::ptr_ref{frames[i]->reference}.cast < dx::resource_reference >();
@@ -133,10 +135,12 @@ cx::exp::ptr_ref < swap_chain::frame >
 
       reference->resource->SetName((std::wstringstream() << L"Swap chain back buffer index " << i).str().c_str());
 
-      reference->handle.cpu_handle = heap_start;
-      device->CreateRenderTargetView(reference->resource.get(), nullptr, heap_start);
+      reference->heap = frame_heap;
+      reference->heap_offset = heap_start;
 
-      heap_start = D3D12_CPU_DESCRIPTOR_HANDLE{heap_start.ptr + offset_size};
+      device->CreateRenderTargetView(reference->resource.get(), nullptr, { frame_heap->GetCPUDescriptorHandleForHeapStart().ptr + heap_start });
+
+      heap_start += offset_size;
     }
   }
 

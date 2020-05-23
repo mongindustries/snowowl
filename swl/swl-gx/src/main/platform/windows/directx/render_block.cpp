@@ -100,6 +100,8 @@ render_block::render_block(dx::queue &queue, dx::render_pipeline *pipeline)
   if (pipeline != nullptr) {
     command_list->SetPipelineState(pipeline->pipeline_state.get());
     command_list->SetGraphicsRootSignature(pipeline->root_signature.get());
+
+    current_pipeline = cx::exp::ptr_ref<dx::render_pipeline>{ pipeline };
   }
 
   command_list->Close();
@@ -114,13 +116,16 @@ void
 
   auto &dx_pipeline = dynamic_cast<dx::render_pipeline&>(pipeline);
 
+  current_pipeline = cx::exp::ptr_ref{ &dx_pipeline };
+
   command_list->SetPipelineState(dx_pipeline.pipeline_state.get());
   command_list->SetGraphicsRootSignature(dx_pipeline.root_signature.get());
 }
 
 
 render_pass::render_pass(dx::render_block &block, std::vector < gx::render_pass_context > const &context)
-  : command_list(block.command_list) {
+  : command_list(block.command_list)
+  , pipeline(block.current_pipeline) {
 
   std::vector < D3D12_RENDER_PASS_RENDER_TARGET_DESC > rtv_desc;
   rtv_desc.reserve(context.size());
@@ -180,7 +185,7 @@ render_pass::render_pass(dx::render_block &block, std::vector < gx::render_pass_
       break;
     }
 
-    rdesc.cpuDescriptor = reference->handle.cpu_handle;
+    rdesc.cpuDescriptor = { reference->heap->GetCPUDescriptorHandleForHeapStart().ptr + reference->heap_offset };
 
     rtv_desc.emplace_back(rdesc);
 
@@ -323,14 +328,61 @@ void
 }
 
 cx::exp::ptr < transition_handle >
-  render_pass::buffer_boundary(
-    std::vector < std::pair < cx::exp::ptr_ref < gx::resource_reference >, buffer_transition > > const &transitions) { return cx::exp::ptr < transition_handle, barrier_transition >{new barrier_transition(*this, transitions)}.abstract(); }
+  render_pass::buffer_boundary(std::vector < std::pair < cx::exp::ptr_ref < gx::resource_reference >, buffer_transition > > const &transitions) {
+    return cx::exp::ptr < transition_handle, barrier_transition >{new barrier_transition(*this, transitions)}.abstract();
+}
 
 void
-  render_pass::bind_buffer(render_pass_stage_binding binding, int slot, cx::exp::ptr_ref < gx::resource_reference > const &reference) {}
+  render_pass::bind_buffer(render_pass_stage_binding binding, int slot, cx::exp::ptr_ref < gx::resource_reference > const &reference) {
+  dx::resource_reference* ref = reference.cast<dx::resource_reference>().pointer();
+
+  if (!pipeline) {
+    return;
+  }
+
+  pipeline::shader_stage stage;
+
+  switch (binding) {
+  case render_pass_stage_binding::bindingGraphicsFragment:
+    stage = pipeline::shader_stage::fragment;
+    break;
+  case render_pass_stage_binding::bindingGraphicsVertex:
+    stage = pipeline::shader_stage::vertex;
+    break;
+  }
+
+  auto& slot_info = pipeline->render_inputs[stage];
+
+  if (slot_info.bindings[slot].indirect) {
+    /* TODO: specify descriptor heap in pipeline, not in buffer.
+    command_list->SetGraphicsRootDescriptorTable(slot, { ref->heap->GetGPUDescriptorHandleForHeapStart().ptr + ref->heap_offset });
+    */
+  }
+  else {
+    switch (ref->resource_type) {
+    case resource_type::typeSRV:
+      command_list->SetGraphicsRootShaderResourceView(slot, ref->resource->GetGPUVirtualAddress() + ref->heap_offset);
+      break;
+    case resource_type::typeCBV:
+      command_list->SetGraphicsRootConstantBufferView(slot, ref->resource->GetGPUVirtualAddress() + ref->heap_offset);
+      break;
+    default:
+      break;
+    }
+  }
+}
 
 void
-  render_pass::bind_buffers(render_pass_stage_binding binding, std::array < cx::exp::ptr_ref < gx::resource_reference >, 16 > const &references) { }
+  render_pass::bind_buffers(render_pass_stage_binding binding, std::array < cx::exp::ptr_ref < gx::resource_reference >, 16 > const &references) {
+
+  for (auto i = 0u; i < 16; i += 1) {
+    if (!references[i]) {
+      continue;
+    }
+
+    bind_buffer(binding, i, references[i]);
+  }
+}
 
 void
   render_pass::draw(const render_pass_draw_range &vertex_range) {

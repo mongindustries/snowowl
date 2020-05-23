@@ -208,10 +208,10 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
       bool enabled{false};
 
       blend_type source_blend{typeOne};
-      blend_type source_alpha_blend{typeOne};
+      blend_type source_alpha_blend{typeZero};
 
       blend_type destination_blend{typeOne};
-      blend_type destination_alpha_blend{typeOne};
+      blend_type destination_alpha_blend{typeZero};
 
       bool op_enabled{false};
 

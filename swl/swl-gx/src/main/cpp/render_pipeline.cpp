@@ -32,15 +32,35 @@ pipeline::shader_stage pipeline::shader_stage::fragment = pipeline::shader_stage
 
 render_pipeline::render_pipeline  () noexcept { }
 
-render_pipeline::render_pipeline  (context& context) { }
-
-render_pipeline::render_pipeline  (render_pipeline&&) noexcept { }
+render_pipeline::render_pipeline  (render_pipeline&& mov) noexcept
+  : shader_stages(std::move(mov.shader_stages))
+  , raster(std::move(mov.raster))
+  , depth(std::move(mov.depth))
+  , stencil(std::move(mov.stencil))
+  , sample(std::move(mov.sample))
+  , topology_type(mov.topology_type)
+  , independent_target_blend(mov.independent_target_blend)
+  , render_inputs(std::move(mov.render_inputs))
+  , render_outputs(std::move(mov.render_outputs)) { }
 
 render_pipeline::~render_pipeline () { }
 
 
 render_pipeline&
-  render_pipeline::operator=      (render_pipeline&&) noexcept { return *this; }
+  render_pipeline::operator=      (render_pipeline&& mov) noexcept {
+
+  shader_stages = std::move(mov.shader_stages);
+  raster = std::move(mov.raster);
+  depth = std::move(mov.depth);
+  stencil = std::move(mov.stencil);
+  sample = std::move(mov.sample);
+  topology_type = mov.topology_type;
+  independent_target_blend = mov.independent_target_blend;
+  render_inputs = std::move(mov.render_inputs);
+  render_outputs = std::move(mov.render_outputs);
+
+  return *this;
+}
 
 void
   render_pipeline::construct      () { }

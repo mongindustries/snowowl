@@ -121,13 +121,16 @@ void
       if (barrier_in.Transition.StateBefore != barrier_in.Transition.StateAfter) { barriers_in.emplace_back(barrier_in); }
 
       if (barrier_out.Transition.StateBefore != barrier_out.Transition.StateAfter) { barriers_out.emplace_back(barrier_out); }
+
     } catch (std::bad_cast const &) { }
   }
 
   if (!barriers_in.empty())
     command_list_transfer->ResourceBarrier(barriers_in.size(), barriers_in.data());
 
-  for (const auto &desc : upload_descs) { command_list_transfer->CopyBufferRegion(desc.dest.get(), 0, desc.source.get(), 0, desc.size); }
+  for (const auto &desc : upload_descs) {
+    command_list_transfer->CopyBufferRegion(desc.dest.get(), 0, desc.source.get(), 0, desc.size);
+  }
 
   command_list_transfer->ResourceBarrier(barriers_out.size(), barriers_out.data());
 

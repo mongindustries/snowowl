@@ -75,7 +75,9 @@ struct buffer {
 
   template < typename EntryType >
   cx::exp::ptr < buffer_staging >
-    set_data(size_t start, std::vector < EntryType > &items) { return set_data(upload_desc{start, sizeof(EntryType) * items.size(), reinterpret_cast < char * >(items.data())}); }
+    set_data(size_t start, std::vector < EntryType > &items) { 
+    return set_data(upload_desc{start, sizeof(EntryType) * items.size(), reinterpret_cast < char * >(items.data())});
+  }
 
   /**
    * Method to encode fresh data to the GPU. Returns an instruction
