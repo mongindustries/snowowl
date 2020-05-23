@@ -274,56 +274,44 @@ void
   std::vector < D3D12_ROOT_PARAMETER > parameters{};
   std::vector < D3D12_STATIC_SAMPLER_DESC > samplers{};
 
-  for (auto &visibility : pipeline_resource_mapping) {
+  for (auto visibility : pipeline_resource_mapping) {
+
     uint16_t index = 0;
-    for (const auto &binding : render_inputs[visibility.first].bindings) {
+
+    for (const auto binding : render_inputs[visibility.first].bindings) {
       if (binding.type == gx::pipeline::typeNotUsed) {
         index += 1;
         continue;
       }
 
-      parameters.emplace_back(cx::tell < D3D12_ROOT_PARAMETER >({}, [index, &binding, &visibility](D3D12_ROOT_PARAMETER &param) {
-        if (binding.indirect) {
-          std::array ranges{
-              D3D12_DESCRIPTOR_RANGE{
-                  gx_param_table(binding.type),
-                  static_cast < UINT >(index),
-                  index, 0,
-                  D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND
-              }
-          };
+      D3D12_ROOT_PARAMETER param;
+      ZeroMemory(&param, sizeof D3D12_ROOT_PARAMETER);
 
-          param.ParameterType   = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-          param.DescriptorTable = {ranges.size(), ranges.data()};
-        } else {
-          param.ParameterType = gx_param(binding.type);
-          param.Descriptor    = D3D12_ROOT_DESCRIPTOR{static_cast < UINT >(index), 0};
-        }
+      D3D12_DESCRIPTOR_RANGE* table_range = new D3D12_DESCRIPTOR_RANGE();
+      ZeroMemory(table_range, sizeof D3D12_DESCRIPTOR_RANGE);
 
-        param.ShaderVisibility = visibility.second;
-      }));
+      if (binding.indirect) {
+
+        table_range->RangeType = gx_param_table(binding.type);
+
+        table_range->BaseShaderRegister = index;
+        table_range->NumDescriptors = 1;
+        table_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+        param.ParameterType   = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+        
+        param.DescriptorTable.NumDescriptorRanges = 1;
+        param.DescriptorTable.pDescriptorRanges   = table_range;
+      } else {
+        param.ParameterType = gx_param(binding.type);
+        param.Descriptor    = D3D12_ROOT_DESCRIPTOR{static_cast < UINT >(index), 0};
+      }
+
+      param.ShaderVisibility = visibility.second;
+
+      parameters.emplace_back(std::move(param));
 
       index += 1;
-    }
-
-    index = 0;
-    for (const auto& sampler : render_inputs[visibility.first].samplers) {
-
-      samplers.emplace_back(cx::tell< D3D12_STATIC_SAMPLER_DESC >({}, [index, &sampler, &visibility](D3D12_STATIC_SAMPLER_DESC &object) {
-
-        object.AddressU = gx_address_mode(sampler.address_x);
-        object.AddressV = gx_address_mode(sampler.address_y);
-        object.AddressW = gx_address_mode(sampler.address_z);
-
-        object.Filter;
-
-        object.MaxAnisotropy = sampler.max_anisotropy;
-
-        object.ComparisonFunc = gx_comparison_func(sampler.comparison_func);
-
-        object.MinLOD = sampler.min_lod;
-        object.MaxLOD = sampler.max_lod;
-      }));
     }
   }
 
@@ -339,7 +327,30 @@ void
   rootDesc.NumStaticSamplers = samplers.size();
   */
   winrt::com_ptr < ID3DBlob > result;
-  D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), nullptr);
+  winrt::com_ptr < ID3DBlob > error;
+  D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, result.put(), error.put());
+
+  for (auto& item : parameters) {
+    if (item.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE) {
+      delete item.DescriptorTable.pDescriptorRanges;
+    }
+  }
+
+  if (error) {
+    std::string error_blob;
+    error_blob.reserve(error->GetBufferSize());
+
+    memcpy(error_blob.data(), error->GetBufferPointer(), error->GetBufferSize());
+
+    size_t w_size = MultiByteToWideChar(CP_UTF8, 0, error_blob.c_str(), -1, nullptr, 0);
+
+    std::wstring message;
+    message.reserve(w_size);
+
+    MultiByteToWideChar(CP_UTF8, 0, error_blob.c_str(), -1, message.data(), w_size);
+
+    OutputDebugString(message.c_str());
+  }
 
   device->CreateRootSignature(0, result.get()->GetBufferPointer(), result->GetBufferSize(), __uuidof(ID3D12RootSignature), root_signature.put_void());
 
@@ -367,10 +378,16 @@ void
       desc.FillMode = D3D12_FILL_MODE_WIREFRAME;
       break;
     }
+
+    desc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
+    desc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
+    desc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
   });
 
   desc.SampleDesc.Count = 1;
   desc.SampleDesc.Quality = 0;
+
+  desc.DSVFormat = gx_format(pipeline::format_1_32_float_depth);
 
   desc.DepthStencilState = cx::tell < D3D12_DEPTH_STENCIL_DESC >({}, [&](D3D12_DEPTH_STENCIL_DESC &desc) {
     desc.BackFace.StencilFunc = gx_comparison_func(stencil.back_comparison);
@@ -392,7 +409,6 @@ void
     desc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
   });
 
-  desc.DSVFormat = gx_format(pipeline::format_1_32_float_depth);
   desc.pRootSignature = root_signature.get();
   desc.PrimitiveTopologyType = gx_primitive(topology_type);
 
@@ -417,6 +433,7 @@ void
     numRTVs += 1;
     desc.RTVFormats[i] = gx_format(output.format);
 
+    desc.BlendState.IndependentBlendEnable = true;
     desc.BlendState.RenderTarget[i] = cx::tell < D3D12_RENDER_TARGET_BLEND_DESC >({}, [&output](D3D12_RENDER_TARGET_BLEND_DESC &blend) {
       blend.BlendEnable   = output.blend.enabled;
       blend.LogicOpEnable = output.blend.op_enabled;
@@ -430,13 +447,14 @@ void
       blend.BlendOp      = gx_blend_op(output.blend.blend_operation);
       blend.BlendOpAlpha = gx_blend_op(output.blend.blend_alpha_operation);
 
-      blend.LogicOp               = {};
+      blend.LogicOp               = D3D12_LOGIC_OP_NOOP;
       blend.RenderTargetWriteMask = output.blend.write_mask;
     });
   }
 
+  desc.SampleMask = UINT_MAX;
   desc.NumRenderTargets = numRTVs;
-
+  
   device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
 }
 

@@ -23,7 +23,7 @@ cx::exp::ptr < buffer_staging >
 
    */
 
-  assert(mapped_data == nullptr);
+  mapped_data = nullptr;
   resource_upload->Map(0, nullptr, reinterpret_cast < void ** >(&mapped_data));
 
   size_t min_m{0};
@@ -63,6 +63,7 @@ cx::exp::ptr < buffer_staging >
 
   if (!data_initialized) { source_state = D3D12_RESOURCE_STATE_COPY_DEST; }
 
+  staging->size           = buffer_size;
   staging->source_state   = source_state;
   staging->target_state   = dest_state;
   staging->buffer         = this->resource;
@@ -82,10 +83,8 @@ cx::exp::ptr_ref < gx::resource_reference >
 
   reference->resource = this->resource;
   reference->format   = DXGI_FORMAT_UNKNOWN;
-  reference->type     = typeAll;
 
-  reference->handle.cpu_handle = descriptor->GetCPUDescriptorHandleForHeapStart();
-  reference->handle.gpu_handle = descriptor->GetGPUDescriptorHandleForHeapStart();
+  reference->heap     = descriptor;
 
   winrt::com_ptr < ID3D12Device > device;
   this->resource->GetDevice(__uuidof(ID3D12Device), device.put_void());
@@ -103,8 +102,9 @@ cx::exp::ptr_ref < gx::resource_reference >
     desc.Buffer.Flags               = D3D12_BUFFER_SRV_FLAG_NONE;
 
     reference->created_state = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    reference->resource_type = resource_type::typeSRV;
 
-    device->CreateShaderResourceView(this->resource.get(), &desc, reference->handle.cpu_handle);
+    // device->CreateShaderResourceView(this->resource.get(), &desc, reference->heap->GetCPUDescriptorHandleForHeapStart());
   }
   break;
   case viewTypeConstant: {
@@ -114,8 +114,9 @@ cx::exp::ptr_ref < gx::resource_reference >
     desc.SizeInBytes    = buffer_size;
 
     reference->created_state = D3D12_RESOURCE_STATE_INDEX_BUFFER | D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+    reference->resource_type = resource_type::typeCBV;
 
-    device->CreateConstantBufferView(&desc, reference->handle.cpu_handle);
+    // device->CreateConstantBufferView(&desc, reference->heap->GetCPUDescriptorHandleForHeapStart());
   }
   break;
   default:

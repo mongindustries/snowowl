@@ -9,25 +9,24 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-enum resource_reference_type {
-  typeCPU,
-  typeGPU,
-
-  typeAll
+enum resource_type {
+  typeCBV,
+  typeSRV,
+  typeRTV,
+  typeUAV
 };
 
 struct resource_reference final : gx::resource_reference {
 
-  struct {
-    D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle;
-    D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle;
-  }                             handle;
-
-  resource_reference_type type;
+  resource_type           resource_type;
   D3D12_RESOURCE_STATES   created_state;
 
-  DXGI_FORMAT                       format;
+  DXGI_FORMAT format;
+
   winrt::com_ptr < ID3D12Resource > resource;
+
+  winrt::com_ptr < ID3D12DescriptorHeap > heap;
+  size_t                                  heap_offset{0};
 };
 
 SNOW_OWL_NAMESPACE_END

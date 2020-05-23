@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.16.0)
 
 set(VERTEX_SOURCES
+    hlsl/common.h
     hlsl/simple.vert)
 
 set(FRAGMENT_SOURCES
+    hlsl/common.h
     hlsl/simple.frag)
 
 set(APP_SOURCES
@@ -68,6 +70,7 @@ endif()
 
 target_include_directories(app
     PUBLIC headers
+    PUBLIC ./
     PUBLIC ../../../swl-cx/src/main/public
     PUBLIC ../../../swl-ui/src/main/public
     PUBLIC ../../../swl-gx/src/main/public
