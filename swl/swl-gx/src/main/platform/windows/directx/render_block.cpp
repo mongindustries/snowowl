@@ -334,19 +334,20 @@ cx::exp::ptr < transition_handle >
 
 void
   render_pass::bind_buffer(render_pass_stage_binding binding, int slot, cx::exp::ptr_ref < gx::resource_reference > const &reference) {
+
   dx::resource_reference* ref = reference.cast<dx::resource_reference>().pointer();
 
   if (!pipeline) {
     return;
   }
 
-  pipeline::shader_stage stage;
+  pipeline::shader_stage stage{0};
 
   switch (binding) {
-  case render_pass_stage_binding::bindingGraphicsFragment:
+  case bindingGraphicsFragment:
     stage = pipeline::shader_stage::fragment;
     break;
-  case render_pass_stage_binding::bindingGraphicsVertex:
+  case bindingGraphicsVertex:
     stage = pipeline::shader_stage::vertex;
     break;
   }

@@ -15,19 +15,20 @@ if(WIN32)
     if(WINDOWS_STORE)
 
       set(PLATFORM_SOURCE_LIST
-              platform/uwp/uwp_application.cpp
-              platform/uwp/uwp_window_backend.cpp)
+            platform/uwp/uwp_application.cpp
+            platform/uwp/uwp_window.cpp)
 
       set(PLATFORM_HEADER_LIST
-              platform/uwp/uwp_application.hpp)
+            platform/uwp/uwp_application.hpp
+            platform/uwp/uwp_internal_state.h)
 
     else()
       set(PLATFORM_SOURCE_LIST
-          platform/windows/swl_application.cpp
-              platform/windows/swl_window.cpp
-          )
+            platform/windows/swl_application.cpp
+            platform/windows/swl_window.cpp)
 
-      set(PLATFORM_HEADER_LIST platform/windows/swl_internal_state.h)
+      set(PLATFORM_HEADER_LIST
+            latform/windows/swl_internal_state.h)
     endif()
 endif()
 
@@ -47,11 +48,11 @@ if(APPLE)
 endif()
 
 add_library(ui
-        ${SOURCE_LIST}
-        ${HEADER_LIST}
-        ${PRIVATE_HEADER_LIST}
-        ${PLATFORM_SOURCE_LIST}
-        ${PLATFORM_HEADER_LIST})
+    ${SOURCE_LIST}
+    ${HEADER_LIST}
+    ${PRIVATE_HEADER_LIST}
+    ${PLATFORM_SOURCE_LIST}
+    ${PLATFORM_HEADER_LIST})
 
 target_include_directories(ui
     PUBLIC  public

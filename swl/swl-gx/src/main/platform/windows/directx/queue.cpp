@@ -93,6 +93,7 @@ void
       auto &item = dynamic_cast < buffer_data_staging & >(buffer.get());
 
       item.ref->data_initialized = true;
+      item.ref->mapped_data = nullptr;
 
       upload_descs.emplace_back(upload_desc{
                                     item.buffer_staging,
@@ -132,7 +133,8 @@ void
     command_list_transfer->CopyBufferRegion(desc.dest.get(), 0, desc.source.get(), 0, desc.size);
   }
 
-  command_list_transfer->ResourceBarrier(barriers_out.size(), barriers_out.data());
+  if (!barriers_out.empty())
+    command_list_transfer->ResourceBarrier(barriers_out.size(), barriers_out.data());
 
   command_list_transfer->Close();
 
