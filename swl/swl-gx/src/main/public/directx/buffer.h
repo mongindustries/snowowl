@@ -47,8 +47,6 @@ struct buffer_data final : buffer < typeData > {
   winrt::com_ptr < ID3D12Resource > resource;
   winrt::com_ptr < ID3D12Resource > resource_upload;
 
-  winrt::com_ptr < ID3D12DescriptorHeap > descriptor;
-
   friend struct buffer_allocator;
   friend struct queue;
 

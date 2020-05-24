@@ -278,40 +278,56 @@ void
 
     uint16_t index = 0;
 
+    std::vector<std::pair<pipeline::render_input_item, uint16_t>> indirect_items;
+    indirect_items.reserve(16);
+
     for (const auto binding : render_inputs[visibility.first].bindings) {
       if (binding.type == gx::pipeline::typeNotUsed) {
         index += 1;
         continue;
       }
 
-      D3D12_ROOT_PARAMETER param;
-      ZeroMemory(&param, sizeof D3D12_ROOT_PARAMETER);
-
-      D3D12_DESCRIPTOR_RANGE* table_range = new D3D12_DESCRIPTOR_RANGE();
-      ZeroMemory(table_range, sizeof D3D12_DESCRIPTOR_RANGE);
-
       if (binding.indirect) {
-
-        table_range->RangeType = gx_param_table(binding.type);
-
-        table_range->BaseShaderRegister = index;
-        table_range->NumDescriptors = 1;
-        table_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-        param.ParameterType   = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-        
-        param.DescriptorTable.NumDescriptorRanges = 1;
-        param.DescriptorTable.pDescriptorRanges   = table_range;
+        indirect_items.emplace_back(binding, index);
       } else {
+
+        D3D12_ROOT_PARAMETER param;
+        ZeroMemory(&param, sizeof D3D12_ROOT_PARAMETER);
+
         param.ParameterType = gx_param(binding.type);
         param.Descriptor    = D3D12_ROOT_DESCRIPTOR{static_cast < UINT >(index), 0};
+        param.ShaderVisibility = visibility.second;
+
+        parameters.emplace_back(std::move(param));
       }
 
-      param.ShaderVisibility = visibility.second;
-
-      parameters.emplace_back(std::move(param));
-
       index += 1;
+    }
+
+    if (!indirect_items.empty()) {
+      D3D12_ROOT_PARAMETER descriptor_param{};
+
+      descriptor_param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+      descriptor_param.ShaderVisibility = visibility.second;
+
+      std::vector<D3D12_DESCRIPTOR_RANGE> ranges;
+      ranges.reserve(indirect_items.size());
+
+      for (auto &item : indirect_items) {
+        D3D12_DESCRIPTOR_RANGE range_item{};
+
+        range_item.BaseShaderRegister = item.second;
+        range_item.RegisterSpace = 0;
+        range_item.RangeType = gx_param_table(item.first.type);
+        range_item.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+        ranges.emplace_back(range_item);
+      }
+
+      descriptor_param.DescriptorTable.NumDescriptorRanges = ranges.size();
+      descriptor_param.DescriptorTable.pDescriptorRanges = ranges.data();
+
+      parameters.emplace_back(descriptor_param);
     }
   }
 
@@ -454,8 +470,24 @@ void
 
   desc.SampleMask = UINT_MAX;
   desc.NumRenderTargets = numRTVs;
-  
-  device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void());
+
+  winrt::check_hresult(device->CreateGraphicsPipelineState(&desc, __uuidof(ID3D12PipelineState), pipeline_state.put_void()));
+
+  D3D12_DESCRIPTOR_HEAP_DESC heap_desc{};
+
+  heap_desc.NumDescriptors = 16;
+  heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+  heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+  winrt::check_hresult(device->CreateDescriptorHeap(&heap_desc, __uuidof(ID3D12DescriptorHeap), descriptor_buf.put_void()));
+
+  heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+  heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+  winrt::check_hresult(device->CreateDescriptorHeap(&heap_desc, __uuidof(ID3D12DescriptorHeap), descriptor_rtv.put_void()));
+
+  heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+  winrt::check_hresult(device->CreateDescriptorHeap(&heap_desc, __uuidof(ID3D12DescriptorHeap), descriptor_dsv.put_void()));
 }
 
 SNOW_OWL_NAMESPACE_END

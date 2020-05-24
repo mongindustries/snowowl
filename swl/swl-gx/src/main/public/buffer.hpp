@@ -8,8 +8,6 @@
 #include <header.hpp>
 #include <ownership.hpp>
 
-#include "render_pipeline.hpp"
-
 SNOW_OWL_NAMESPACE(gx)
 
 struct resource_reference;

@@ -94,15 +94,6 @@ cx::exp::ptr<buffer<typeData>>
    state, nullptr,
    __uuidof(ID3D12Resource), instance->resource_upload.put_void());
 
-  D3D12_DESCRIPTOR_HEAP_DESC descriptor_heap_desc{};
-
-  descriptor_heap_desc.NumDescriptors = 1;
-  descriptor_heap_desc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-  descriptor_heap_desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-  device->CreateDescriptorHeap(&descriptor_heap_desc,
-    __uuidof(ID3D12DescriptorHeap), instance->descriptor.put_void());
-
   instance->view_type        = view_type;
   instance->buffer_size      = size;
   instance->buffer_stride    = stride;
@@ -114,6 +105,24 @@ cx::exp::ptr<buffer<typeData>>
 
 cx::exp::ptr<buffer<typeTexture2d>>
   buffer_allocator::create_texture2d(cx::size_2d const& dimension, pipeline::format format) {
+
+  D3D12_RESOURCE_DESC tex_desc{};
+
+  tex_desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+  tex_desc.Width = dimension.x();
+  tex_desc.Height = dimension.y();
+
+  tex_desc.MipLevels = 1;
+  tex_desc.Alignment = 0;
+
+  tex_desc.DepthOrArraySize = 1;
+
+  tex_desc.SampleDesc.Count = 1;
+  tex_desc.SampleDesc.Quality = 0;
+
+  winrt::com_ptr<ID3D12Device> device;
+  heap->GetDevice(__uuidof(ID3D12Device), device.put_void());
+
   return cx::exp::ptr<buffer<typeTexture2d>>{nullptr};
 }
 

@@ -161,6 +161,8 @@ LRESULT
 void
   ui::application::pre_heat(application &app) {
 
+  winrt::init_apartment();
+
   const auto instance = static_cast < HINSTANCE >(app.native_instance);
 
   constexpr wchar_t class_name[9] = L"snowowl:";

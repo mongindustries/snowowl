@@ -84,8 +84,6 @@ cx::exp::ptr_ref < gx::resource_reference >
   reference->resource = this->resource;
   reference->format   = DXGI_FORMAT_UNKNOWN;
 
-  reference->heap     = descriptor;
-
   winrt::com_ptr < ID3D12Device > device;
   this->resource->GetDevice(__uuidof(ID3D12Device), device.put_void());
 
@@ -103,8 +101,6 @@ cx::exp::ptr_ref < gx::resource_reference >
 
     reference->created_state = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
     reference->resource_type = resource_type::typeSRV;
-
-    // device->CreateShaderResourceView(this->resource.get(), &desc, reference->heap->GetCPUDescriptorHandleForHeapStart());
   }
   break;
   case viewTypeConstant: {
@@ -115,8 +111,6 @@ cx::exp::ptr_ref < gx::resource_reference >
 
     reference->created_state = D3D12_RESOURCE_STATE_INDEX_BUFFER | D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
     reference->resource_type = resource_type::typeCBV;
-
-    // device->CreateConstantBufferView(&desc, reference->heap->GetCPUDescriptorHandleForHeapStart());
   }
   break;
   default:

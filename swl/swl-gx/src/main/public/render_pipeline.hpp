@@ -13,6 +13,7 @@
 
 #include "context.hpp"
 #include "shader.hpp"
+#include "buffer.hpp"
 
 SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
@@ -318,6 +319,15 @@ SNOW_OWL_NAMESPACE(gx) namespace pipeline {
 
     virtual void
       construct();
+
+    virtual void
+      bind_resource(gx::buffer<typeData> const& resource, int slot);
+
+    virtual void
+      bind_resource(gx::buffer<typeTexture2d> const& resource, int slot);
+
+    virtual void
+      bind_resource(gx::buffer<typeTexture3d> const& resource, int slot);
 
     std::array < shader, 2 > shader_stages{};
 

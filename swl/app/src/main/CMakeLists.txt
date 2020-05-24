@@ -17,8 +17,49 @@ if(WIN32)
 
   if(WINDOWS_STORE)
 
+    set(logos
+      platform/uwp/SmallLogo44x44.scale-100.png
+      platform/uwp/SmallLogo44x44.scale-200.png
+      platform/uwp/SmallLogo44x44.scale-400.png
+      platform/uwp/SmallLogo44x44.altform-lightunplated_targetsize-16.png
+      platform/uwp/SmallLogo44x44.altform-lightunplated_targetsize-24.png
+      platform/uwp/SmallLogo44x44.altform-lightunplated_targetsize-32.png
+      platform/uwp/SmallLogo44x44.altform-lightunplated_targetsize-48.png
+      platform/uwp/SmallLogo44x44.altform-lightunplated_targetsize-256.png
+      platform/uwp/SmallLogo44x44.altform-unplated_targetsize-16.png
+      platform/uwp/SmallLogo44x44.altform-unplated_targetsize-24.png
+      platform/uwp/SmallLogo44x44.altform-unplated_targetsize-32.png
+      platform/uwp/SmallLogo44x44.altform-unplated_targetsize-48.png
+      platform/uwp/SmallLogo44x44.altform-unplated_targetsize-256.png
+      platform/uwp/SmallLogo44x44.targetsize-16.png
+      platform/uwp/SmallLogo44x44.targetsize-24.png
+      platform/uwp/SmallLogo44x44.targetsize-32.png
+      platform/uwp/SmallLogo44x44.targetsize-48.png
+      platform/uwp/SmallLogo44x44.targetsize-256.png
+      platform/uwp/Logo.scale-100.png
+      platform/uwp/Logo.scale-200.png
+      platform/uwp/Logo.scale-400.png
+      platform/uwp/SplashScreen.scale-100.png
+      platform/uwp/SplashScreen.scale-200.png
+      platform/uwp/SplashScreen.scale-400.png
+      platform/uwp/StoreLogo.scale-100.png
+      platform/uwp/StoreLogo.scale-200.png
+      platform/uwp/StoreLogo.scale-400.png)
+
+    set(manifest
+      platform/uwp/package.appxManifest)
+
+    set(uwp_content
+      ${logos} ${manifest}
+      platform/uwp/app_TemporaryKey.pfx)
+
+    set_property(SOURCE ${manifest} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+    set_property(SOURCE ${logos} PROPERTY VS_DEPLOYMENT_CONTENT 1)
+    set_property(SOURCE ${logos} PROPERTY VS_DEPLOYMENT_LOCATION "Assets")
+
     add_executable(app WIN32
-            ${APP_SOURCES})
+            ${APP_SOURCES}
+            ${uwp_content})
 
     target_link_libraries(app
         "dwmapi"
@@ -38,7 +79,8 @@ if(WIN32)
         "dwmapi"
         "dxgi"
         "d3d12"
-        "dcomp")
+        "dcomp"
+        "windowsapp")
 
   endif()
 

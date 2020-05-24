@@ -16,7 +16,7 @@ context::context() {
   const auto flag = 0;
 #endif
 
-  CreateDXGIFactory2(flag, __uuidof(IDXGIFactory2), dxgi_factory.put_void());
+  winrt::check_hresult(CreateDXGIFactory2(flag, __uuidof(IDXGIFactory2), dxgi_factory.put_void()));
   winrt::com_ptr < IDXGIAdapter > adapter{};
 
   uint16_t index{0};
@@ -34,10 +34,10 @@ context::context() {
     has_adapters = dxgi_factory->EnumAdapters(++index, adapter.put()) != DXGI_ERROR_NOT_FOUND;
   }
 
-  D3D12CreateDevice(adapter.get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), device.put_void());
+  winrt::check_hresult(D3D12CreateDevice(adapter.get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), device.put_void()));
 
 #if defined(SWL_DEBUG)
-  device->QueryInterface(__uuidof(ID3D12DebugDevice), debug_device.put_void());
+  winrt::check_hresult(device->QueryInterface(__uuidof(ID3D12DebugDevice), debug_device.put_void()));
 #endif
 }
 
