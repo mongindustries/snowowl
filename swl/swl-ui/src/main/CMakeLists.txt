@@ -28,7 +28,7 @@ if(WIN32)
             platform/windows/swl_window.cpp)
 
       set(PLATFORM_HEADER_LIST
-            latform/windows/swl_internal_state.h)
+            platform/windows/swl_internal_state.h)
     endif()
 endif()
 
