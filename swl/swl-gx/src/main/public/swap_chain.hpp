@@ -48,6 +48,12 @@ struct swap_chain {
   virtual void
     resize(cx::size_2d const &new_size);
 
+  virtual cx::size_2d
+    size() const;
+
+  friend struct ui::window;
+
+protected:
 
   bool swaps_immediately{false};
 

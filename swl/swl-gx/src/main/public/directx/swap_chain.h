@@ -26,6 +26,9 @@ struct swap_chain : gx::swap_chain {
   void
     resize(cx::size_2d const &new_size) override;
 
+  cx::size_2d
+    size() const override;
+
 
   HANDLE event_wait;
 

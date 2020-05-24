@@ -8,6 +8,10 @@
 
 #include "game_loop.hpp"
 
+#ifdef SWL_UWP
+#include <winrt/base.h>
+#endif
+
 using namespace std;
 using namespace chrono;
 using namespace swl::cx;
@@ -22,6 +26,10 @@ game_loop::~game_loop() = default;
 void game_loop::open() {
 
   auto func = [](game_loop* game_loop) {
+
+#ifdef SWL_UWP
+    winrt::init_apartment();
+#endif // SWL_UWP
 
     game_loop->game_thread_id = this_thread::get_id();
 

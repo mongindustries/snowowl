@@ -2,6 +2,9 @@
 #include <Windows.h>
 #include <Unknwn.h>
 
+#include <game_loop.hpp>
+#include <swap_chain.hpp>
+
 #include "window.hpp"
 #include "uwp_internal_state.h"
 
@@ -26,6 +29,8 @@ window::window(const std::string &window_name, cx::rect const &frame, void *inst
   _state->core_window = make_agile(core_window);
 
   if (const auto view = ViewManagement::ApplicationView::GetForCurrentView()) {
+    _state->application_view = make_agile(view);
+
     view.SetPreferredMinSize({ 400, 400 });
 
     const auto title_bar = view.TitleBar();
@@ -35,7 +40,8 @@ window::window(const std::string &window_name, cx::rect const &frame, void *inst
     title_bar.ButtonInactiveBackgroundColor(Colors::Transparent());
   }
 
-  core_window.ResizeStarted([&](CoreWindow const&, impl::IInspectable const&) {
+  core_window.ResizeStarted(
+    [&](CoreWindow const&, IInspectable const&) {
 
     _state->interactive_resize = true;
 
@@ -58,7 +64,8 @@ window::window(const std::string &window_name, cx::rect const &frame, void *inst
     }
   });
 
-  core_window.ResizeCompleted([&](CoreWindow const& cw, IInspectable const&) {
+  core_window.ResizeCompleted(
+    [&](CoreWindow const& cw, IInspectable const&) {
 
     auto &chain = _state->swap_chain;
 
@@ -84,7 +91,8 @@ window::window(const std::string &window_name, cx::rect const &frame, void *inst
     _state->interactive_resize = false;
   });
 
-  core_window.SizeChanged([&](CoreWindow const& cw, WindowSizeChangedEventArgs const& args) {
+  core_window.SizeChanged(
+    [&](CoreWindow const& cw, WindowSizeChangedEventArgs const& args) {
 
     // this flag is for when the window is interactively resized, that is, 
       // there is a resize drag going on.
@@ -112,7 +120,7 @@ window::window(const std::string &window_name, cx::rect const &frame, void *inst
     // this thread now owns the framing...
     if (chain) {
       // ...start by resizing the swapchain
-      chain->resize({ cw.Bounds().Width, cw.Bounds().Height });
+      chain->resize({ (int) cw.Bounds().Width, (int) cw.Bounds().Height });
     }
 
     // ...then run a game loop frame
@@ -159,47 +167,82 @@ void
 
 cx::game_loop &
   window::game_loop() const {
-  
+  return _state->game_loop.get();
 }
 
 void
   window::game_loop(cx::exp::ptr<cx::game_loop> &&value) {
-  
+  _state->game_loop = std::move(value);
 }
 
 std::string
   window::title() const {
-  
+
+  std::string m_title;
+
+  // TODO: Convert to coroutines
+  _state->core_window.get().Dispatcher()
+    .RunAsync(CoreDispatcherPriority::High, [&]() {
+
+      auto application_view = _state->application_view.get();
+
+      auto title = application_view.Title();
+
+      size_t m_size = WideCharToMultiByte(CP_UTF8, 0, title.c_str(), -1, nullptr, 0, nullptr, nullptr);
+      m_title.reserve(m_size);
+
+      WideCharToMultiByte(CP_UTF8, 0, title.c_str(), -1, m_title.data(), m_size, nullptr, nullptr);
+    })
+    .get();
+
+  return m_title;
 }
 
 void
   window::title(std::string const &value) {
   
+  // TODO: Convert to coroutines
+  _state->core_window.get().Dispatcher().RunAsync(CoreDispatcherPriority::High, [&, value]() {
+
+    size_t w_size = MultiByteToWideChar(CP_UTF8, 0, value.c_str(), -1, nullptr, 0);
+
+    std::wstring w_title;
+    w_title.reserve(w_size);
+
+    MultiByteToWideChar(CP_UTF8, 0, value.c_str(), -1, w_title.data(), w_size);
+
+    _state->application_view.get().Title(w_title.c_str());
+  }).get();
 }
 
 cx::rect
   window::frame() const {
-  
+
+  Windows::Foundation::Rect bounds{};
+  return { {}, { (int) 800, (int) 600 } };
 }
 
 void
   window::frame(cx::rect const &value) {
   
+  _state->core_window.get().Dispatcher()
+    .RunAsync(CoreDispatcherPriority::High, [&, value]() {
+      _state->application_view.get().TryResizeView({ (float) value.size.x(), (float) value.size.y() });
+    }).get();
 }
 
 cx::size_2d
   window::size() const {
-  
+  return frame().size;
 }
 
 bool
   window::full_screen() const {
-  
+  return false;
 }
 
 void
   window::full_screen(bool value) {
-  
 }
 
 bool
