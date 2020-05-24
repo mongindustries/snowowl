@@ -51,10 +51,6 @@ struct swap_chain {
   virtual cx::size_2d
     size() const;
 
-  friend struct ui::window;
-
-protected:
-
   bool swaps_immediately{false};
 
   cx::exp::ptr_ref < ui::window > window;
