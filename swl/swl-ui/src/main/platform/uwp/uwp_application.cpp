@@ -1,6 +1,4 @@
 #include "uwp_application.hpp"
-#include "swl_window_backend.hpp"
-
 #include <winrt/windows.applicationmodel.core.h>
 
 using namespace winrt;
@@ -9,7 +7,7 @@ SNOW_OWL_NAMESPACE(ui::backend)
 
 ApplicationSource* ApplicationSource::instance = nullptr;
 
-ApplicationSource::ApplicationSource  (const cx::exp::ptr_ref<ui::application> &app): app(app), _window() { }
+ApplicationSource::ApplicationSource  (const cx::exp::ptr_ref<ui::application> &app): app(app), _window(nullptr) { }
 
 // IFVS
 
@@ -35,7 +33,7 @@ void ApplicationSource::Load          (hstring const&) {
 }
 
 void ApplicationSource::Uninitialize  () {
-
+  app->on_destroy();
 }
 
 void ApplicationSource::SetWindow     (Windows::UI::Core::CoreWindow const& window) {
@@ -45,7 +43,7 @@ void ApplicationSource::SetWindow     (Windows::UI::Core::CoreWindow const& wind
   void* native{ nullptr };
   copy_to_abi(window, native);
 
-  window_backend::instance->create_native(_window.pointer(), native);
+  _window = cx::exp::ptr<ui::window>(new ui::window("", cx::rect{ {}, {800, 480}}, native));
 }
 
 void ApplicationSource::Run           () {
@@ -53,8 +51,6 @@ void ApplicationSource::Run           () {
   app->on_create();
 
   _core_window.get().Dispatcher().ProcessEvents(Windows::UI::Core::CoreProcessEventsOption::ProcessUntilQuit);
-
-  app->on_destroy();
 }
 
 SNOW_OWL_NAMESPACE_END
@@ -78,8 +74,9 @@ int   application::run_loop(application& app) {
   return 0; // no run loop. handled by IFrameworkView::Run.
 }
 
-cx::exp::ptr_ref<ui::window> application::get_main_window() {
-  return cx::exp::ptr_ref{ backend::ApplicationSource::instance->_window };
+std::reference_wrapper < window >
+  application::main_window() {
+  return backend::ApplicationSource::instance->_window.get();
 }
 
 SNOW_OWL_NAMESPACE_END

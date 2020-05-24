@@ -19,7 +19,9 @@ struct window_invalid_game_loop: std::exception{};
 window::window(nullptr_t): _state(nullptr), _handle(0) {
 }
 
-window::window(const std::string &window_name, const cx::rect &frame, void*): _state(new internal_state()) {
+window::window(const std::string &window_name, const cx::rect &frame, void*)
+  : _state(new internal_state())
+  , _handle(cx::core::make_handle()) {
 
   const wchar_t class_name[9] = L"snowowl:";
 

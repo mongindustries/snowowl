@@ -4,7 +4,12 @@
 #include <sstream>
 
 #include <window.hpp>
+
+#ifdef SWL_UWP
+#include "../../../../swl-ui/src/main/platform/uwp/uwp_internal_state.h"
+#else
 #include "../../../../swl-ui/src/main/platform/windows/swl_internal_state.h"
+#endif
 
 using namespace winrt;
 
@@ -44,7 +49,7 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   com_ptr < IDXGISwapChain1 > pre_instance;
 
 #ifdef SWL_UWP
-  const auto window_handle = surface.cast < IUnknown >().pointer();
+  const auto window_handle = static_cast<::IUnknown*>(get_abi(window.state()->core_window.get()));
   context.dxgi_factory->CreateSwapChainForCoreWindow(present_queue.command_queue.get(), window_handle, &swap_chain_desc,
                                                      nullptr, pre_instance.put());
 #else
