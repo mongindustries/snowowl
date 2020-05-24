@@ -58,6 +58,11 @@ swap_chain::frame&
 void
   swap_chain::resize      (const cx::size_2d &new_size) { }
 
+cx::size_2d
+  swap_chain::size        () const {
+  return cx::size_2d();
+}
+
 ptr_ref<swap_chain::frame>
   swap_chain::next_frame  () { return ptr_ref<frame>{frames[0]}; }
 

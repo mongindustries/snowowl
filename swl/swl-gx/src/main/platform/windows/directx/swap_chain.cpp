@@ -30,9 +30,6 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
 
   DXGI_SWAP_CHAIN_DESC1 swap_chain_desc{};
 
-  swap_chain_desc.Width  = window.size().x();
-  swap_chain_desc.Height = window.size().y();
-
   swap_chain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
   swap_chain_desc.Format      = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -49,10 +46,20 @@ swap_chain::swap_chain(context &context, queue &present_queue, ui::window &windo
   com_ptr < IDXGISwapChain1 > pre_instance;
 
 #ifdef SWL_UWP
-  const auto window_handle = static_cast<::IUnknown*>(get_abi(window.state()->core_window.get()));
+
+  auto &core_window         = window.state()->core_window.get();
+  const auto window_handle  = static_cast<::IUnknown*>(get_abi(window.state()->core_window.get()));
+
+  swap_chain_desc.Width   = (UINT) core_window.Bounds().Width;
+  swap_chain_desc.Height  = (UINT) core_window.Bounds().Height;
+
   context.dxgi_factory->CreateSwapChainForCoreWindow(present_queue.command_queue.get(), window_handle, &swap_chain_desc,
                                                      nullptr, pre_instance.put());
 #else
+
+  swap_chain_desc.Width  = window.size().x();
+  swap_chain_desc.Height = window.size().y();
+
   const auto window_handle = window.state()->handle;
   context.dxgi_factory->CreateSwapChainForHwnd(present_queue.command_queue.get(), window_handle, &swap_chain_desc, nullptr, nullptr, pre_instance.put());
 #endif
@@ -156,6 +163,15 @@ void
   swap_chain::present(std::vector < ptr_ref < gx::queue > > const &dependencies) {
 
   assert(instance->Present(swaps_immediately ? 0 : 1, 0) == S_OK);
+}
+
+cx::size_2d
+  swap_chain::size() const {
+
+  DXGI_SWAP_CHAIN_DESC1 desc{};
+  instance->GetDesc1(&desc);
+
+  return { (int) desc.Width, (int) desc.Height };
 }
 
 SNOW_OWL_NAMESPACE_END

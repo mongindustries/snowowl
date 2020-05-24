@@ -168,7 +168,7 @@ struct app_game_loop final : game_loop {
             const auto i_ref = std::make_pair(buffer_index->reference(),
                                               gx::buffer_transition{gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView});
 
-            const auto size = window.size();
+            const auto size = swap_chain.size();
 
             gx::buffer_usage_block resource_block{pass, {v_ref, i_ref}};
             {
