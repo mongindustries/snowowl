@@ -164,9 +164,9 @@ struct app_game_loop final : game_loop {
           auto pass = factory.render_pass(clear_block, {frame_context});
           {
             const auto v_ref = std::make_pair(buffer_vertex->reference(),
-                                              gx::buffer_transition{gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView});
+                                              gx::buffer_transition{gx::buffer_transition::transitionShaderView});
             const auto i_ref = std::make_pair(buffer_index->reference(),
-                                              gx::buffer_transition{gx::pipeline::shader_stage::vertex, gx::buffer_transition::transitionShaderView});
+                                              gx::buffer_transition{gx::buffer_transition::transitionShaderView});
 
             const auto size = swap_chain.size();
 

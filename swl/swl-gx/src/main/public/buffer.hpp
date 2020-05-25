@@ -44,8 +44,6 @@ struct buffer_transition {
     transitionRenderTargetView,
   };
 
-  pipeline::shader_stage stage{0xff};
-
   transition_type during{transitionInherit};
 
   transition_type before{transitionInherit};
