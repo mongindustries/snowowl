@@ -97,8 +97,6 @@ void
 
     if (auto item = dynamic_cast< dx::buffer_data_transfer_block* >(buffer.pointer())) {
 
-      item->ref->data_initialized = true;
-      
       upload_descs.emplace_back(upload_desc{
                                     item->buffer_staging,
                                     item->buffer,

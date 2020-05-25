@@ -8,6 +8,8 @@
 #include "directx/resource_reference.h"
 #include "directx/render_pipeline.h"
 
+#include "directx/pipeline.h"
+
 SNOW_OWL_NAMESPACE(gx::dx)
 
 buffer_data::buffer_data  ()
@@ -47,18 +49,20 @@ cx::exp::ptr < gx::transfer_block >
   D3D12_RESOURCE_STATES target_state{};
 
   switch (target_type.usage) {
-  case pipeline::usageTypeConstant:
+  case gx::pipeline::usageTypeConstant:
     target_state = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
     break;
-  case pipeline::usageTypeRenderTarget:
+  case gx::pipeline::usageTypeRenderTarget:
     target_state = D3D12_RESOURCE_STATE_RENDER_TARGET;
     break;
-  case pipeline::usageTypeTexture:
-  case pipeline::usageTypeShader:
+  case gx::pipeline::usageTypeTexture:
+  case gx::pipeline::usageTypeShader:
     switch (target_type.stage) {
-    case 1:   target_state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+    case 1:
+      target_state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
       break;
-    default:  target_state = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+    default:
+      target_state = D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
       break;
     }
     break;
@@ -81,46 +85,69 @@ cx::exp::ptr < gx::transfer_block >
   buffer_data::set_dirty  () { return cx::exp::ptr < gx::transfer_block >{nullptr}; }
 
 cx::exp::ptr_ref < gx::resource_reference >
-  buffer_data::reference  (cx::exp::ptr_ref<gx::render_pipeline> const &desc, gx::pipeline::shader_stage const &stage, int slot) {
+  buffer_data::reference  (cx::exp::ptr_ref<gx::render_pipeline> const &render_pipeline, gx::pipeline::shader_stage const &stage, int slot) {
 
   resource_reference *reference = new resource_reference();
 
-  reference->resource = this->resource;
-  reference->format   = DXGI_FORMAT_UNKNOWN;
+  reference->resource       = this->resource;
+  reference->format         = DXGI_FORMAT_UNKNOWN;
 
-  winrt::com_ptr < ID3D12Device > device;
-  this->resource->GetDevice(__uuidof(ID3D12Device), device.put_void());
+  // I am explicitly not checking the current resource state of the buffer.
+  // This is because the state may be modified during render_pass execution.
+  // This method will just link the resource to a descriptor heap...
+  reference->created_state  = current_state;
 
-  D3D12_RESOURCE_STATES old_state = current_state;
+  auto& slot_info = render_pipeline->stages[stage].input.arguments[slot];
 
-  switch (desc->stages[stage].input.arguments[slot].type) {
-  case gx::pipeline::shader_argument_type::typeBuffer: {
+  if (slot_info.indirect) { // ...if applicable, this will do nothing if the slot is a direct binding
 
-    D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
+    winrt::com_ptr < ID3D12Device > device;
+    this->resource->GetDevice(__uuidof(ID3D12Device), device.put_void());
 
-    desc.ViewDimension           = D3D12_SRV_DIMENSION_BUFFER;
-    desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    if (auto dx_pipeline = dynamic_cast<dx::render_pipeline*>(render_pipeline.pointer())) {
 
-    desc.Buffer.FirstElement        = 0;
-    desc.Buffer.NumElements         = buffer_size / buffer_stride;
-    desc.Buffer.StructureByteStride = buffer_stride;
-    desc.Buffer.Flags               = D3D12_BUFFER_SRV_FLAG_NONE;
+      auto handle = dx_pipeline->descriptor_buf->GetCPUDescriptorHandleForHeapStart();
+      auto offset = (dx_pipeline->stage_offset * stage.value) + (slot * dx_pipeline->item_offset);
 
-    reference->created_state = current_state;
-    reference->resource_type = resource_type::typeSRV;
-  } break;
-  case gx::pipeline::shader_argument_type::typeConstant: {
+      reference->heap         = dx_pipeline->descriptor_buf;
+      reference->heap_offset  = offset;
 
-    D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
+      switch (slot_info.type) {
+      case gx::pipeline::shader_argument_type::typeBuffer: {
 
-    desc.BufferLocation = resource->GetGPUVirtualAddress();
-    desc.SizeInBytes    = buffer_size;
+        D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 
-    reference->created_state = current_state;
-    reference->resource_type = resource_type::typeCBV;
-  } break;
-  default:
-    break;
+        desc.ViewDimension              = D3D12_SRV_DIMENSION_BUFFER;
+        desc.Shader4ComponentMapping    = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+        desc.Buffer.FirstElement        = 0;
+        desc.Buffer.NumElements         = buffer_size / buffer_stride;
+        desc.Buffer.StructureByteStride = buffer_stride;
+        desc.Buffer.Flags               = D3D12_BUFFER_SRV_FLAG_NONE;
+
+        reference->created_state = current_state;
+        reference->resource_type = resource_type::typeSRV;
+
+        device->CreateShaderResourceView(resource.get(), &desc, { handle.ptr + offset });
+
+      } break;
+      case gx::pipeline::shader_argument_type::typeConstant: {
+
+        D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
+
+        desc.BufferLocation = resource->GetGPUVirtualAddress();
+        desc.SizeInBytes    = buffer_size;
+
+        reference->created_state = current_state;
+        reference->resource_type = resource_type::typeCBV;
+
+        device->CreateConstantBufferView(&desc, { handle.ptr + offset });
+      
+      } break;
+      default:
+        break;
+      }
+    }
   }
 
   return cx::exp::ptr_ref < resource_reference >{reference}.cast < gx::resource_reference >();
