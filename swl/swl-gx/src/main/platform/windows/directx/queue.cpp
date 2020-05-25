@@ -1,5 +1,6 @@
 #include "directx/queue.h"
 #include "directx/render_block.h"
+#include "directx/transfer_block.h"
 
 #include "render_block.hpp"
 
@@ -75,7 +76,7 @@ void
 }
 
 void
-  queue::transfer(std::vector < cx::exp::ptr_ref < buffer_staging > > const &buffers) {
+  queue::transfer(std::vector < cx::exp::ptr_ref < transfer_block > > const &buffers) {
 
   if (!fence) { return; }
 
@@ -93,41 +94,43 @@ void
   upload_descs.reserve(buffers.size());
 
   for (const auto &buffer : buffers) {
-    try {
-      auto &item = dynamic_cast < buffer_data_staging & >(buffer.get());
 
-      item.ref->data_initialized = true;
-      item.ref->mapped_data = nullptr;
+    if (auto item = dynamic_cast< dx::buffer_data_transfer_block* >(buffer.pointer())) {
 
+      item->ref->data_initialized = true;
+      
       upload_descs.emplace_back(upload_desc{
-                                    item.buffer_staging,
-                                    item.buffer,
-                                    item.size
+                                    item->buffer_staging,
+                                    item->buffer,
+                                    item->size
                                 });
 
       auto barrier_in = cx::tell < D3D12_RESOURCE_BARRIER >({}, [&item](D3D12_RESOURCE_BARRIER &object) {
         object.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
         object.Transition.Subresource = 0;
-        object.Transition.pResource   = item.buffer.get();
+        object.Transition.pResource   = item->buffer.get();
 
         object.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_DEST;
-        object.Transition.StateBefore = item.source_state;
+        object.Transition.StateBefore = item->source_state;
       });
 
       auto barrier_out = cx::tell < D3D12_RESOURCE_BARRIER >({}, [&item](D3D12_RESOURCE_BARRIER &object) {
         object.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
         object.Transition.Subresource = 0;
-        object.Transition.pResource   = item.buffer.get();
+        object.Transition.pResource   = item->buffer.get();
 
         object.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-        object.Transition.StateAfter  = item.target_state;
+        object.Transition.StateAfter  = item->target_state;
       });
 
-      if (barrier_in.Transition.StateBefore != barrier_in.Transition.StateAfter) { barriers_in.emplace_back(barrier_in); }
+      if (barrier_in.Transition.StateBefore != barrier_in.Transition.StateAfter) {
+        barriers_in.emplace_back(barrier_in);
+      }
 
-      if (barrier_out.Transition.StateBefore != barrier_out.Transition.StateAfter) { barriers_out.emplace_back(barrier_out); }
-
-    } catch (std::bad_cast const &) { }
+      if (barrier_out.Transition.StateBefore != barrier_out.Transition.StateAfter) {
+        barriers_out.emplace_back(barrier_out);
+      }
+    }
   }
 
   if (!barriers_in.empty())

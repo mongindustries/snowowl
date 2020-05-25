@@ -1,3 +1,5 @@
+#pragma once
+
 #include <header.hpp>
 #include <rect.hpp>
 #include <ownership.hpp>
@@ -335,7 +337,7 @@ struct shader_output {
 
 struct pipeline_stage {
 
-  shader                                function;
+  shader                                function{nullptr, 0};
 
   shader_input                          input;
   std::array < shader_output, NRS >     output;
@@ -381,14 +383,10 @@ struct upload_desc {
   char*                                 data                        {nullptr};
 };
 
-struct resource_reference_desc {
+struct resource_state_desc {
 
   shader_stage                          stage;
   buffer_usage_type                     usage;
-
-  cx::exp::ptr_ref< render_pipeline >   pipeline;
-
-  int                                   slot;
 };
 
 SNOW_OWL_NAMESPACE_END

@@ -6,31 +6,36 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-pipeline::shader_stage::operator  uint8_t() const {
+pipeline::shader_stage::operator
+  uint8_t     () const {
   return value;
 }
 
-pipeline::shader_stage pipeline::shader_stage::vertex   = pipeline::shader_stage{ 0 };
-pipeline::shader_stage pipeline::shader_stage::fragment = pipeline::shader_stage{ 1 };
+pipeline::shader_stage pipeline::shader_stage::vertex   = shader_stage{ 0 };
+pipeline::shader_stage pipeline::shader_stage::fragment = shader_stage{ 1 };
 
 
-pipeline::write_mask::operator    uint8_t() const {
+pipeline::write_mask::operator
+  uint8_t     () const {
   return value;
 }
 
-bool pipeline::write_mask::operator&          (const pipeline::write_mask& rhs) const {
+bool pipeline::write_mask::operator&          (const write_mask& rhs) const {
   return value & rhs.value;
 }
 
-pipeline::write_mask pipeline::write_mask::r  = pipeline::write_mask{ 0b0001 };
-pipeline::write_mask pipeline::write_mask::g  = pipeline::write_mask{ 0b0010 };
-pipeline::write_mask pipeline::write_mask::b  = pipeline::write_mask{ 0b0100 };
-pipeline::write_mask pipeline::write_mask::a  = pipeline::write_mask{ 0b1000 };
+pipeline::write_mask pipeline::write_mask::r  = write_mask{ 0b0001 };
+pipeline::write_mask pipeline::write_mask::g  = write_mask{ 0b0010 };
+pipeline::write_mask pipeline::write_mask::b  = write_mask{ 0b0100 };
+pipeline::write_mask pipeline::write_mask::a  = write_mask{ 0b1000 };
 
 
 render_pipeline::render_pipeline  () noexcept = default;
 
 render_pipeline::~render_pipeline () = default;
+
+
+render_pipeline::render_pipeline  (context &) { }
 
 
 render_pipeline::render_pipeline            (render_pipeline&& mov) noexcept

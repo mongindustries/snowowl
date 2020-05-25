@@ -6,15 +6,11 @@
 #undef _USE_MATH_DEFINES
 
 #include <array>
-#include <vector>
-#include <numeric>
 
 #include <header.hpp>
 
-#include "buffer.hpp"
 #include "context.hpp"
 #include "pipeline.hpp"
-#include "shader.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 

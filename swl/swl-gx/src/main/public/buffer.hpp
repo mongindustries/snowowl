@@ -4,7 +4,6 @@
 #pragma once
 
 #include <vector>
-#include <optional>
 
 #include <header.hpp>
 #include <ownership.hpp>
@@ -30,8 +29,8 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    */
   template < typename EntryType >
   cx::exp::ptr < transfer_block >
-    set_data    (size_t start, std::vector < EntryType > &items) { 
-      return set_data(upload_desc{start, sizeof(EntryType) * items.size(), reinterpret_cast < char * >(items.data())});
+    set_data    (size_t start, std::vector < EntryType > &items, pipeline::resource_state_desc const &target_state) {
+      return set_data(pipeline::upload_desc{start, sizeof(EntryType) * items.size(), reinterpret_cast < char * >(items.data())}, target_state);
     }
 
   /**
@@ -39,8 +38,8 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * on how a <code>queue</code> will synchronize the data.
    */
   cx::exp::ptr < transfer_block >
-    set_data    (pipeline::upload_desc const &upload) {
-      return set_data(std::array < upload_desc, 8 >{upload});
+    set_data    (pipeline::upload_desc const &upload, pipeline::resource_state_desc const& target_state) {
+      return set_data(std::array < pipeline::upload_desc, 8 >{upload}, target_state);
     }
 
   /**
@@ -48,7 +47,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * on how a <code>queue</code> will synchronize the data.
    */
   virtual cx::exp::ptr < transfer_block >
-    set_data    (std::array < pipeline::upload_desc, 8 > const &modifications) {
+    set_data    (std::array < pipeline::upload_desc, 8 > const &modifications, pipeline::resource_state_desc const& target_state) {
       return cx::exp::ptr < transfer_block >{nullptr};
     }
 
@@ -65,7 +64,7 @@ struct buffer { SWL_REFERENCEABLE(buffer) SWL_POLYMORPHIC(buffer)
    * Prepares buffer for resource binding in a render pass.
    */
   virtual cx::exp::ptr_ref < resource_reference >
-    reference   (pipeline::resource_reference_desc const &desc) {
+    reference   (cx::exp::ptr_ref<render_pipeline> const &pipeline, pipeline::shader_stage const &stage, int slot) {
       return cx::exp::ptr_ref < resource_reference >{nullptr};
     }
 };

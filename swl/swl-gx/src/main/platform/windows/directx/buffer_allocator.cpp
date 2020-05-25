@@ -27,7 +27,7 @@ buffer_allocator::buffer_allocator    (context& context, size_t initial_size)
 buffer_allocator::~buffer_allocator   () { }
 
 cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
-  buffer_allocator::create_data       (pipeline::buffer_visibility_type visbility, size_t allocator_offset, size_t size, size_t stride) {
+  buffer_allocator::create_data       (pipeline::buffer_visibility_type visibility, size_t allocator_offset, size_t size, size_t stride) {
   
     cx::exp::ptr<buffer< pipeline::buffer_type::typeData >, dx::buffer_data> instance;
 
@@ -71,7 +71,7 @@ cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
     D3D12_HEAP_PROPERTIES desc  {};
     D3D12_RESOURCE_STATES state {};
 
-    switch (visbility) {
+    switch (visibility) {
     case pipeline::buffer_visibility_type::dataUsagePrivate: {
       // create upload heap
       desc.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -87,13 +87,15 @@ cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
     // buffer for modifying allocated buffer data~
 
     device->CreateCommittedResource(
-     &desc, D3D12_HEAP_FLAG_NONE, &resource_desc,
-     state, nullptr,
+     &desc,
+     D3D12_HEAP_FLAG_NONE,
+     &resource_desc,
+     state,
+     nullptr,
      __uuidof(ID3D12Resource),
      instance->resource_upload.put_void());
 
-    instance->current_state     = state;
-    instance->data_initialized  = false;
+    instance->current_state     = D3D12_RESOURCE_STATE_COPY_DEST;
 
     instance->buffer_size       = size;
     instance->buffer_stride     = stride;
@@ -104,7 +106,7 @@ cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
   }
 
 cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture2d > >
-  buffer_allocator::create_texture2d  (pipeline::buffer_visibility_type visbility, cx::size_2d const &dimension, pipeline::format) {
+  buffer_allocator::create_texture2d  (pipeline::buffer_visibility_type visibility, cx::size_2d const &dimension, pipeline::format) {
   
     D3D12_RESOURCE_DESC tex_desc{};
 
@@ -127,7 +129,7 @@ cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture2d > >
   }
 
 cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture3d > >
-  buffer_allocator::create_texture3d  (pipeline::buffer_visibility_type visbility, cx::size_3d const&, pipeline::format) {
+  buffer_allocator::create_texture3d  (pipeline::buffer_visibility_type visibility, cx::size_3d const&, pipeline::format) {
     return cx::exp::ptr<buffer< pipeline::buffer_type::typeTexture3d >>{nullptr};
   }
 

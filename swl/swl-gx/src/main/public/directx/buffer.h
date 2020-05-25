@@ -18,13 +18,13 @@ struct buffer_data final : buffer < pipeline::buffer_type::typeData > {
    * this buffer will be updated to the GPU.
    */
   cx::exp::ptr < gx::transfer_block >
-    set_data  (std::array < pipeline::upload_desc, 8 > const &modifications) override;
+    set_data  (std::array < gx::pipeline::upload_desc, 8 > const &modifications, gx::pipeline::resource_state_desc const &target_type) override;
 
   cx::exp::ptr < gx::transfer_block >
     set_dirty () override;
 
   cx::exp::ptr_ref < gx::resource_reference >
-    reference (pipeline::resource_reference_desc const &desc) override;
+    reference (cx::exp::ptr_ref< gx::render_pipeline > const &desc, gx::pipeline::shader_stage const &stage, int slot) override;
 
 
   winrt::com_ptr < ID3D12Resource > resource;
@@ -41,8 +41,6 @@ private:
 
   size_t                  buffer_size       {};
   size_t                  buffer_stride     {};
-
-  bool                    data_initialized  {};
 };
 
 SNOW_OWL_NAMESPACE_END

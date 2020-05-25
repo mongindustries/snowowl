@@ -1,3 +1,5 @@
+#pragma once
+
 #include <header.hpp>
 
 SNOW_OWL_NAMESPACE(gx)
