@@ -8,74 +8,19 @@
 #include <header.hpp>
 #include <rect.hpp>
 
-#include "context.hpp"
-
 #include "buffer.hpp"
-#include "resource_reference.hpp"
+#include "context.hpp"
 #include "render_pipeline.hpp"
+#include "resource_reference.hpp"
+#include "transfer_block.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
 
 struct render_block;
 
-enum render_pass_load_op {
-  loadOpLoad,
-  loadOpClear,
-  loadOpDoNotCare,
-  loadOpNoAccess
-};
+struct render_pass_resource_scope;
 
-enum render_pass_store_op {
-  storeOpStore,
-  storeOpDoNotCare,
-  storeOpResolve,
-  storeOpNoAccess
-};
-
-enum render_pass_transition {
-  transitionInherit,
-
-  transitionRenderTargetView,
-  transitionShaderResource,
-  transitionSwapChainPresent,
-
-  transitionCopySource,
-  transitionCopyDestination,
-};
-
-enum render_pass_stage_binding {
-  bindingGraphicsVertex,
-  bindingGraphicsFragment,
-};
-
-struct render_pass_context {
-  cx::exp::ptr_ref < resource_reference > reference;
-
-  render_pass_load_op  action_load;
-  render_pass_store_op action_store;
-
-  std::array < float, 4 > load_clear;
-
-  render_pass_transition transition_before;
-  render_pass_transition transition_during;
-  render_pass_transition transition_after;
-};
-
-struct render_pass_draw_range {
-  unsigned int begin;
-  unsigned int size;
-};
-
-struct transition_handle {
-  SWL_POLYMORPHIC(transition_handle)
-
-  virtual void
-    release();
-};
-
-struct render_pass {
-  SWL_REFERENCEABLE(render_pass)
-  SWL_POLYMORPHIC(render_pass)
+struct render_pass { SWL_REFERENCEABLE(render_pass) SWL_POLYMORPHIC(render_pass)
 
   enum topology_type {
     typeTriangleList,
@@ -87,43 +32,31 @@ struct render_pass {
     typePointList
   };
 
-  render_pass(context &context, render_block &render_block);
+  render_pass       (render_block &render_block, std::array< pipeline::pass_output, NRS > const& output);
 
 
   virtual void
-    set_viewport(const cx::size_2d &value);
-
-  virtual void
-    set_scissor(const cx::rect &value);
-
-  virtual void
-    set_topology(topology_type type);
+    topology        (topology_type type);
 
 
-  virtual cx::exp::ptr < transition_handle >
-    buffer_boundary(std::vector < std::pair < cx::exp::ptr_ref < resource_reference >, buffer_transition > > const &transitions);
+  virtual cx::exp::ptr < render_pass_resource_scope >
+    buffer_prepare  (std::array< pipeline::pass_input, NBS > const &transitions);
 
 
   virtual void
-    bind_buffer(render_pass_stage_binding binding, int slot, cx::exp::ptr_ref < resource_reference > const &reference);
+    buffer_bind     (pipeline::shader_stage const &binding, int slot, cx::exp::ptr_ref < resource_reference > const &reference);
 
   virtual void
-    bind_buffers(render_pass_stage_binding binding, std::array < cx::exp::ptr_ref < resource_reference >, 16 > const &references);
+    buffer_bind     (pipeline::shader_stage const &binding, std::array < cx::exp::ptr_ref < resource_reference >, NBS > const &references);
 
 
   virtual void
-    draw(const render_pass_draw_range &vertex_range);
+    draw            (pipeline::draw_range const &vertex_range);
 };
 
+struct render_pass_resource_scope { SWL_BLOCK_CONTEXT(render_pass_resource_scope) SWL_POLYMORPHIC(render_pass_resource_scope)
 
-struct buffer_usage_block {
-
-  buffer_usage_block(render_pass &pass, std::vector < std::pair < cx::exp::ptr_ref < resource_reference >, buffer_transition > > const &transitions);
-
-  ~buffer_usage_block();
-
-
-  cx::exp::ptr < transition_handle > handle;
+  render_pass_resource_scope  (render_pass &pass, std::vector< pipeline::pass_input > const &input);
 };
 
 SNOW_OWL_NAMESPACE_END

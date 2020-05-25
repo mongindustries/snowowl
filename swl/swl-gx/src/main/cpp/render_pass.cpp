@@ -5,60 +5,46 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-  template <typename c>
-  using ptr_ref = cx::exp::ptr_ref<c>;
+template <typename c>
+using ptr_ref = cx::exp::ptr_ref<c>;
 
-  render_pass::render_pass() noexcept = default;
+render_pass::render_pass              (render_pass&&) noexcept { }
 
-  render_pass::render_pass(context& context, render_block& render_block) {}
-
-  render_pass::~render_pass() = default;
+render_pass& render_pass::operator=   (render_pass&&) noexcept { return *this; }
 
 
-  render_pass::render_pass(render_pass&&) noexcept { }
+render_pass::render_pass  () noexcept = default;
 
-  render_pass&
-  render_pass::operator=(render_pass&&) noexcept { return *this; }
-
-
-  buffer_usage_block::buffer_usage_block(render_pass& pass, std::vector<std::pair<cx::exp::ptr_ref<resource_reference>, buffer_transition>> const& transitions)
-    : handle(pass.buffer_boundary(transitions)) { }
-
-  buffer_usage_block::~buffer_usage_block() { handle->release(); }
+render_pass::~render_pass () = default;
 
 
-  transition_handle::transition_handle() noexcept = default;
-
-  transition_handle::~transition_handle() = default;
+render_pass::render_pass  (render_block& render_block, std::array< pipeline::pass_output, NRS > const& output) { }
 
 
-  void
-    render_pass::set_viewport(const cx::size_2d& value) {}
-
-  void
-    render_pass::set_scissor(const cx::rect& value) {}
-
-  void
-    render_pass::set_topology(topology_type type) {}
+void
+  render_pass::topology       (topology_type type) {}
 
 
-  cx::exp::ptr<transition_handle>
-    render_pass::buffer_boundary(std::vector<std::pair<cx::exp::ptr_ref<resource_reference>, buffer_transition>> const& transitions) { return cx::exp::ptr<transition_handle>{nullptr}; }
+cx::exp::ptr<render_pass_resource_scope>
+  render_pass::buffer_prepare (std::array< pipeline::pass_input, NBS > const& transitions) { return cx::exp::ptr<render_pass_resource_scope>{nullptr}; }
 
 
-  void
-    render_pass::bind_buffer(render_pass_stage_binding binding, int slot, cx::exp::ptr_ref<resource_reference> const& reference) { }
+void
+  render_pass::buffer_bind    (pipeline::shader_stage const &binding, int slot, cx::exp::ptr_ref<resource_reference> const& reference) { }
 
-  void
-    render_pass::bind_buffers(render_pass_stage_binding binding, std::array<cx::exp::ptr_ref<resource_reference>, 16> const& references) {}
-
-
-  void
-    render_pass::draw(const render_pass_draw_range& vertex_range) {}
+void
+  render_pass::buffer_bind    (pipeline::shader_stage const &binding, std::array<cx::exp::ptr_ref<resource_reference>, NBS> const& references) { }
 
 
-  void
-    transition_handle::release() { }
+void
+  render_pass::draw           (pipeline::draw_range const &vertex_range) {}
 
+
+render_pass_resource_scope::render_pass_resource_scope  () = default;
+
+render_pass_resource_scope::~render_pass_resource_scope () { }
+
+
+render_pass_resource_scope::render_pass_resource_scope  (render_pass &pass, std::vector < pipeline::pass_input > const &input) { }
 
 SNOW_OWL_NAMESPACE_END

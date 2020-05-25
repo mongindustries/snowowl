@@ -10,14 +10,10 @@
 
 #include "context.hpp"
 
+#include "transfer_block.hpp"
+#include "render_block.hpp"
+
 SNOW_OWL_NAMESPACE(gx)
-
-struct render_block;
-
-struct render_pipeline;
-
-
-struct buffer_staging;
 
 /**
  * A graphics queue construct.
@@ -32,12 +28,10 @@ struct buffer_staging;
  * <code>transfer</code> for updating/synchronizing resource buffers.
  *
  */
-struct queue {
-  SWL_REFERENCEABLE(queue)
-  SWL_POLYMORPHIC(queue)
+struct queue { SWL_REFERENCEABLE(queue) SWL_POLYMORPHIC(queue)
 
   explicit
-    queue(context &context);
+    queue     (context &context);
 
   /**
    *
@@ -49,7 +43,7 @@ struct queue {
    * wait).
    */
   virtual void
-    begin(std::vector < std::reference_wrapper < queue > > const &dependencies);
+    begin     (std::vector < std::reference_wrapper < queue > > const &dependencies);
 
   /**
    *
@@ -59,7 +53,7 @@ struct queue {
    * @param commands The list of <code>gx::render_block</code> to execute.
    */
   virtual void
-    submit(std::vector < std::reference_wrapper < render_block > > const &commands);
+    submit    (std::vector < std::reference_wrapper < render_block > > const &commands);
 
   /**
    *
@@ -68,7 +62,7 @@ struct queue {
    * @param buffers The list of <code>gx::buffer_staging</code> to execute.
    */
   virtual void
-    transfer(std::vector < cx::exp::ptr_ref < buffer_staging > > const &buffers);
+    transfer  (std::vector < cx::exp::ptr_ref < transfer_block > > const &buffers);
 
 protected:
 

@@ -1,8 +1,7 @@
 #pragma once
 
 #include "buffer.hpp"
-
-#include "directx/context.h"
+#include "pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
@@ -10,38 +9,22 @@ struct buffer_data;
 
 struct buffer_allocator;
 
-struct buffer_data_staging final : buffer_staging {
+struct buffer_data final : buffer < pipeline::buffer_type::typeData > {
 
-  ~buffer_data_staging() override;
-
-  winrt::com_ptr < ID3D12Resource > buffer;
-  winrt::com_ptr < ID3D12Resource > buffer_staging;
-
-  cx::exp::ptr_ref < buffer_data > ref;
-
-  D3D12_RESOURCE_STATES source_state;
-  D3D12_RESOURCE_STATES target_state;
-
-  size_t alloc_pos;
-  size_t size;
-};
-
-struct buffer_data final : buffer < typeData > {
-
-  buffer_data();
+  buffer_data ();
 
   /**
    * Method to update a CPU buffer. Returned data is an instruction on how
    * this buffer will be updated to the GPU.
    */
-  cx::exp::ptr < buffer_staging >
-    set_data(std::array < upload_desc, 8 > const &modifications) override;
+  cx::exp::ptr < gx::transfer_block >
+    set_data  (std::array < pipeline::upload_desc, 8 > const &modifications) override;
 
-  cx::exp::ptr < buffer_staging >
-    set_dirty() override;
+  cx::exp::ptr < gx::transfer_block >
+    set_dirty () override;
 
   cx::exp::ptr_ref < gx::resource_reference >
-    reference() override;
+    reference (pipeline::resource_reference_desc const &desc) override;
 
 
   winrt::com_ptr < ID3D12Resource > resource;
@@ -52,16 +35,14 @@ struct buffer_data final : buffer < typeData > {
 
 private:
 
-  buffer_view_type view_type;
+  D3D12_RESOURCE_STATES   current_state     {};
 
-  char *mapped_data;
+  size_t                  alloc_pos         {};
 
-  size_t alloc_pos{};
+  size_t                  buffer_size       {};
+  size_t                  buffer_stride     {};
 
-  size_t buffer_size{};
-  size_t buffer_stride{};
-
-  bool data_initialized{};
+  bool                    data_initialized  {};
 };
 
 SNOW_OWL_NAMESPACE_END

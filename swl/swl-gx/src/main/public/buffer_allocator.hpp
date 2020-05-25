@@ -10,16 +10,9 @@
 #include "context.hpp"
 #include "buffer.hpp"
 
-#include "render_pipeline.hpp"
+#include "pipeline.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
-
-enum buffer_usage {
-  // GPU read CPU write
-  dataUsagePrivate,
-  // GPU write GPU read
-  dataUsageExamine 
-};
 
 /**
  * A construct for buffer allocations.
@@ -27,24 +20,24 @@ enum buffer_usage {
  * This object handles buffer instance allocations. A buffer allocator
  * contains information on where and how to create buffer instances.
  */
-struct buffer_allocator {
-  SWL_REFERENCEABLE(buffer_allocator)
-  SWL_POLYMORPHIC(buffer_allocator)
+struct buffer_allocator { SWL_REFERENCEABLE(buffer_allocator) SWL_POLYMORPHIC(buffer_allocator)
 
-  buffer_allocator(gx::context &context, size_t initial_size);
-
-  virtual cx::exp::ptr < buffer < typeData > >
-    create_data(buffer_usage usage, buffer_view_type view_type, size_t allocator_offset, size_t size, size_t stride);
-
+  buffer_allocator    (gx::context &context, size_t initial_size);
+  
   template < typename Type, uint64_t Size = 1 >
-  cx::exp::ptr < buffer < typeData > >
-    create_data(buffer_usage usage, buffer_view_type view_type, size_t allocator_offset) { return create_data(usage, view_type, allocator_offset, sizeof(Type) * Size, sizeof(Type)); }
+  cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
+    create_data       (pipeline::buffer_visibility_type usage, size_t allocator_offset) {
+      return create_data(usage, allocator_offset, sizeof(Type) * Size, sizeof(Type));
+    }
 
-  virtual cx::exp::ptr < buffer < typeTexture2d > >
-    create_texture2d(cx::size_2d const &dimension, pipeline::format format);
+  virtual cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
+    create_data       (pipeline::buffer_visibility_type usage, size_t allocator_offset, size_t size, size_t stride);
 
-  virtual cx::exp::ptr < buffer < typeTexture3d > >
-    create_texture3d(cx::size_3d const &dimension, pipeline::format format);
+  virtual cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture2d > >
+    create_texture2d  (pipeline::buffer_visibility_type usage, cx::size_2d const &dimension, pipeline::format format);
+
+  virtual cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture3d > >
+    create_texture3d  (pipeline::buffer_visibility_type usage, cx::size_3d const &dimension, pipeline::format format);
 };
 
 SNOW_OWL_NAMESPACE_END

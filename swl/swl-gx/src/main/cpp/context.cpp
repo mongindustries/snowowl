@@ -8,13 +8,13 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-context::context      () noexcept = default;
+context::context  () noexcept = default;
 
-context::context      (context &&move) noexcept = default;
+context::~context () = default;
 
-context::~context     () = default;
 
-context&
-  context::operator=  (context &&) noexcept { return *this; }
+context::context              (context &&) noexcept = default;
+
+context& context::operator=   (context &&) noexcept { return *this; }
 
 SNOW_OWL_NAMESPACE_END

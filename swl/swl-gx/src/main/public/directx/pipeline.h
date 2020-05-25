@@ -1,33 +1,28 @@
 #pragma once
 
+#include <d3d12.h>
 #include <header.hpp>
 
-#include "render_pipeline.hpp"
+#include "pipeline.hpp"
 
-#include "directx/context.h"
+SNOW_OWL_NAMESPACE(gx::dx::pipeline)
 
-SNOW_OWL_NAMESPACE(gx::dx)
+DXGI_FORMAT                   gx_format           (gx::pipeline::format const &format);
 
-struct render_pipeline final : gx::render_pipeline {
+D3D12_ROOT_PARAMETER_TYPE     gx_param            (gx::pipeline::shader_argument_type const &type);
 
-  render_pipeline();
+D3D12_DESCRIPTOR_RANGE_TYPE   gx_param_table      (gx::pipeline::shader_argument_type const &type);
 
-  explicit
-    render_pipeline(context &context);
+D3D12_PRIMITIVE_TOPOLOGY_TYPE gx_primitive        (gx::pipeline::topology_type const &type);
 
+D3D12_BLEND                   gx_blend            (gx::pipeline::blend_type const &type);
 
-  void
-    construct() override;
+D3D12_BLEND_OP                gx_blend_op         (gx::pipeline::blend_op const &op);
 
+D3D12_TEXTURE_ADDRESS_MODE    gx_address_mode     (gx::pipeline::address_mode const &mode);
 
-  winrt::com_ptr < ID3D12Device > device;
+D3D12_COMPARISON_FUNC         gx_comparison_func  (gx::pipeline::comparison_type const &type);
 
-  winrt::com_ptr < ID3D12RootSignature > root_signature;
-  winrt::com_ptr < ID3D12PipelineState > pipeline_state;
-
-  winrt::com_ptr < ID3D12DescriptorHeap > descriptor_buf;
-  winrt::com_ptr < ID3D12DescriptorHeap > descriptor_rtv;
-  winrt::com_ptr < ID3D12DescriptorHeap > descriptor_dsv;
-};
+D3D12_STENCIL_OP              gx_stencil_op       (gx::pipeline::stencil_op const &type);
 
 SNOW_OWL_NAMESPACE_END

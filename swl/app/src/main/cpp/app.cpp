@@ -88,16 +88,16 @@ struct app_game_loop final : game_loop {
       pipeline.render_outputs[0].format        = gx::pipeline::format_4_8_int_u_norm_flipped;
       pipeline.render_outputs[0].blend.enabled = false;
 
-      pipeline.render_inputs[gx::pipeline::shader_stage::vertex] = cx::tell < gx::pipeline::render_input >({}, [](auto &object) {
+      pipeline.render_inputs[gx::pipeline::shader_stage::vertex] = cx::tell < gx::pipeline::shader_input >({}, [](auto &object) {
         // vertex
-        object.bindings[0] = cx::tell < gx::pipeline::render_input_item >({}, [](auto &object) {
+        object.bindings[0] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
           object.format   = gx::pipeline::format_4_32_float;
           object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         });
 
         // index
-        object.bindings[1] = cx::tell < gx::pipeline::render_input_item >({}, [](auto &object) {
+        object.bindings[1] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
           object.format   = gx::pipeline::format_1_16_int_u;
           object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
@@ -138,9 +138,9 @@ struct app_game_loop final : game_loop {
 
     main_queue.begin({});
     {
-      const gx::swap_chain_boundary frame_block{swap_chain};
+      const gx::swap_chain_scope frame_block{swap_chain};
       {
-        gx::block_boundary block{clear_block, render_pipeline};
+        gx::render_block_scope block{clear_block, render_pipeline};
         {
           auto &frame         = static_cast < gx::swap_chain::frame & >(frame_block);
           auto  frame_context = cx::tell < gx::render_pass_context >({}, [&](auto &object) {

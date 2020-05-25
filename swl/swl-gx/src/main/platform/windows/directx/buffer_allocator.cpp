@@ -3,7 +3,7 @@
 
 SNOW_OWL_NAMESPACE(gx::dx)
 
-buffer_allocator::buffer_allocator(context& context, size_t initial_size)
+buffer_allocator::buffer_allocator    (context& context, size_t initial_size)
   : gx::buffer_allocator(context, initial_size) {
 
   D3D12_HEAP_DESC heap_desc{};
@@ -24,111 +24,111 @@ buffer_allocator::buffer_allocator(context& context, size_t initial_size)
   context.device->CreateHeap(&heap_desc, __uuidof(ID3D12Heap), heap.put_void());
 }
 
-buffer_allocator::~buffer_allocator() { }
+buffer_allocator::~buffer_allocator   () { }
 
-cx::exp::ptr<buffer<typeData>>
-  buffer_allocator::create_data(buffer_usage      usage,
-                                buffer_view_type  view_type,
-                                size_t            allocator_offset,
-                                size_t            size,
-                                size_t            stride) {
+cx::exp::ptr < buffer < pipeline::buffer_type::typeData > >
+  buffer_allocator::create_data       (pipeline::buffer_visibility_type visbility, size_t allocator_offset, size_t size, size_t stride) {
+  
+    cx::exp::ptr<buffer< pipeline::buffer_type::typeData >, dx::buffer_data> instance;
 
-  cx::exp::ptr<buffer<typeData>, dx::buffer_data> instance;
+    D3D12_RESOURCE_DESC resource_desc{};
 
-  D3D12_RESOURCE_DESC resource_desc{};
+    resource_desc.Dimension         = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resource_desc.Alignment         = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+    resource_desc.DepthOrArraySize  = 1;
 
-  resource_desc.Dimension        = D3D12_RESOURCE_DIMENSION_BUFFER;
-  resource_desc.Alignment        = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-  resource_desc.DepthOrArraySize = 1;
+    resource_desc.Height            = 1;
+    resource_desc.Width             = size;
 
-  resource_desc.Height    = 1;
-  resource_desc.Width     = size;
-  resource_desc.MipLevels = 1;
+    resource_desc.MipLevels         = 1;
 
-  resource_desc.SampleDesc.Count = 1;
+    resource_desc.SampleDesc.Count  = 1;
 
-  resource_desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    resource_desc.Layout            = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-  winrt::com_ptr<ID3D12Device> device;
-  heap->GetDevice(__uuidof(ID3D12Device), device.put_void());
+    winrt::com_ptr<ID3D12Device> device;
+    heap->GetDevice(__uuidof(ID3D12Device), device.put_void());
 
-  D3D12_HEAP_DESC heap_desc = heap->GetDesc();
+    D3D12_HEAP_DESC heap_desc = heap->GetDesc();
 
-  // buffer for actual data
+    // buffer for actual data
 
-  size_t final_offset = allocator_offset;
-  size_t alignment    = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+    size_t final_offset = allocator_offset;
+    size_t alignment    = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
 
-  if (final_offset % alignment > 0)
-    final_offset = size_t(std::ceil(static_cast<float>(final_offset) / static_cast<float>(alignment))) * alignment;
+    if (final_offset % alignment > 0)
+      final_offset = size_t(std::ceil(static_cast<float>(final_offset) / static_cast<float>(alignment))) * alignment;
 
-  device->CreatePlacedResource(
-                               heap.get(), final_offset,
-                               &resource_desc, D3D12_RESOURCE_STATE_COPY_DEST,
-                               // only set once, will change to D3D12_RESOURCE_STATE_PIXEL_SHADER... | NON_PIXEL_SHADER after data set
-                               nullptr,
-                               __uuidof(ID3D12Resource), instance->resource.put_void());
+    device->CreatePlacedResource(
+      heap.get(),
+      final_offset,
+      &resource_desc,
+      D3D12_RESOURCE_STATE_COPY_DEST,
+      nullptr,
+      __uuidof(ID3D12Resource),
+      instance->resource.put_void());
 
-  D3D12_HEAP_PROPERTIES desc{};
-  D3D12_RESOURCE_STATES state{};
+    D3D12_HEAP_PROPERTIES desc  {};
+    D3D12_RESOURCE_STATES state {};
 
-  switch (usage) {
-  case dataUsagePrivate: {
-    // create upload heap
-    desc.Type = D3D12_HEAP_TYPE_UPLOAD;
-    state     = D3D12_RESOURCE_STATE_GENERIC_READ;
+    switch (visbility) {
+    case pipeline::buffer_visibility_type::dataUsagePrivate: {
+      // create upload heap
+      desc.Type = D3D12_HEAP_TYPE_UPLOAD;
+      state     = D3D12_RESOURCE_STATE_GENERIC_READ;
+    } break;
+    case pipeline::buffer_visibility_type::dataUsageReadBack: {
+      // create read-back heap
+      desc.Type = D3D12_HEAP_TYPE_READBACK;
+      state     = D3D12_RESOURCE_STATE_COPY_DEST;
+    } break;
+    }
+
+    // buffer for modifying allocated buffer data~
+
+    device->CreateCommittedResource(
+     &desc, D3D12_HEAP_FLAG_NONE, &resource_desc,
+     state, nullptr,
+     __uuidof(ID3D12Resource),
+     instance->resource_upload.put_void());
+
+    instance->current_state     = state;
+    instance->data_initialized  = false;
+
+    instance->buffer_size       = size;
+    instance->buffer_stride     = stride;
+
+    instance->alloc_pos         = final_offset;
+
+    return instance.abstract();
   }
-  break;
-  case dataUsageExamine: {
-    // create read-back heap
-    desc.Type = D3D12_HEAP_TYPE_READBACK;
-    state     = D3D12_RESOURCE_STATE_COPY_DEST;
+
+cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture2d > >
+  buffer_allocator::create_texture2d  (pipeline::buffer_visibility_type visbility, cx::size_2d const &dimension, pipeline::format) {
+  
+    D3D12_RESOURCE_DESC tex_desc{};
+
+    tex_desc.Dimension  = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    tex_desc.Width      = dimension.x();
+    tex_desc.Height     = dimension.y();
+
+    tex_desc.MipLevels  = 1;
+    tex_desc.Alignment  = 0;
+
+    tex_desc.DepthOrArraySize   = 1;
+
+    tex_desc.SampleDesc.Count   = 1;
+    tex_desc.SampleDesc.Quality = 0;
+
+    winrt::com_ptr<ID3D12Device> device;
+    heap->GetDevice(__uuidof(ID3D12Device), device.put_void());
+
+    return cx::exp::ptr<buffer< pipeline::buffer_type::typeTexture2d >>{nullptr};
   }
-  break;
+
+cx::exp::ptr < buffer < pipeline::buffer_type::typeTexture3d > >
+  buffer_allocator::create_texture3d  (pipeline::buffer_visibility_type visbility, cx::size_3d const&, pipeline::format) {
+    return cx::exp::ptr<buffer< pipeline::buffer_type::typeTexture3d >>{nullptr};
   }
-
-  // buffer for modifying allocated buffer data~
-
-  device->CreateCommittedResource(
-   &desc, D3D12_HEAP_FLAG_NONE, &resource_desc,
-   state, nullptr,
-   __uuidof(ID3D12Resource), instance->resource_upload.put_void());
-
-  instance->view_type        = view_type;
-  instance->buffer_size      = size;
-  instance->buffer_stride    = stride;
-  instance->data_initialized = false;
-  instance->alloc_pos        = final_offset;
-
-  return instance.abstract();
-}
-
-cx::exp::ptr<buffer<typeTexture2d>>
-  buffer_allocator::create_texture2d(cx::size_2d const& dimension, pipeline::format format) {
-
-  D3D12_RESOURCE_DESC tex_desc{};
-
-  tex_desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-  tex_desc.Width = dimension.x();
-  tex_desc.Height = dimension.y();
-
-  tex_desc.MipLevels = 1;
-  tex_desc.Alignment = 0;
-
-  tex_desc.DepthOrArraySize = 1;
-
-  tex_desc.SampleDesc.Count = 1;
-  tex_desc.SampleDesc.Quality = 0;
-
-  winrt::com_ptr<ID3D12Device> device;
-  heap->GetDevice(__uuidof(ID3D12Device), device.put_void());
-
-  return cx::exp::ptr<buffer<typeTexture2d>>{nullptr};
-}
-
-cx::exp::ptr<buffer<typeTexture3d>>
-  buffer_allocator::create_texture3d(cx::size_3d const& dimension, pipeline::format format) {
-  return cx::exp::ptr<buffer<typeTexture3d>>{nullptr};
-}
 
 SNOW_OWL_NAMESPACE_END
