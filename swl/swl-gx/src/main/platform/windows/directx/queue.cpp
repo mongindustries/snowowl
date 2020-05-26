@@ -1,11 +1,11 @@
 #include "directx/queue.h"
 #include "directx/render_block.h"
 #include "directx/transfer_block.h"
+#include "directx/buffer.h"
 
 #include "render_block.hpp"
 
 #include "tell.hpp"
-#include "directx/buffer.h"
 
 struct upload_desc {
   winrt::com_ptr < ID3D12Resource > source;
@@ -128,6 +128,8 @@ void
       if (barrier_out.Transition.StateBefore != barrier_out.Transition.StateAfter) {
         barriers_out.emplace_back(barrier_out);
       }
+
+      item->ref->current_state = item->target_state;
     }
   }
 

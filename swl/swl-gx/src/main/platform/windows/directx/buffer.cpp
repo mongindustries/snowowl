@@ -149,6 +149,16 @@ cx::exp::ptr_ref < gx::resource_reference >
       }
     }
   }
+  else {
+    switch (slot_info.type) {
+    case gx::pipeline::shader_argument_type::typeConstant:
+      reference->resource_type = resource_type::typeCBV;
+      break;
+    case gx::pipeline::shader_argument_type::typeBuffer:
+      reference->resource_type = resource_type::typeSRV;
+      break;
+    }
+  }
 
   return cx::exp::ptr_ref < resource_reference >{reference}.cast < gx::resource_reference >();
 }

@@ -44,15 +44,15 @@ struct app_game_loop final : game_loop {
 
   window& window;
 
-  Factory::t_queue           main_queue;
-  Factory::t_swap_chain      swap_chain;
-  Factory::t_render_block    clear_block;
-  Factory::t_render_pipeline render_pipeline;
+  Factory::Queue            main_queue;
+  Factory::SwapChain        swap_chain;
+  Factory::RenderBlock      clear_block;
+  Factory::RenderPipeline   render_pipeline;
 
-  ptr < gx::buffer_allocator > allocator;
+  Factory::BufferAllocator  allocator;
 
-  ptr < gx::buffer < gx::typeData > > buffer_vertex;
-  ptr < gx::buffer < gx::typeData > > buffer_index;
+  ptr < gx::buffer < gx::pipeline::typeData > > buffer_vertex;
+  ptr < gx::buffer < gx::pipeline::typeData > > buffer_index;
 
   float peg{0};
 
@@ -66,42 +66,42 @@ struct app_game_loop final : game_loop {
     , buffer_vertex(nullptr)
     , buffer_index(nullptr) {
 
-    buffer_vertex = allocator->create_data < shaders::simple::vertex_input, 4 >(gx::dataUsagePrivate, gx::viewTypeShader, 0);
-    buffer_index  = allocator->create_data < uint32_t, 6 >(gx::dataUsagePrivate, gx::viewTypeShader, sizeof(shaders::simple::vertex_input) * 4);
+    buffer_vertex = allocator.create_data< shaders::simple::vertex_input, 4 >
+      (gx::pipeline::dataUsagePrivate, 0 );
+    buffer_index  = allocator.create_data< uint32_t, 6 >
+      (gx::pipeline::dataUsagePrivate, sizeof(shaders::simple::vertex_input) * 4);
 
-    render_pipeline = cx::tell < Factory::t_render_pipeline >(factory.render_pipeline(), [&](Factory::t_render_pipeline &pipeline) {
+    render_pipeline = cx::tell < Factory::RenderPipeline >(factory.render_pipeline(), [&](Factory::RenderPipeline &pipeline) {
       pipeline.topology_type = gx::pipeline::topologyTypeTriangle;
 
       pipeline.raster.cull_mode                = gx::pipeline::modeNone;
       pipeline.raster.fill_mode                = gx::pipeline::modeFill;
       pipeline.raster.render_counter_clockwise = false;
 
-      const unsigned char *vert_prog = shaders::simple::vert_prog;
-      const unsigned char *frag_prog = shaders::simple::frag_prog;
+      pipeline.depth.format   = gx::pipeline::format_unknown;
+      pipeline.depth.enabled  = false;
 
-      pipeline.shader_stages[gx::pipeline::shader_stage::vertex] = gx::shader{
-        .byte_code = (char*) vert_prog, .byte_size = sizeof(shaders::simple::vert_prog) };
+      pipeline.stages[gx::pipeline::shader_stage::vertex] = cx::tell<gx::pipeline::pipeline_stage>({}, [&](gx::pipeline::pipeline_stage &stage) {
 
-      pipeline.shader_stages[gx::pipeline::shader_stage::fragment] = gx::shader{
-        .byte_code = (char*) frag_prog, .byte_size = sizeof(shaders::simple::frag_prog) };
+        stage.function = { (char *)shaders::simple::vert_prog, sizeof shaders::simple::vert_prog };
 
-      pipeline.render_outputs[0].format        = gx::pipeline::format_4_8_int_u_norm_flipped;
-      pipeline.render_outputs[0].blend.enabled = false;
-
-      pipeline.render_inputs[gx::pipeline::shader_stage::vertex] = cx::tell < gx::pipeline::shader_input >({}, [](auto &object) {
-        // vertex
-        object.bindings[0] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
+        stage.input.arguments[0] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
           object.format   = gx::pipeline::format_4_32_float;
-          object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         });
 
-        // index
-        object.bindings[1] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
+        stage.input.arguments[1] = cx::tell < gx::pipeline::shader_argument >({}, [](auto &object) {
           object.format   = gx::pipeline::format_1_16_int_u;
-          object.indirect = false;
           object.type     = gx::pipeline::typeBuffer;
         });
+      });
+
+      pipeline.stages[gx::pipeline::shader_stage::fragment] = cx::tell<gx::pipeline::pipeline_stage>({}, [&](gx::pipeline::pipeline_stage &stage) {
+
+        stage.function = { (char *)shaders::simple::frag_prog, sizeof shaders::simple::frag_prog };
+
+        stage.output[0].format        = gx::pipeline::format_4_8_int_u_norm_flipped;
+        stage.output[0].blend.enabled = false;
       });
 
       pipeline.construct();
@@ -110,6 +110,13 @@ struct app_game_loop final : game_loop {
 
   void
     create() override {
+  }
+
+  void
+    update(milliseconds delta) override { peg += 1; }
+
+  void
+    render(float offset) override {
 
     main_queue.begin({});
 
@@ -124,17 +131,12 @@ struct app_game_loop final : game_loop {
         0, 1, 2, 0, 2, 3
     };
 
-    const auto v_staging = buffer_vertex->set_data(0, data);
-    const auto i_staging = buffer_index->set_data(0, indices);
+    const auto v_staging = buffer_vertex->set_data(
+    0, data, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
+    const auto i_staging = buffer_index ->set_data(
+    0, indices, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
 
     main_queue.transfer({ exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging} });
-  }
-
-  void
-    update(milliseconds delta) override { peg += 1; }
-
-  void
-    render(float offset) override {
 
     main_queue.begin({});
     {
@@ -142,43 +144,45 @@ struct app_game_loop final : game_loop {
       {
         gx::render_block_scope block{clear_block, render_pipeline};
         {
-          auto &frame         = static_cast < gx::swap_chain::frame & >(frame_block);
-          auto  frame_context = cx::tell < gx::render_pass_context >({}, [&](auto &object) {
-            float rad = peg * 0.01745329f;
-
-            float r = sin(rad);
-            float g = sin(rad - (2.0f / 3.0f) * M_PI);
-            float b = sin(rad - (4.0f / 3.0f) * M_PI);
-
-            object.action_load  = gx::loadOpClear;
-            object.action_store = gx::storeOpStore;
-            object.load_clear   = std::array < float, 4 >{r, g, b, 1.0f};
-
-            object.transition_before = gx::transitionInherit;
-            object.transition_during = gx::transitionRenderTargetView;
-            object.transition_after  = gx::transitionInherit;
-
-            object.reference = frame.reference;
-          });
-
-          auto pass = factory.render_pass(clear_block, {frame_context});
-          {
-            const auto v_ref = std::make_pair(buffer_vertex->reference(),
-                                              gx::buffer_transition{gx::buffer_transition::transitionShaderView});
-            const auto i_ref = std::make_pair(buffer_index->reference(),
-                                              gx::buffer_transition{gx::buffer_transition::transitionShaderView});
+          auto &frame       = static_cast < gx::swap_chain::frame & >(frame_block);
+          auto  swap_output = cx::tell < gx::pipeline::pass_output >({}, [&](auto &object) {
 
             const auto size = swap_chain.size();
 
-            gx::buffer_usage_block resource_block{pass, {v_ref, i_ref}};
-            {
-              pass.bind_buffers(gx::bindingGraphicsVertex, {get < 0 >(v_ref), get < 0 >(i_ref)});
+            float rad = peg * 0.01745329f;
 
-              pass.set_viewport(size);
-              pass.set_scissor(cx::rect{{}, size});
+            float r   = sin(rad);
+            float g   = sin(rad - (2.0f / 3.0f) * M_PI);
+            float b   = sin(rad - (4.0f / 3.0f) * M_PI);
 
-              pass.set_topology(gx::render_pass::typeTriangleList);
-              pass.draw(gx::render_pass_draw_range{0, 6});
+            object.action_load  = gx::pipeline::loadOpClear;
+            object.action_store = gx::pipeline::storeOpStore;
+            object.clear_color  = std::array < float, 4 >{r, g, b, 1.0f};
+
+            object.viewport     = size;
+            object.scissor      = cx::rect{ {}, size }; 
+
+            object.output       = frame.reference;
+          });
+
+          auto pass = factory.render_pass(clear_block, {swap_output});
+          {
+            const auto v_ref = buffer_vertex->reference(
+              cx::exp::ptr_ref<gx::render_pipeline>{ &render_pipeline }, gx::pipeline::shader_stage::vertex, 0);
+
+            const auto i_ref = buffer_index->reference(
+              cx::exp::ptr_ref<gx::render_pipeline>{ &render_pipeline }, gx::pipeline::shader_stage::vertex, 1);
+
+            const auto v_pass = gx::pipeline::pass_input{ v_ref, gx::pipeline::shader_stage::vertex, gx::pipeline::transitionTypeShaderView };
+            const auto i_pass = gx::pipeline::pass_input{ i_ref, gx::pipeline::shader_stage::vertex, gx::pipeline::transitionTypeShaderView };
+
+            auto resource_block = pass.buffer_prepare({ v_pass, i_pass }); {
+
+              pass.buffer_bind(gx::pipeline::shader_stage::vertex, 0, v_ref);
+              pass.buffer_bind(gx::pipeline::shader_stage::vertex, 1, i_ref);
+
+              pass.topology   (gx::render_pass::typeTriangleList);
+              pass.draw       (gx::pipeline::draw_range{0, 6});
             }
           }
         }

@@ -160,7 +160,7 @@ cx::exp::ptr_ref < swap_chain::frame >
 }
 
 void
-  swap_chain::present(std::vector < ptr_ref < gx::queue > > const &dependencies) {
+  swap_chain::present() {
 
   assert(instance->Present(swaps_immediately ? 0 : 1, 0) == S_OK);
 }

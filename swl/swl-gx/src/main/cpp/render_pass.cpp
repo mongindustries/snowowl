@@ -40,9 +40,9 @@ void
   render_pass::draw           (pipeline::draw_range const &vertex_range) {}
 
 
-render_pass_resource_scope::render_pass_resource_scope  () = default;
+render_pass_resource_scope::render_pass_resource_scope  () noexcept = default;
 
-render_pass_resource_scope::~render_pass_resource_scope () { }
+render_pass_resource_scope::~render_pass_resource_scope () = default;
 
 
 render_pass_resource_scope::render_pass_resource_scope  (render_pass &pass, std::vector < pipeline::pass_input > const &input) { }

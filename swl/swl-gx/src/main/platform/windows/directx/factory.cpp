@@ -4,22 +4,35 @@ SNOW_OWL_NAMESPACE(gx)
 
 typedef factory < dx::context, 0 > fx;
 
-fx::t_queue
-  fx::queue() { return fx::t_queue(instance); }
+fx::factory             (dx::context&& instance)
+  : instance(std::move(instance)) {}
 
-fx::t_swap_chain
-  fx::swap_chain(fx::t_queue &queue, ui::window &window) { return fx::t_swap_chain(instance, queue, window); }
+fx::Queue
+  fx::queue             () { return Queue(instance); }
 
-fx::t_render_block
-  fx::render_block(t_queue &queue, t_render_pipeline *pipeline) { return fx::t_render_block(queue, pipeline); }
+fx::SwapChain
+  fx::swap_chain        (Queue &queue, ui::window &window) {
+  return SwapChain(instance, queue, window);
+}
 
-fx::t_render_pass
-  fx::render_pass(t_render_block &block, std::vector < gx::render_pass_context > const &pass_context) { return fx::t_render_pass(block, pass_context); }
+fx::RenderBlock
+  fx::render_block      (Queue &queue, RenderPipeline *pipeline) {
+  return RenderBlock(queue, pipeline);
+}
 
-fx::t_render_pipeline
-  fx::render_pipeline() { return t_render_pipeline(instance); }
+fx::RenderPass
+  fx::render_pass       (RenderBlock &block, std::array < pipeline::pass_output, NRS > const &pass_context) {
+  return RenderPass(block, pass_context);
+}
 
-cx::exp::ptr < buffer_allocator >
-  fx::buffer_allocator(size_t initial_size) { return cx::exp::ptr < gx::buffer_allocator >{new dx::buffer_allocator(instance, initial_size)}; }
+fx::RenderPipeline
+  fx::render_pipeline   () {
+  return RenderPipeline(instance);
+}
+
+fx::BufferAllocator
+  fx::buffer_allocator  (size_t initial_size) {
+  return BufferAllocator(instance, initial_size);
+}
 
 SNOW_OWL_NAMESPACE_END

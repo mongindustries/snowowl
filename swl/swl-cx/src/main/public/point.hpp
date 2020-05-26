@@ -6,6 +6,7 @@
 #include "header.hpp"
 
 #include <array>
+#include <cstdint>
 #include <immintrin.h>
 
 SNOW_OWL_NAMESPACE(cx)

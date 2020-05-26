@@ -320,7 +320,7 @@ struct shader_argument {
   shader_argument_type                  type                        {shader_argument_type::typeNotUsed};
   format                                format                      {format::format_unknown};
 
-  bool                                  indirect                    {false};
+  bool                                  indirect                    {true};
 };
 
 struct shader_input {
@@ -346,6 +346,8 @@ struct pipeline_stage {
 struct pass_input {
 
   cx::exp::ptr_ref<resource_reference>  input;
+
+  shader_stage                          stage;
 
   resource_transition_type              during                      {resource_transition_type::transitionTypeShaderView};
 
@@ -377,7 +379,7 @@ struct draw_range {
 
 struct upload_desc {
 
-  size_t                                start                       {-1};
+  size_t                                start                       { 0};
   size_t                                size                        { 0};
 
   char*                                 data                        {nullptr};

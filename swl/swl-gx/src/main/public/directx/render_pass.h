@@ -14,9 +14,9 @@ struct render_pipeline;
 
 struct render_pass final : gx::render_pass {
 
-  render_pass   (dx::render_block &block, std::array < pipeline::pass_output, 8 > const &outputs);
+  render_pass       (dx::render_block &block, std::array < pipeline::pass_output, 8 > const &outputs);
 
-  ~render_pass  ();
+  ~render_pass      ();
 
 
   void

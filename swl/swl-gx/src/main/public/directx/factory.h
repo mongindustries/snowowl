@@ -5,10 +5,11 @@
 #include "factory.hpp"
 
 #include "directx/context.h"
-
-#include "directx/swap_chain.h"
 #include "directx/queue.h"
+#include "directx/swap_chain.h"
 #include "directx/render_block.h"
+#include "directx/render_pass.h"
+#include "directx/render_pipeline.h"
 #include "directx/buffer_allocator.h"
 
 SNOW_OWL_NAMESPACE(gx)
@@ -16,42 +17,34 @@ SNOW_OWL_NAMESPACE(gx)
 template <>
 struct factory < dx::context > {
 
-  typedef dx::queue                t_queue;
-  typedef cx::exp::ptr < t_queue > p_queue;
+  typedef dx::queue             Queue;
+  typedef dx::swap_chain        SwapChain;
+  
+  typedef dx::render_block      RenderBlock;
+  typedef dx::render_pass       RenderPass;
+  typedef dx::render_pipeline   RenderPipeline;
 
-  typedef dx::swap_chain                t_swap_chain;
-  typedef cx::exp::ptr < t_swap_chain > p_swap_chain;
-
-  typedef dx::render_block                t_render_block;
-  typedef cx::exp::ptr < t_render_block > p_render_block;
-
-  typedef dx::render_pass                t_render_pass;
-  typedef cx::exp::ptr < t_render_pass > p_render_pass;
-
-  typedef dx::render_pipeline                t_render_pipeline;
-  typedef cx::exp::ptr < t_render_pipeline > p_render_pipeline;
+  typedef dx::buffer_allocator  BufferAllocator;
 
   explicit
-    factory(dx::context &&instance)
-    : instance(std::move(instance)) {}
+    factory           (dx::context &&instance);
 
-  [[nodiscard]] t_swap_chain
-    swap_chain(t_queue &queue, ui::window &window);
+  [[nodiscard]] SwapChain
+    swap_chain        (Queue &queue, ui::window &window);
 
-  [[nodiscard]] t_queue
-    queue();
+  [[nodiscard]] Queue
+    queue             ();
 
-  [[nodiscard]] t_render_block
-    render_block(t_queue &queue, t_render_pipeline *pipeline);
+  [[nodiscard]] RenderBlock
+    render_block      (Queue &queue, RenderPipeline *pipeline);
 
-  [[nodiscard]] t_render_pass
-    render_pass(t_render_block &block, std::vector < gx::render_pass_context > const &pass_context);
+  [[nodiscard]] RenderPass
+    render_pass       (RenderBlock &block, std::array< pipeline::pass_output, NRS > const &pass_context);
 
-  [[nodiscard]] t_render_pipeline
-    render_pipeline();
-
-  [[nodiscard]] cx::exp::ptr < buffer_allocator >
-    buffer_allocator(size_t initial_size);
+  [[nodiscard]] RenderPipeline
+    render_pipeline   ();
+  [[nodiscard]] BufferAllocator
+    buffer_allocator  (size_t initial_size);
 
 private:
 

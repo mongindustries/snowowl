@@ -20,7 +20,7 @@ struct swap_chain : gx::swap_chain {
     next_frame() override;
 
   void
-    present(std::vector < cx::exp::ptr_ref < gx::queue > > const &dependencies) override;
+    present() override;
 
 
   void

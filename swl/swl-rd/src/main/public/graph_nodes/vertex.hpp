@@ -46,11 +46,10 @@ struct vertex_argument_state: node_argument_state {
 
 	~vertex_argument_state  ();
 
+	cx::exp::ptr<gx::buffer<gx::pipeline::typeData>>  buffer;
+	cx::exp::ptr<gx::buffer<gx::pipeline::typeData>>  index_buffer;
 
-	cx::exp::ptr<gx::buffer<gx::buffer_type::typeData>> buffer;
-	cx::exp::ptr<gx::buffer<gx::buffer_type::typeData>> index_buffer;
-
-	gx::shader                                                   shader;
+	gx::shader                                        shader;
 };
 
 struct vertex_entity_state: node_argument_state {

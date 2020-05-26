@@ -16,7 +16,7 @@ buffer_allocator::buffer_allocator  (gx::context& context, size_t initial_size) 
 
 buffer_allocator::buffer_allocator            (buffer_allocator&&) noexcept { }
 
-buffer_allocator& buffer_allocator::operator= (buffer_allocator&&) noexcept { }
+buffer_allocator& buffer_allocator::operator= (buffer_allocator&&) noexcept { return *this; }
 
 
 cx::exp::ptr<buffer<pipeline::buffer_type::typeData>>

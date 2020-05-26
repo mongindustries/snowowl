@@ -7,7 +7,6 @@
 #include <type_traits>
 
 #include <header.hpp>
-#include <ownership.hpp>
 
 #include "context.hpp"
 #include "queue.hpp"
@@ -16,7 +15,6 @@
 #include "render_pass.hpp"
 #include "render_pipeline.hpp"
 
-#include "buffer.hpp"
 #include "buffer_allocator.hpp"
 
 SNOW_OWL_NAMESPACE(gx)
@@ -24,45 +22,48 @@ SNOW_OWL_NAMESPACE(gx)
 template < typename context, std::enable_if_t < std::is_base_of_v < gx::context, context >, int > = 0 >
 struct factory {
 
-  typedef gx::queue                t_queue;
-  typedef cx::exp::ptr < t_queue > p_queue;
+  typedef gx::queue             Queue;
+  typedef gx::swap_chain        SwapChain;
+  
+  typedef gx::render_block      RenderBlock;
+  typedef gx::render_pass       RenderPass;
+  typedef gx::render_pipeline   RenderPipeline;
 
-  typedef gx::swap_chain                t_swap_chain;
-  typedef cx::exp::ptr < t_swap_chain > p_swap_chain;
-
-  typedef gx::render_block                t_render_block;
-  typedef cx::exp::ptr < t_render_block > p_render_block;
-
-  typedef gx::render_pass                t_render_pass;
-  typedef cx::exp::ptr < t_render_pass > p_render_pass;
-
-  typedef gx::render_pipeline                t_render_pipeline;
-  typedef cx::exp::ptr < t_render_pipeline > p_render_pipeline;
+  typedef gx::buffer_allocator  BufferAllocator;
 
   explicit
     factory(context &&instance)
     : instance(instance) {}
 
-  [[nodiscard]] t_swap_chain
-    swap_chain(t_queue &queue, ui::window &window) { return t_swap_chain(instance, queue, window); }
+  [[nodiscard]] SwapChain
+    swap_chain(Queue &queue, ui::window &window) {
+    return SwapChain(instance, queue, window);
+  }
 
-  [[nodiscard]] t_queue
-    queue() { return t_queue(instance); }
+  [[nodiscard]] Queue
+    queue() {
+    return Queue(instance);
+  }
 
-  [[nodiscard]] t_render_block
-    render_block(t_queue &queue, t_render_pipeline *pipeline) { return t_render_block(queue, pipeline); }
+  [[nodiscard]] RenderBlock
+    render_block(Queue &queue, RenderPipeline *pipeline) {
+    return RenderBlock(queue, pipeline);
+  }
 
-  [[nodiscard]] t_render_pass
-    render_pass(t_render_block &block, std::vector < render_pass_context > const &pass_context) { return t_render_pass(isntance, block); }
+  [[nodiscard]] RenderPass
+    render_pass(RenderBlock &block, std::array< pipeline::pass_output, NRS > const &pass_context) {
+    return RenderPass(instance, block);
+  }
 
-  [[nodiscard]] t_render_pipeline
-    render_pipeline() { return t_render_pipeline(instance); }
+  [[nodiscard]] RenderPipeline
+    render_pipeline() {
+    return RenderPipeline(instance);
+  }
 
-  [[nodiscard]] cx::exp::ptr < buffer_allocator >
-    buffer_allocator(size_t initial_size) { return cx::exp::ptr{nullptr}; }
-
-  shader
-    shader(std::filesystem::path const& location) { return shader{}; }
+  [[nodiscard]] BufferAllocator
+    buffer_allocator(size_t initial_size) {
+    return BufferAllocator(instance, initial_size);
+  }
 
 private:
 

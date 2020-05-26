@@ -30,7 +30,8 @@ pipeline::write_mask pipeline::write_mask::b  = write_mask{ 0b0100 };
 pipeline::write_mask pipeline::write_mask::a  = write_mask{ 0b1000 };
 
 
-render_pipeline::render_pipeline  () noexcept = default;
+render_pipeline::render_pipeline  () noexcept {
+}
 
 render_pipeline::~render_pipeline () = default;
 

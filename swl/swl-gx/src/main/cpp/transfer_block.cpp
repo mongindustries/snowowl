@@ -2,7 +2,7 @@
 
 SNOW_OWL_NAMESPACE(gx)
 
-transfer_block::transfer_block  () = default;
+transfer_block::transfer_block  () noexcept = default;
 
 transfer_block::~transfer_block () = default;
 

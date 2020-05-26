@@ -13,6 +13,8 @@ swap_chain::swap_chain            (swap_chain&& move) noexcept : window(move.win
 swap_chain &swap_chain::operator= (swap_chain&& move) noexcept {
   window = move.window;
   frames = std::move(move.frames);
+
+  return *this;
 }
 
 
