@@ -110,14 +110,7 @@ struct app_game_loop final : game_loop {
 
   void
     create() override {
-  }
-
-  void
-    update(milliseconds delta) override { peg += 1; }
-
-  void
-    render(float offset) override {
-
+    
     main_queue.begin({});
 
     std::vector < shaders::simple::vertex_input > data = {
@@ -132,11 +125,18 @@ struct app_game_loop final : game_loop {
     };
 
     const auto v_staging = buffer_vertex->set_data(
-    0, data, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
+      0, data, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
     const auto i_staging = buffer_index ->set_data(
-    0, indices, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
+      0, indices, { gx::pipeline::shader_stage::vertex, gx::pipeline::usageTypeShader });
 
     main_queue.transfer({ exp::ptr_ref{v_staging}, exp::ptr_ref{i_staging} });
+  }
+
+  void
+    update(milliseconds delta) override { peg += 1; }
+
+  void
+    render(float offset) override {
 
     main_queue.begin({});
     {
@@ -173,8 +173,8 @@ struct app_game_loop final : game_loop {
             const auto i_ref = buffer_index->reference(
               cx::exp::ptr_ref<gx::render_pipeline>{ &render_pipeline }, gx::pipeline::shader_stage::vertex, 1);
 
-            const auto v_pass = gx::pipeline::pass_input{ v_ref, gx::pipeline::shader_stage::vertex, gx::pipeline::transitionTypeShaderView };
-            const auto i_pass = gx::pipeline::pass_input{ i_ref, gx::pipeline::shader_stage::vertex, gx::pipeline::transitionTypeShaderView };
+            const auto v_pass = gx::pipeline::pass_input{ v_ref, gx::pipeline::shader_stage::vertex };
+            const auto i_pass = gx::pipeline::pass_input{ i_ref, gx::pipeline::shader_stage::vertex };
 
             auto resource_block = pass.buffer_prepare({ v_pass, i_pass }); {
 
